@@ -29,6 +29,7 @@ export default function MapView() {
     const classes = useStyles();
 
     const [leftMenuOpen, setLeftMenu] = useState(false);
+    const [discussionOpen, setDiscussion] = useState(false);
 
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
@@ -38,10 +39,34 @@ export default function MapView() {
         setLeftMenu(open);
     };
 
-    const toggleDiscussionPane = (open) => (event) => {
+    const toggleDiscussion = (event) => {
         // Do additional checks if required
-        setLeftMenu(open);
+        console.log(event);
+        setDiscussion(!discussionOpen);
     };
+
+    // Set container for map and disucssion pane
+    let grid;
+    if(discussionOpen) {
+        grid = (
+            <Grid container>
+                <Grid item xs={8} className={classes.element}>
+                    <MapComponent onRightClick={toggleDiscussion}/>
+                </Grid>
+                <Grid item xs={4} className={classes.element}>
+                    <Typography variant="h6" className={classes.menuElement}>
+                        Test
+                    </Typography>
+                </Grid>
+            </Grid>
+        );
+    } else {
+        grid = (
+            <Grid item xs={12} className={classes.element}>
+                <MapComponent onRightClick={toggleDiscussion}/>
+            </Grid>
+        );
+    }
 
     return (<div className={classes.root}>
         <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu}/>
@@ -50,11 +75,6 @@ export default function MapView() {
                 Test
             </Typography>
         </Drawer>
-        {/* Container for map and disucssion pane */}
-        <Grid container>
-            <Grid item xs={12} className={classes.element}>
-                <MapComponent/>
-            </Grid>
-        </Grid>
+        {grid}
     </div>);
 }

@@ -9,6 +9,7 @@ export default function MapComponent(props) {
                 defaultZoom={8}
                 defaultCenter={{lat: 48.137154, lng: 11.576124}}
                 options={{streetViewControl: false}}
+                onRightClick={props.onRightClick}
             />
         );
     }
