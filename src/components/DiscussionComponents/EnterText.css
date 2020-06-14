@@ -1,0 +1,26 @@
+
+.AddContent {
+    position: absolute;
+   /* left: 2%;
+    right: 5%;
+    top: 55.0%;
+    bottom: 0%; */
+    z-index: 1;
+    } 
+    .Contentfield {
+        width: 700px;
+        height: 250px;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 13px;
+        background-color: #f8f8f8;
+        resize: none;
+        width: 30vw;
+        height: 25vh;
+        padding: 30px 20px;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 13px;
+        background-color: #f8f8f8;
+
+}

@@ -1,0 +1,129 @@
+.Topictext {
+    position: absolute;
+    /*left: 0%;
+    right: 0%;
+    top: 23.0%;
+    bottom: 71%;*/
+    z-index: 4;
+    background: #B5CDD0;
+    font-family: HelveticaNeue;
+font-style: normal;
+font-weight: normal;
+font-size: 3.5vmin;
+line-height: 42px;
+text-align: center;
+height: 6%;
+width: 30%;
+    }
+.Buttonfield {
+    position: absolute;
+   /* left: 0%;
+    right: 0%;
+    top: 29.0%;
+    bottom: 58%;*/
+    z-index: 4;
+    width: 25vw;
+    height : 5vw;
+    /*background: #CAE2E5;*/
+  
+    font-family: HelveticaNeue;
+}
+.Topics1 {
+ background-color:#B5CDD0;
+ width: 4.2vw;
+ height: 4.2vw;
+ border-radius:50%;
+ margin: 10px 20px 0px 20px;
+}
+.Topics2#request{
+    background:#62AEBB;
+    width: 4.2vw;
+ height: 4.2vw;
+    /*border-radius:50%;*/
+    margin: 10px 20px 0px 20px;
+    background-image:url("./request.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics2#hiking{
+    background:#62AEBB;
+    width: 4.2vw;
+ height: 4.2vw;
+   /*border-radius:50%;*/
+    margin: 10px 20px 0px 20px;
+    background-image:url("./shoes.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics2#photograph{
+    background:#62AEBB;
+    width: 4.2vw;
+ height: 4.2vw;
+    /*border-radius:50%;*/
+    margin: 10px 20px 0px 20px;
+    background-image:url("./photograph.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics2#alert{
+    background:#62AEBB;
+    width: 4.2vw;
+    height: 4.2vw;
+    /*border-radius:50%;*/
+    margin: 10px 20px 0px 20px;
+    background-image:url("./alert.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics2#nature{
+    background:#62AEBB;
+    width: 4.2vw;
+ height: 4.2vw;
+    /*border-radius:50%;*/
+    margin: 10px 20px 0px 20px;
+    background-image:url("./nature.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics1#request {
+    background-image:url("./request.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics1#nature {
+    background-image:url("./nature.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics1#hiking {
+    background-image:url("./shoes.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics1#photograph {
+    background-image:url("./photograph.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+.Topics1#alert {
+    background-image:url("./alert.png");
+    background-repeat: no-repeat;
+    background-size:70%;
+    background-position: center;
+}
+
+/*.Gruppe
+{
+    height: 4.2vw;
+    width: 25vw;
+    background-color:#B5CDD0;
+}*/

@@ -1,0 +1,43 @@
+.CreateaDiscussion {
+position: absolute;
+/*left: 0%;
+right: 0%;
+bottom: 84%;'*/
+height: 6%;
+width: 33.1%;
+right: 2.2%;
+z-index: 1;
+background: #B5CDD0;
+font-family: HelveticaNeue;
+font-style: normal;
+font-weight: normal;
+font-size: 3.5vmin;
+line-height: 42px;
+text-align: center;
+
+}
+.AddTitle {
+position: absolute;
+/*left: 2%;
+right: 5%;
+top: 16.0%;*/
+
+height: 6%;
+width: 30%;
+z-index: 1;
+}
+.textfield {
+    margin: 0px 0px 0px 0px;
+    border-radius: 13px;
+    
+    line-height:140%;
+   /* width:  calc(10vw - 20px);      
+  height: calc(5vh - 20px); */
+  resize: none;
+width: 100%;
+padding: 12px 20px;
+box-sizing: border-box;
+border: 2px solid #ccc;
+background-color: #f8f8f8;
+resize: none;
+}
