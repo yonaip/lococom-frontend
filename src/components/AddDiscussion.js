@@ -181,6 +181,7 @@ contentfield: {
         color: "white",
         fontSize: 20,
         float: 'left',
+        textAlign: 'center'
       },
    
     confirm: {
