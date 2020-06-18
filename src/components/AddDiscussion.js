@@ -5,13 +5,14 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import Box from '@material-ui/core/Box';
-import requestimg from './DiscussionComponents/request.png';
-import walkerimg from './DiscussionComponents/shoes.png';
-import photoimg from './DiscussionComponents/photograph.png';
-import natureimg from './DiscussionComponents/nature.png';
-import alertimg from './DiscussionComponents/alert.png';
+import requestimg from '../resources/request.png';
+import walkerimg from '../resources/shoes.png';
+import photoimg from '../resources/photograph.png';
+import natureimg from '../resources/nature.png';
+import alertimg from '../resources/alert.png';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import axios from 'axios';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,8 +54,8 @@ contentfield: {
 },
   request: {
     backgroundColor:"#B5CDD0",
-    width: "4.2vw",
-    height: "4.2vw",
+    width: "3.5vw",
+    height: "3.5vw",
     borderRadius:"50%",
     margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ requestimg+')',
@@ -64,8 +65,8 @@ contentfield: {
   },
   walking: {
     backgroundColor:"#B5CDD0",
-    width: "4.2vw",
-    height: "4.2vw",
+    width: "3.5vw",
+    height: "3.5vw",
     borderRadius:"50%",
     margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ walkerimg+')',
@@ -75,8 +76,8 @@ contentfield: {
   },
   nature: {
     backgroundColor:"#B5CDD0",
-    width: "4.2vw",
-    height: "4.2vw",
+    width: "3.5vw",
+    height: "3.5vw",
     borderRadius:"50%",
     margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ natureimg+')',
@@ -86,8 +87,8 @@ contentfield: {
   },
   photo: {
     backgroundColor:"#B5CDD0",
-    width: "4.2vw",
-    height: "4.2vw",
+    width: "3.5vw",
+    height: "3.5vw",
     borderRadius:"50%",
     margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ photoimg+')',
@@ -97,8 +98,8 @@ contentfield: {
   },
   hint: {
     backgroundColor:"#B5CDD0",
-    width: "4.2vw",
-    height: "4.2vw",
+    width: "3.5vw",
+    height: "3.5vw",
     borderRadius:"50%",
     margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ alertimg+')',
@@ -284,7 +285,7 @@ export default function AddDiscussion(props) {
         />
        <div className={classes.rectangleTop}>
     <div className={classes.text}>
-    Create a discussion
+      Select a Topic
     </div>
     </div>
 
