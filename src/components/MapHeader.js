@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import SearchFieldComponent from '../components/SearchFieldComponent';
+import createSpacing from "@material-ui/core/styles/createSpacing";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,9 +19,12 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  searchField: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 }));
-
-
 
 export default function MapHeader(props) {
   const classes = useStyles();
@@ -34,6 +39,7 @@ export default function MapHeader(props) {
           <Typography variant="h6" className={classes.title}>
             LoCoCom
           </Typography>
+          <SearchFieldComponent className={classes.searchField}/>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>

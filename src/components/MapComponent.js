@@ -1,12 +1,11 @@
 import React from "react";
-import  { GoogleMap, withScriptjs, withGoogleMap } from "react-google-maps";
+import  { GoogleMap, withGoogleMap } from "react-google-maps";
 
 export default function MapComponent(props) {
     /**
-     * withScriptjs - loads the Google Maps Javascript API v3
      * withGoogleMap - initializes the map component
      */
-    const MapComponent = withScriptjs(withGoogleMap((properties) =>
+    const MapComponent = (withGoogleMap((properties) =>
         <GoogleMap
             defaultZoom={8}
             defaultCenter={{lat: 48.137154, lng: 11.576124}}
