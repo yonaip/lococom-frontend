@@ -24,9 +24,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  right: {
-    justify: "flex-end"
+    position: 'relative',
   },
 }));
 
@@ -50,7 +48,7 @@ export default function MapHeader(props) {
             </Grid>
           </Grid>
           <Grid container xs={4} alignItems="center" justify = "center">
-            <Grid item >
+            <Grid item>
               <SearchFieldComponent className={classes.searchField}/>
             </Grid>
           </Grid>

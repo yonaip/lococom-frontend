@@ -3,6 +3,7 @@ import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
 import MapHeader from "../components/MapHeader";
 import MapComponent from "../components/MapComponent";
+import SearchFieldComponent from "../components/SearchFieldComponent";
 
 const useStyles = makeStyles((theme) => ({
     root: {

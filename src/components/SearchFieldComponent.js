@@ -1,89 +1,151 @@
 import React from "react";
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
-import { fade, makeStyles, createMuiTheme,  ThemeProvider, } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { teal } from '@material-ui/core/colors';
+import parse from 'autosuggest-highlight/parse';
+import throttle from 'lodash/throttle';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
+const autocompleteService = { current: null };
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: 300,
-    },  
+    icon: {
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(2),
+    },
     textField: {
-        background: "black",
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        borderRadius: theme.shape.borderRadius,
     },
     input: {
         color: 'white',
-    }
+    },
+    searchIcon: {
+        color: 'white',
+    },
 }));
 
-const theme = createMuiTheme({
-    palette: {
-        primary: teal,
-    },
-});
-
-const searchHistory = [
-    {description: 'Eisbachwelle', latitude: 48.142690, longitude: 11.590240},
-    {description: 'Wendelstein', latitude: 47.671470, longitude: 12.014710}
-]
-
-export default function SearchFieldComponent() {
-    const [address, setAddress] = React.useState("");
-
-    const handleSelect = async (value) => {};
-
+export default function SearchFieldComponent(props) {
     const classes = useStyles();
+    const [value, setValue] = React.useState(null);
+    const [inputValue, setInputValue] = React.useState('');
+    const [options, setOptions] = React.useState([]);
+
+    const fetch = React.useMemo(
+        () =>
+            throttle((request, callback) => {
+                autocompleteService.current.getPlacePredictions(request, callback);
+            }, 200),
+        [],
+    );
+
+    React.useEffect(() => {
+        let active = true;
+
+        if (!autocompleteService.current && window.google) {
+            autocompleteService.current = new window.google.maps.places.AutocompleteService();
+        }
+        if (!autocompleteService.current) {
+            return undefined;
+        }
+
+        if (inputValue === '') {
+            setOptions(value ? [value] : []);
+            return undefined;
+        }
+
+        fetch({ input: inputValue }, (results) => {
+            if (active) {
+                let newOptions = [];
+
+                if (value) {
+                    newOptions = [value];
+                }
+
+                if (results) {
+                    newOptions = [...newOptions, ...results];
+                }
+
+                setOptions(newOptions);
+            }
+        });
+
+        return () => {
+            active = false;
+        };
+    }, [value, inputValue, fetch]);
 
     return (
-      <div>
-          <PlacesAutocomplete
-              value={address}
-              onChange={setAddress}
-              onSelect={handleSelect}
-          >
-              {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+        <Autocomplete
+            id="google-map-search"
+            style={{ width: 300 }}
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
+            filterOptions={(x) => x}
+            options={options}
+            autoComplete
+            includeInputInList
+            filterSelectedOptions
+            value={value}
+            onChange={(event, newValue) => {
+                setOptions(newValue ? [newValue, ...options] : options);
+                setValue(newValue);
+            }}
+            onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+            }}
+            renderInput={(params) => (
+                <TextField
+                    className={classes.textField}
+                    {...params}
+                    placeholder="Search..."
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                        ...params.InputProps,
+                        type: "search",
+                        className: classes.input,
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon className={classes.searchIcon}/>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+            )}
+            renderOption={(option) => {
+                const matches = option.structured_formatting.main_text_matched_substrings;
+                const parts = parse(
+                    option.structured_formatting.main_text,
+                    matches.map((match) => [match.offset, match.offset + match.length]),
+                );
 
-                  <div className={classes.root}>
-                      <Autocomplete
-                          id="searchPlaces"
-                          freeSolo
-                          disableClearable
-                          options={searchHistory.map((option) => option.description)}
-                          renderInput={(params) => (
-                              <ThemeProvider theme={theme}>
-                                  <TextField
-                                      {...params}
-                                      placeholder="Search..."
-                                      type="search"
-                                      variant="outlined"
-                                      InputProps={{
-                                          className: classes.input,
-                                          ...params.InputProps, type: 'search',
-                                          startAdornment: (
-                                              <InputAdornment position="start">
-                                                  <SearchIcon />
-                                              </InputAdornment>
-                                          ),
-                                          endAdornment: (
-                                              <React.Fragment>
-                                                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                                                  {params.InputProps.endAdornment}
-                                              </React.Fragment>
-                                          ),
-                                      }}
-                                  />
-                              </ThemeProvider>
-                          )}
-                      />
-                  </div>
-              )}
-          </PlacesAutocomplete>
-      </div>
+                return (
+                    <Grid container alignItems="center">
+                        <Grid item>
+                            <LocationOnIcon className={classes.icon} />
+                        </Grid>
+                        <Grid item xs>
+                            {parts.map((part, index) => (
+                                <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                  {part.text}
+                </span>
+                            ))}
+
+                            <Typography variant="body2" color="textSecondary">
+                                {option.structured_formatting.secondary_text}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                );
+            }}
+        />
     );
 
 }
