@@ -1,57 +1,60 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import Box from '@material-ui/core/Box';
+import { Grid, Button, TextField, ToggleButton, Box, TextareaAutosize, Typography } from '@material-ui/core';
 import requestimg from '../resources/request.png';
 import walkerimg from '../resources/shoes.png';
 import photoimg from '../resources/photograph.png';
 import natureimg from '../resources/nature.png';
 import alertimg from '../resources/alert.png';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import axios from 'axios';
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     background: '#CAE2E5',
-    height: '90vh',
-    marginLeft: theme.spacing(160),
-    marginTop: theme.spacing(10),
-    overflow: "hidden",
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    flexGrow: 1
   },
+
+  element: {
+    position: 'relative'
+  },
+
+  icon: {
+    //margin: theme.spacing(0,3),
+    float: 'left',
+  },
+
+  text: {
+    color: "black",
+    textAlign: 'left',
+    padding: theme.spacing(1),
+    flexGrow: 2  
+  },
+
   rectangle: {
     background: '#B9CFD4',
     height: '7vh',
     marginBottom: theme.spacing(2),
-    
-    
   },
+
   rectangleTop: {
     background: '#B9CFD4',
     height: '7vh',
     marginTop: theme.spacing(2),
-},
-
-  text: {
-    color: "black",
-    fontSize: 30,
-    textAlign: 'center',
-    paddingTop: '10px',   
   },
 
   titlefield: {
     background: "white",
     margin: theme.spacing(0,2.5),
   },
-contentfield: {
 
+  contentfield: {
     margin: theme.spacing(0,2.5),
+  },
 
-
-},
   request: {
     backgroundColor:"#B5CDD0",
     width: "3.5vw",
@@ -163,11 +166,6 @@ contentfield: {
     backgroundPosition: "center",
   },
 
-  icon: {
-    margin: theme.spacing(0,3),
-    float: 'left',
-  },
-
   textfield:{
     width: "100",
     height: "50vw",
@@ -258,69 +256,76 @@ export default function AddDiscussion(props) {
   }
 
   return (
-    <div>
-    <div className={classes.root}>
-      <div className={classes.rectangle}>
+    <Grid container className={classes.root}>
+      <Grid item xs={12} className={classes.element}>
+        <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
+        <Typography variant="h6" className={classes.text}>
+          Username
+        </Typography>
+      </Grid>
       
-      <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
-      <div className={classes.user}>
-        UserName
-    </div>
-    </div>
-    <div className={classes.rectangle}>
-    <div className={classes.text}>
-    Create a discussion
-    </div>
-    </div>
+      <Grid item xs={12} className={classes.element}>
+        <div className={classes.text}>
+          Create a discussion
+        </div>
+      </Grid>
 
-    <TextField
-          onChange={onChangeTitle}
-          className={classes.titlefield}
-          id="outlined-margin-none"
-          placeholder="Your Title."
-          variant="outlined"
-          style = {{width: 600}}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-       <div className={classes.rectangleTop}>
-    <div className={classes.text}>
-      Select a Topic
-    </div>
-    </div>
+      <Grid item xs={12} className={classes.element}>
+        <TextField
+              onChange={onChangeTitle}
+              className={classes.titlefield}
+              id="outlined-margin-none"
+              placeholder="Your Title."
+              variant="outlined"
+              style = {{width: 600}}
+              InputLabelProps={{
+                shrink: true,
+              }}
+          />
+      </Grid>
+        
+      <Grid item xs={12} className={classes.element}>
+        <div className={classes.text}>
+          Select a Topic
+        </div>
+      </Grid>
+      
+      <Grid item xs={12} className={classes.element}>
+        <Box className="Buttonfield"  m={1} ml ={2.5}> 
+        <Button onClick={topicRequest} variant="outlined" className={topic === 'Request' ? classes.pickedRequest : classes.request}> 
+        </Button>
+        <Button onClick={topicNature} variant="outlined" className={topic === 'Nature' ? classes.pickedNature : classes.nature}>
+        </Button>
+        <Button onClick={topicWalking} variant="outlined" className={topic === 'Walking' ? classes.pickedWalking : classes.walking}>
+        </Button>
+        <Button onClick={topicPhoto} variant="outlined" className={topic === 'Photo' ? classes.pickedPhoto : classes.photo}>
+        </Button>
+        <Button onClick={topicHint} variant="outlined" className={topic === 'Hint' ? classes.pickedHint : classes.hint}>
+        </Button>
+        </Box>
+      </Grid>
+      
+      <Grid item xs={12} className={classes.element}>
+        <div className={classes.text}>
+        Enter text | content
+        </div>
+      </Grid>
 
-    <Box className="Buttonfield"  m={1} ml ={2.5}> 
-    <Button onClick={topicRequest} variant="outlined" className={topic === 'Request' ? classes.pickedRequest : classes.request}> 
-    </Button>
-    <Button onClick={topicNature} variant="outlined" className={topic === 'Nature' ? classes.pickedNature : classes.nature}>
-    </Button>
-    <Button onClick={topicWalking} variant="outlined" className={topic === 'Walking' ? classes.pickedWalking : classes.walking}>
-    </Button>
-    <Button onClick={topicPhoto} variant="outlined" className={topic === 'Photo' ? classes.pickedPhoto : classes.photo}>
-    </Button>
-    <Button onClick={topicHint} variant="outlined" className={topic === 'Hint' ? classes.pickedHint : classes.hint}>
-    </Button>
-    </Box>
-       
-    <div className={classes.rectangle}>
-    <div className={classes.text}>
-    Enter text | content
-    </div>
-    </div>
-    <div className={classes.contentfield}> 
-    <TextareaAutosize onChange={onChangeContent} aria-label="minimum height" rowsMin={15} style = {{width: 600}} placeholder="Enter Text..." />
-    </div>     
+      <Grid item xs={12} className={classes.element}>
+        <div className={classes.contentfield}> 
+        <TextareaAutosize onChange={onChangeContent} aria-label="minimum height" rowsMin={15} style = {{width: 600}} placeholder="Enter Text..." />
+        </div>
+      </Grid>
+      
+      <Grid item xs={12} className={classes.element}>
         <Box >
           <Button  className={classes.cancel} variant= "contained" style={{ minWidth: '120px', minHeight: '50px'}} color="secondary">Cancel</Button>
-          </Box>
-          <Box >
+        </Box>
+        <Box >
           <Button onClick={handleSubmit} className={classes.confirm} variant= "contained" style={{ minWidth: '120px', minHeight: '50px'}}>Confirm</Button>
-          </Box>
-    
-    </div>
+        </Box>
+      </Grid>
 
-
-    </div>
+    </Grid>
   );
 }

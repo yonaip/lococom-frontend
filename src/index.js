@@ -7,7 +7,7 @@ import AddDiscussion from './components/AddDiscussion';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AddDiscussion />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
