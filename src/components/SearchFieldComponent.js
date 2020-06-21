@@ -11,7 +11,7 @@ import { teal } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: 200,
+        width: 300,
     },  
     textField: {
         background: "black",
@@ -53,7 +53,7 @@ export default function SearchFieldComponent() {
                           id="searchPlaces"
                           freeSolo
                           disableClearable
-                          options={suggestions.map((suggestion) => suggestion.description)}
+                          options={searchHistory.map((option) => option.description)}
                           renderInput={(params) => (
                               <ThemeProvider theme={theme}>
                                   <TextField
