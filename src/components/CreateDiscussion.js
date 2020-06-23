@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Grid, Button, TextField, ToggleButton, Box, TextareaAutosize, Typography } from '@material-ui/core';
+import { Grid, Button, TextField, ToggleButton, Box, TextareaAutosize, Typography, Fab, ButtonBase } from '@material-ui/core';
 import requestimg from '../resources/request.png';
 import walkerimg from '../resources/shoes.png';
 import photoimg from '../resources/photograph.png';
@@ -19,7 +19,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   element: {
-    position: 'relative'
+    position: 'relative',
+    justifyContent: 'inherit',
+  },
+
+  subElement: {
+    justifyContent: 'inherit',
   },
 
   icon: {
@@ -31,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
     color: "black",
     textAlign: 'left',
     padding: theme.spacing(1),
-    flexGrow: 2  
+    flexGrow: 2,
+    marginTop: "2%"
   },
 
   rectangle: {
@@ -46,12 +52,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 
-  titlefield: {
+  titleField: {
     background: "white",
+    width: '90%',
     margin: theme.spacing(0,2.5),
   },
 
-  contentfield: {
+  contentField: {
+    width: '90%',
     margin: theme.spacing(0,2.5),
   },
 
@@ -116,7 +124,6 @@ const useStyles = makeStyles((theme) => ({
     height: "4.2vw",
     borderRadius:"50%",
     margin: "10px 20px 0px 20px",
-    backgroundImage: 'url('+ requestimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
     backgroundPosition: "center",
@@ -183,15 +190,14 @@ const useStyles = makeStyles((theme) => ({
       },
    
     confirm: {
-        margin: theme.spacing(4,0,0,30),
-        float: 'left',
         background: '#49D147',
         color: "white",
+        marginTop: "15%",
+        marginLeft: "15%",
     },
     cancel: {
-        margin: theme.spacing(4,0,0,10),
-        float: 'left',
-        
+        marginTop: "15%",
+        marginLeft: "20%",
     },
 
   
@@ -199,7 +205,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function AddDiscussion(props) {
+export default function CreateDiscussion(props) {
   const classes = useStyles();
   const [title, setTitle] = React.useState("SampleTitle");
   const [topic, setTopic] = React.useState("SampleTopic");
@@ -256,12 +262,14 @@ export default function AddDiscussion(props) {
   }
 
   return (
-    <Grid container className={classes.root}>
+    <Grid container className={classes.root} justify="center">
       <Grid item xs={12} className={classes.element}>
-        <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
-        <Typography variant="h6" className={classes.text}>
-          Username
-        </Typography>
+        <ButtonBase>
+          <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
+          <Typography variant="h6" className={classes.text}>
+            Username
+          </Typography>
+        </ButtonBase>
       </Grid>
       
       <Grid item xs={12} className={classes.element}>
@@ -273,11 +281,10 @@ export default function AddDiscussion(props) {
       <Grid item xs={12} className={classes.element}>
         <TextField
               onChange={onChangeTitle}
-              className={classes.titlefield}
+              className={classes.titleField}
               id="outlined-margin-none"
               placeholder="Your Title."
               variant="outlined"
-              style = {{width: 600}}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -290,40 +297,41 @@ export default function AddDiscussion(props) {
         </div>
       </Grid>
       
-      <Grid item xs={12} className={classes.element}>
-        <Box className="Buttonfield"  m={1} ml ={2.5}> 
-        <Button onClick={topicRequest} variant="outlined" className={topic === 'Request' ? classes.pickedRequest : classes.request}> 
-        </Button>
-        <Button onClick={topicNature} variant="outlined" className={topic === 'Nature' ? classes.pickedNature : classes.nature}>
-        </Button>
-        <Button onClick={topicWalking} variant="outlined" className={topic === 'Walking' ? classes.pickedWalking : classes.walking}>
-        </Button>
-        <Button onClick={topicPhoto} variant="outlined" className={topic === 'Photo' ? classes.pickedPhoto : classes.photo}>
-        </Button>
-        <Button onClick={topicHint} variant="outlined" className={topic === 'Hint' ? classes.pickedHint : classes.hint}>
-        </Button>
-        </Box>
+      <Grid container xs={12} className={classes.element}>
+        <Grid item xs={2.4}>
+          <Fab onClick={topicRequest} className={topic === 'Request' ? classes.pickedRequest : classes.request}/>
+        </Grid>
+        <Grid item xs={2.4}>
+          <Fab onClick={topicNature} className={topic === 'Nature' ? classes.pickedNature : classes.nature}/>
+        </Grid>
+        <Grid item xs={2.4}>
+          <Fab onClick={topicWalking} className={topic === 'Walking' ? classes.pickedWalking : classes.walking}/>
+        </Grid>
+        <Grid item xs={2.4}>
+          <Fab onClick={topicPhoto} className={topic === 'Photo' ? classes.pickedPhoto : classes.photo}/>
+        </Grid>
+        <Grid item xs={2.4}>
+          <Fab onClick={topicHint} className={topic === 'Hint' ? classes.pickedHint : classes.hint}/>
+        </Grid>
       </Grid>
       
       <Grid item xs={12} className={classes.element}>
         <div className={classes.text}>
-        Enter text | content
+          Enter text | content
         </div>
       </Grid>
 
       <Grid item xs={12} className={classes.element}>
-        <div className={classes.contentfield}> 
-        <TextareaAutosize onChange={onChangeContent} aria-label="minimum height" rowsMin={15} style = {{width: 600}} placeholder="Enter Text..." />
-        </div>
+        <TextareaAutosize className={classes.contentField}
+          onChange={onChangeContent}
+          aria-label="minimum height"
+          rowsMin={15}
+          placeholder="Enter Text..." />
       </Grid>
-      
+
       <Grid item xs={12} className={classes.element}>
-        <Box >
-          <Button  className={classes.cancel} variant= "contained" style={{ minWidth: '120px', minHeight: '50px'}} color="secondary">Cancel</Button>
-        </Box>
-        <Box >
-          <Button onClick={handleSubmit} className={classes.confirm} variant= "contained" style={{ minWidth: '120px', minHeight: '50px'}}>Confirm</Button>
-        </Box>
+        <Button className={classes.cancel} variant= "contained" style={{ minWidth: '120px', minHeight: '50px'}} color="secondary">Cancel</Button>
+        <Button onClick={handleSubmit} className={classes.confirm} variant="contained" style={{ minWidth: '120px', minHeight: '50px'}}>Confirm</Button>
       </Grid>
 
     </Grid>

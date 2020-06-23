@@ -3,7 +3,7 @@ import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
 import MapHeader from "../components/MapHeader";
 import MapComponent from "../components/MapComponent";
-import AddDiscussion from '../components/AddDiscussion';
+import CreateDiscussion from '../components/CreateDiscussion';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,18 +51,18 @@ export default function MapView() {
     if(discussionOpen) {
         grid = (
             <Grid container>
-                <Grid item xs={6} className={classes.element}>
-                    <MapComponent onRightClick={toggleDiscussion}/>
+                <Grid item xs={8} className={classes.element}>
+                    <MapComponent onDblClick={toggleDiscussion}/>
                 </Grid>
-                <Grid item xs={6} className={classes.element}>
-                    <AddDiscussion />
+                <Grid item xs={4} className={classes.element}>
+                    <CreateDiscussion />
                 </Grid>
             </Grid>
         );
     } else {
         grid = (
             <Grid item xs={12} className={classes.element}>
-                <MapComponent onRightClick={toggleDiscussion}/>
+                <MapComponent onDblClick={toggleDiscussion}/>
             </Grid>
         );
     }
