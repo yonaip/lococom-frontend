@@ -124,6 +124,7 @@ const useStyles = makeStyles((theme) => ({
     height: "4.2vw",
     borderRadius:"50%",
     margin: "10px 20px 0px 20px",
+    backgroundImage:'url('+ requestimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
     backgroundPosition: "center",
@@ -215,23 +216,22 @@ export default function CreateDiscussion(props) {
     
     alert('Title: '+title+' Content: '+content+' Topic: '+topic)
     event.preventDefault();
-    const tit = title;
-    const con = content;
-    const top = topic;
-    const creator = "Test123";
-    const lat = 48.137154;
-    const lng = 11.576124;
-    const disc = {
-     tit,
-     con,
-     top,
-     creator,
+    
+    const username = "Test123";// placeholder values
+    const lat = 48.137154; // placeholder values
+    const lng = 11.576124;// placeholder values
+    const discussion = {
+     title,
+     content,
+     topic,
+     username,
      lat,
      lng,
     };
-    console.log(disc);
+  
+    
     axios
-    .post('/create', disc)
+    .post('/discussion/createDiscussion', discussion)
     .then(response => {console.log('Discussion created')})
     .catch(err => {
       console.error(err);

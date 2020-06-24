@@ -189,13 +189,13 @@ export default function AddComment(props) {
   const [creator, setCreator] = React.useState("");
  React.useEffect(() => {
   axios
-  .get("/get")
+  .get("/discussion/getDiscussion")
   .then(({ data }) => {
-    console.log(data);
-   setTitle(data.title);
-   setContent(data.content);
-   setTopic(data.topic);
-   setCreator(data.creator);
+    console.log(data[0]);
+   setTitle(data[0].title);
+   setContent(data[0].content);
+   setTopic(data[0].topic);
+   setCreator(data[0].username);
     });
 }, []);
 

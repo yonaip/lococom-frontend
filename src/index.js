@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import CreateDiscussion from './components/CreateDiscussion';
+
+
 
 ReactDOM.render(
   <React.StrictMode>
