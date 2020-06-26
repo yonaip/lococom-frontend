@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Grid, Button, TextField, ToggleButton, Box, TextareaAutosize, Typography, Fab, ButtonBase } from '@material-ui/core';
+import { Grid, Button, TextField, ToggleButton, Box, TextareaAutosize, Typography, Fab, ButtonBase, useMediaQuery } from '@material-ui/core';
 import requestimg from '../resources/request.png';
 import walkerimg from '../resources/shoes.png';
 import photoimg from '../resources/photograph.png';
@@ -54,12 +54,15 @@ const useStyles = makeStyles((theme) => ({
 
   titleField: {
     background: "white",
+    borderRadius: "5px",
     width: '90%',
     margin: theme.spacing(0,2.5),
   },
 
   contentField: {
     width: '90%',
+    background: "white",
+    borderRadius: "5px",
     margin: theme.spacing(0,2.5),
   },
 
@@ -68,7 +71,9 @@ const useStyles = makeStyles((theme) => ({
     width: "3.5vw",
     height: "3.5vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ requestimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -79,7 +84,9 @@ const useStyles = makeStyles((theme) => ({
     width: "3.5vw",
     height: "3.5vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ walkerimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -90,7 +97,9 @@ const useStyles = makeStyles((theme) => ({
     width: "3.5vw",
     height: "3.5vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ natureimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -101,7 +110,9 @@ const useStyles = makeStyles((theme) => ({
     width: "3.5vw",
     height: "3.5vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ photoimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -112,19 +123,27 @@ const useStyles = makeStyles((theme) => ({
     width: "3.5vw",
     height: "3.5vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ alertimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
     backgroundPosition: "center",
+    [theme.breakpoints.down('sm')]: {
+
+    },
+
   },
   pickedRequest: {
     backgroundColor:"#62AEBB",
     width: "4.2vw",
     height: "4.2vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
-    backgroundImage:'url('+ requestimg+')',
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
+    backgroundImage: 'url('+ requestimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
     backgroundPosition: "center",
@@ -134,7 +153,9 @@ const useStyles = makeStyles((theme) => ({
     width: "4.2vw",
     height: "4.2vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ walkerimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -145,7 +166,9 @@ const useStyles = makeStyles((theme) => ({
     width: "4.2vw",
     height: "4.2vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ natureimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -156,7 +179,9 @@ const useStyles = makeStyles((theme) => ({
     width: "4.2vw",
     height: "4.2vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ photoimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -167,7 +192,9 @@ const useStyles = makeStyles((theme) => ({
     width: "4.2vw",
     height: "4.2vw",
     borderRadius:"50%",
-    margin: "10px 20px 0px 20px",
+    marginRight: "5%",
+    marginTop: "3%",
+    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ alertimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -193,12 +220,26 @@ const useStyles = makeStyles((theme) => ({
     confirm: {
         background: '#49D147',
         color: "white",
-        marginTop: "15%",
-        marginLeft: "15%",
+        minWidth: '8vw',
+        minHeight: '6.5vh',
+        marginTop: "12%",
+        marginLeft: "10%",
+        [theme.breakpoints.down('sm')]: {
+          width: '10vw',
+          height: '5vh',
+          fontSize: '65%'
+      },
     },
     cancel: {
-        marginTop: "15%",
+        marginTop: "12%",
         marginLeft: "20%",
+        minWidth: '8vw',
+        minHeight: '6.5vh',
+        [theme.breakpoints.down('sm')]: {
+          width: '9vw',
+          height: '5vh',
+          fontSize: '65%'
+        },
     },
 
   
@@ -211,6 +252,7 @@ export default function CreateDiscussion(props) {
   const [title, setTitle] = React.useState("SampleTitle");
   const [topic, setTopic] = React.useState("SampleTopic");
   const [content, setContent] = React.useState("SampleContent");
+  //const matches = useMediaQuery('(min-width:600px)');
 
   const handleSubmit = (event) => {
     
@@ -296,25 +338,15 @@ export default function CreateDiscussion(props) {
           Select a Topic
         </div>
       </Grid>
-      
+
       <Grid container xs={12} className={classes.element}>
-        <Grid item xs={2.4}>
-          <Fab onClick={topicRequest} className={topic === 'Request' ? classes.pickedRequest : classes.request}/>
-        </Grid>
-        <Grid item xs={2.4}>
-          <Fab onClick={topicNature} className={topic === 'Nature' ? classes.pickedNature : classes.nature}/>
-        </Grid>
-        <Grid item xs={2.4}>
-          <Fab onClick={topicWalking} className={topic === 'Walking' ? classes.pickedWalking : classes.walking}/>
-        </Grid>
-        <Grid item xs={2.4}>
-          <Fab onClick={topicPhoto} className={topic === 'Photo' ? classes.pickedPhoto : classes.photo}/>
-        </Grid>
-        <Grid item xs={2.4}>
-          <Fab onClick={topicHint} className={topic === 'Hint' ? classes.pickedHint : classes.hint}/>
-        </Grid>
+        <Fab onClick={topicRequest} className={topic === 'Request' ? classes.pickedRequest : classes.request}/>
+        <Fab onClick={topicNature} className={topic === 'Nature' ? classes.pickedNature : classes.nature}/>
+        <Fab onClick={topicWalking} className={topic === 'Walking' ? classes.pickedWalking : classes.walking}/>
+        <Fab onClick={topicPhoto} className={topic === 'Photo' ? classes.pickedPhoto : classes.photo}/>
+        <Fab onClick={topicHint} className={topic === 'Hint' ? classes.pickedHint : classes.hint}/>
       </Grid>
-      
+
       <Grid item xs={12} className={classes.element}>
         <div className={classes.text}>
           Enter text | content
@@ -322,16 +354,23 @@ export default function CreateDiscussion(props) {
       </Grid>
 
       <Grid item xs={12} className={classes.element}>
-        <TextareaAutosize className={classes.contentField}
-          onChange={onChangeContent}
-          aria-label="minimum height"
-          rowsMin={15}
-          placeholder="Enter Text..." />
+        <TextField className={classes.contentField}
+          //onChange={onChangeContent}
+          //rowsMax={15}
+          //aria-label="maximum height"
+          multiline
+          //rowsMin={4}
+          rows={'10'}
+          variant="outlined"
+          placeholder="Enter Text..."
+          InputProps={{ inputProps: { rowsMax: 15 } }}
+
+        />
       </Grid>
 
       <Grid item xs={12} className={classes.element}>
-        <Button className={classes.cancel} variant= "contained" style={{ minWidth: '120px', minHeight: '50px'}} color="secondary">Cancel</Button>
-        <Button onClick={handleSubmit} className={classes.confirm} variant="contained" style={{ minWidth: '120px', minHeight: '50px'}}>Confirm</Button>
+        <Button className={classes.cancel} variant= "contained" color="secondary">Cancel</Button>
+        <Button onClick={handleSubmit} className={classes.confirm} variant="contained">Confirm</Button>
       </Grid>
 
     </Grid>
