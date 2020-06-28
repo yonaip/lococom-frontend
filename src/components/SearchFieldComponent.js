@@ -37,8 +37,18 @@ export default function SearchFieldComponent(props) {
     const [value, setValue] = React.useState(null);
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
+    const [location, setLocation] = React.useState("");
 
+    /*
+    useMemo - recomputes the place prediction when
+    one of the dependencies has changed
+    */
     const fetch = React.useMemo(
+        /*
+        the function (request, callback) executed at most once every 200 sec
+        request: AutocompletionRequest
+        callback: function(Array<AutocompletePrediction>, PlacesServiceStatus)
+         */
         () =>
             throttle((request, callback) => {
                 autocompleteService.current.getPlacePredictions(request, callback);
@@ -67,6 +77,8 @@ export default function SearchFieldComponent(props) {
 
                 if (value) {
                     newOptions = [value];
+                    setLocation(value.location);
+                    console.log(location.lat.toString());
                 }
 
                 if (results) {
@@ -147,5 +159,6 @@ export default function SearchFieldComponent(props) {
             }}
         />
     );
+
 
 }

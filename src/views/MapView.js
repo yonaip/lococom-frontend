@@ -32,6 +32,12 @@ export default function MapView() {
     const [leftMenuOpen, setLeftMenu] = useState(false);
     const [discussionOpen, setDiscussion] = useState(false);
 
+    //Munich: lat: 48.137154, lng: 11.576124
+    const [lat, setLat] = useState(48.137154);
+    const [lng, setLng] = useState(11.576124);
+
+    const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124})
+
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -52,7 +58,10 @@ export default function MapView() {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
-                    <MapComponent onRightClick={toggleDiscussion}/>
+                    <MapComponent
+                        defaultCenter={setCenter({lat: 48.137154, lng: 11.576124})}
+                        onRightClick={toggleDiscussion}
+                    />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
                     <Typography variant="h6" className={classes.menuElement}>
@@ -61,12 +70,19 @@ export default function MapView() {
                 </Grid>
             </Grid>
         );
+        console.log(center.lat.toString());
+        console.log(center.lng.toString());
     } else {
         grid = (
             <Grid item xs={12} className={classes.element}>
-                <MapComponent onRightClick={toggleDiscussion}/>
+                <MapComponent
+                    defaultCenter={setCenter({lat: 48.137154, lng: 11.576124})}
+                    onRightClick={toggleDiscussion}
+                />
             </Grid>
         );
+        console.log(center.lat.toString());
+        console.log(center.lng.toString());
     }
 
     return (<div className={classes.root}>
