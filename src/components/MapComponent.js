@@ -9,7 +9,7 @@ export default function MapComponent(props) {
         return (
             <GoogleMap
                 defaultZoom={8}
-                defaultCenter={props.center}
+                defaultCenter={props.defaultCenter}
                 options={{disableDefaultUI: true}}
                 onRightClick={props.onRightClick}
             />

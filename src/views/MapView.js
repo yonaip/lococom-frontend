@@ -33,9 +33,6 @@ export default function MapView() {
     const [discussionOpen, setDiscussion] = useState(false);
 
     //Munich: lat: 48.137154, lng: 11.576124
-    const [lat, setLat] = useState(48.137154);
-    const [lng, setLng] = useState(11.576124);
-
     const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124})
 
     // Callback functions for opening/closing leftsideMenu
@@ -44,6 +41,8 @@ export default function MapView() {
           return;
         }
         setLeftMenu(open);
+        // TODO: remove
+        setCenter({lat: 11.576124, lng: 48.137154})
     };
 
     const toggleDiscussion = (event) => {
@@ -59,7 +58,7 @@ export default function MapView() {
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
                     <MapComponent
-                        defaultCenter={setCenter({lat: 48.137154, lng: 11.576124})}
+                        defaultCenter={center}
                         onRightClick={toggleDiscussion}
                     />
                 </Grid>
@@ -76,7 +75,7 @@ export default function MapView() {
         grid = (
             <Grid item xs={12} className={classes.element}>
                 <MapComponent
-                    defaultCenter={setCenter({lat: 48.137154, lng: 11.576124})}
+                    defaultCenter={center}
                     onRightClick={toggleDiscussion}
                 />
             </Grid>
