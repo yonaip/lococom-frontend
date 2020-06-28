@@ -9,6 +9,7 @@ import throttle from 'lodash/throttle';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { geocodeByPlaceId } from "react-places-autocomplete";
 
 const autocompleteService = { current: null };
 
@@ -37,7 +38,8 @@ export default function SearchFieldComponent(props) {
     const [value, setValue] = React.useState(null);
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
-    const [location, setLocation] = React.useState("");
+    const [address, setAddress] = React.useState('');
+    const [coordinates, setCoordinates] = React.useState({lat: null, lng: null});
 
     /*
     useMemo - recomputes the place prediction when
@@ -56,6 +58,10 @@ export default function SearchFieldComponent(props) {
         [],
     );
 
+    const handleSelect = async value => {
+        const location = await geocodeByPlaceId(value.place_id)
+        console.log(location);
+    }
     React.useEffect(() => {
         let active = true;
 
@@ -77,8 +83,8 @@ export default function SearchFieldComponent(props) {
 
                 if (value) {
                     newOptions = [value];
-                    setLocation(value.location);
-                    console.log(location.lat.toString());
+                    let queriedLocation = value;
+                    console.log(queriedLocation);
                 }
 
                 if (results) {
@@ -96,7 +102,8 @@ export default function SearchFieldComponent(props) {
 
     return (
         <Autocomplete
-            id="google-map-search"
+            id="google-map-demo"
+            freeSolo
             style={{ width: 300 }}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
             filterOptions={(x) => x}
@@ -121,7 +128,6 @@ export default function SearchFieldComponent(props) {
                     fullWidth
                     InputProps={{
                         ...params.InputProps,
-                        type: "search",
                         className: classes.input,
                         startAdornment: (
                             <InputAdornment position="start">
