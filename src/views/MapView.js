@@ -3,6 +3,7 @@ import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
 import MapHeader from "../components/MapHeader";
 import MapComponent from "../components/MapComponent";
+import CreateDiscussion from '../components/CreateDiscussion';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +30,7 @@ export default function MapView() {
     const classes = useStyles();
 
     const [leftMenuOpen, setLeftMenu] = useState(false);
-    const [discussionOpen, setDiscussion] = useState(false);
+    const [discussionOpen, setDiscussion] = useState(true);
 
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
@@ -51,19 +52,17 @@ export default function MapView() {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
-                    <MapComponent onRightClick={toggleDiscussion}/>
+                    <MapComponent onDblClick={toggleDiscussion}/>
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
-                    <Typography variant="h6" className={classes.menuElement}>
-                        Test
-                    </Typography>
+                    <CreateDiscussion />
                 </Grid>
             </Grid>
         );
     } else {
         grid = (
             <Grid item xs={12} className={classes.element}>
-                <MapComponent onRightClick={toggleDiscussion}/>
+                <MapComponent onDblClick={toggleDiscussion}/>
             </Grid>
         );
     }
