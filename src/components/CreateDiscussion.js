@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Grid, Button, TextField, ToggleButton, Box, TextareaAutosize, Typography, Fab, ButtonBase, useMediaQuery } from '@material-ui/core';
+import { Grid, Button, TextField, Typography, Fab, ButtonBase } from '@material-ui/core';
 import requestimg from '../resources/request.png';
 import walkerimg from '../resources/shoes.png';
 import photoimg from '../resources/photograph.png';
@@ -73,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ requestimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -86,7 +85,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ walkerimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -99,7 +97,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ natureimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -112,7 +109,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ photoimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -125,7 +121,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ alertimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -142,7 +137,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ requestimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -155,7 +149,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ walkerimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -168,7 +161,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ natureimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -181,7 +173,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ photoimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -194,7 +185,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:"50%",
     marginRight: "5%",
     marginTop: "3%",
-    //margin: "10px 20px 0px 20px",
     backgroundImage: 'url('+ alertimg+')',
     backgroundRepeat: "no-repeat",
     backgroundSize:"70%",
@@ -250,14 +240,14 @@ const useStyles = makeStyles((theme) => ({
 export default function CreateDiscussion(props) {
   const classes = useStyles();
   const [title, setTitle] = React.useState("");
-  const [topic, setTopic] = React.useState("SampleTopic");
+  const [topic, setTopic] = React.useState("No topic selected");
   const [content, setContent] = React.useState("");
-  //const matches = useMediaQuery('(min-width:600px)');
 
   // Clear input after discussion is saved
   const clear = () => {
     setTitle("");
     setContent("");
+    setTopic("No topic selected");
   }
 
   const handleSubmit = (event) => {
