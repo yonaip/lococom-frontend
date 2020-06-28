@@ -249,10 +249,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateDiscussion(props) {
   const classes = useStyles();
-  const [title, setTitle] = React.useState("SampleTitle");
+  const [title, setTitle] = React.useState("");
   const [topic, setTopic] = React.useState("SampleTopic");
-  const [content, setContent] = React.useState("SampleContent");
+  const [content, setContent] = React.useState("");
   //const matches = useMediaQuery('(min-width:600px)');
+
+  // Clear input after discussion is saved
+  const clear = () => {
+    setTitle("");
+    setContent("");
+  }
 
   const handleSubmit = (event) => {
     
@@ -270,11 +276,12 @@ export default function CreateDiscussion(props) {
      lat,
      lng,
     };
-  
     
     axios
-    .post('/discussion/createDiscussion', discussion)
-    .then(response => {console.log('Discussion created')})
+    .post('api/discussion', discussion)
+    .then(response => {
+      console.log('Discussion created');
+    })
     .catch(err => {
       console.error(err);
     });
@@ -322,15 +329,16 @@ export default function CreateDiscussion(props) {
 
       <Grid item xs={12} className={classes.element}>
         <TextField
-              onChange={onChangeTitle}
-              className={classes.titleField}
-              id="outlined-margin-none"
-              placeholder="Your Title."
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true,
-              }}
-          />
+            value={title}
+            onChange={onChangeTitle}
+            className={classes.titleField}
+            id="outlined-margin-none"
+            placeholder="Your Title."
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
+        />
       </Grid>
         
       <Grid item xs={12} className={classes.element}>
@@ -354,23 +362,33 @@ export default function CreateDiscussion(props) {
       </Grid>
 
       <Grid item xs={12} className={classes.element}>
-        <TextField className={classes.contentField}
-          //onChange={onChangeContent}
-          //rowsMax={15}
-          //aria-label="maximum height"
-          multiline
-          //rowsMin={4}
-          rows={'10'}
-          variant="outlined"
-          placeholder="Enter Text..."
-          InputProps={{ inputProps: { rowsMax: 15 } }}
+        <TextField
+            className={classes.contentField}
+            value={content}
+            onChange={onChangeContent}
+            multiline
+            rows={'10'}
+            variant="outlined"
+            placeholder="Enter Text..."
+            InputProps={{ inputProps: { rowsMax: 15 } }}
 
         />
       </Grid>
 
       <Grid item xs={12} className={classes.element}>
-        <Button className={classes.cancel} variant= "contained" color="secondary">Cancel</Button>
-        <Button onClick={handleSubmit} className={classes.confirm} variant="contained">Confirm</Button>
+        <Button
+            onClick={clear}
+            className={classes.cancel}
+            variant= "contained"
+            color="secondary">
+          Cancel
+        </Button>
+        <Button
+            onClick={() => {clear(); handleSubmit();}}
+            className={classes.confirm}
+            variant="contained">
+          Confirm
+        </Button>
       </Grid>
 
     </Grid>
