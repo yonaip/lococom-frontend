@@ -9,7 +9,7 @@ import throttle from 'lodash/throttle';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { geocodeByPlaceId } from "react-places-autocomplete";
+import Geocode from "react-geocode";
 
 const autocompleteService = { current: null };
 
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
     },
     textField: {
+        flexGrow: 1,
         backgroundColor: fade(theme.palette.common.white, 0.15),
         '&:hover': {
             backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -33,14 +34,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SearchFieldComponent(props) {
+export default function SearchFieldComponent() {
     const classes = useStyles();
     const [value, setValue] = React.useState(null);
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
-    const [address, setAddress] = React.useState('');
     const [coordinates, setCoordinates] = React.useState({lat: null, lng: null});
 
+    Geocode.setApiKey("AIzaSyC-1_iM_0fSsAenW9hkQSGcQU36f2k8HAU");
     /*
     useMemo - recomputes the place prediction when
     one of the dependencies has changed
@@ -58,10 +59,6 @@ export default function SearchFieldComponent(props) {
         [],
     );
 
-    const handleSelect = async value => {
-        const location = await geocodeByPlaceId(value.place_id)
-        console.log(location);
-    }
     React.useEffect(() => {
         let active = true;
 
@@ -83,8 +80,16 @@ export default function SearchFieldComponent(props) {
 
                 if (value) {
                     newOptions = [value];
-                    let queriedLocation = value;
-                    console.log(queriedLocation);
+                    Geocode.fromAddress(value.description).then(
+                        response => {
+                            const { lat, lng } = response.results[0].geometry.location;
+                            setCoordinates({lat: lat, lng: lng});
+                            console.log(lat, lng);
+                        },
+                        error => {
+                            console.error(error);
+                        }
+                    );
                 }
 
                 if (results) {
@@ -104,7 +109,6 @@ export default function SearchFieldComponent(props) {
         <Autocomplete
             id="google-map-demo"
             freeSolo
-            style={{ width: 300 }}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
             filterOptions={(x) => x}
             options={options}

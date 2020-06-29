@@ -3,7 +3,6 @@ import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
 import MapHeader from "../components/MapHeader";
 import MapComponent from "../components/MapComponent";
-import SearchFieldComponent from "../components/SearchFieldComponent";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -69,8 +68,6 @@ export default function MapView() {
                 </Grid>
             </Grid>
         );
-        console.log(center.lat.toString());
-        console.log(center.lng.toString());
     } else {
         grid = (
             <Grid item xs={12} className={classes.element}>
@@ -80,8 +77,6 @@ export default function MapView() {
                 />
             </Grid>
         );
-        console.log(center.lat.toString());
-        console.log(center.lng.toString());
     }
 
     return (<div className={classes.root}>

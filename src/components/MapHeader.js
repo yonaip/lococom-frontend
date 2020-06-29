@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchFieldComponent from '../components/SearchFieldComponent';
-import createSpacing from "@material-ui/core/styles/createSpacing";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
@@ -15,16 +14,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
+    width: '50%',
+    height: '50%',
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
-  },
-  searchField: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
   },
 }));
 
@@ -35,25 +30,25 @@ export default function MapHeader(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Grid container xs={4} alignItems="center" justify = "flex-start">
+          <Grid container alignItems="center" justify = "flex-start">
             <Grid item xs={1}>
               <IconButton edge="start" className={classes.menuButton} onClick={props.onLeftMenuClick(true)} color="inherit" aria-label="menu">
                 <MenuIcon />
               </IconButton>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography variant="h6" className={classes.title}>
                 LoCoCom
               </Typography>
             </Grid>
           </Grid>
-          <Grid container xs={4} alignItems="center" justify = "center">
-            <Grid item>
-              <SearchFieldComponent className={classes.searchField}/>
+          <Grid container alignItems="center" justify = "center">
+            <Grid item xs={7}>
+              <SearchFieldComponent />
             </Grid>
           </Grid>
-          <Grid container xs={4} alignItems="center" justify = "flex-end">
-            <Grid item>
+          <Grid container alignItems="center" justify = "flex-end">
+            <Grid item xs={2}>
               <Button color="inherit">Login</Button>
             </Grid>
           </Grid>
