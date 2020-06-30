@@ -11,7 +11,7 @@ export default function MapComponent(props) {
                 defaultZoom={8}
                 defaultCenter={props.defaultCenter}
                 options={{disableDefaultUI: true}}
-                onRightClick={props.onRightClick}
+                onDblClick={props.onDblClick}
             />
         )
     }
