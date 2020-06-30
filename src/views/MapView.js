@@ -31,7 +31,7 @@ export default function MapView() {
     const [leftMenuOpen, setLeftMenu] = useState(false);
     const [discussionOpen, setDiscussion] = useState(false);
 
-    //Munich: lat: 48.137154, lng: 11.576124
+    //Munich: lat: 48.137154, lng: 11.576124, update with user location
     const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124})
 
     // Callback functions for opening/closing leftsideMenu
@@ -40,8 +40,6 @@ export default function MapView() {
           return;
         }
         setLeftMenu(open);
-        // TODO: remove
-        setCenter({lat: 11.576124, lng: 48.137154})
     };
 
     const toggleDiscussion = (event) => {
@@ -49,6 +47,10 @@ export default function MapView() {
         console.log(event);
         setDiscussion(!discussionOpen);
     };
+
+    const updateMap = (coordinates) => {
+        setCenter(coordinates);
+    }
 
     // Set container for map and disucssion pane
     let grid;
@@ -80,7 +82,7 @@ export default function MapView() {
     }
 
     return (<div className={classes.root}>
-        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu}/>
+        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu} updateMap={updateMap}/>
         <Drawer anchor='left' open={leftMenuOpen} onClose={toggleLeftMenu(false)}>
             <Typography variant="h6" className={classes.menuElement}>
                 Test

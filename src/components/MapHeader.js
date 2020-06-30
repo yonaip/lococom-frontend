@@ -44,7 +44,7 @@ export default function MapHeader(props) {
           </Grid>
           <Grid container alignItems="center" justify = "center">
             <Grid item xs={7}>
-              <SearchFieldComponent />
+              <SearchFieldComponent updateMap={props.updateMap}/>
             </Grid>
           </Grid>
           <Grid container alignItems="center" justify = "flex-end">

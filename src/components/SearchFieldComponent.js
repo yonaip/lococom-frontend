@@ -34,12 +34,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SearchFieldComponent() {
+export default function SearchFieldComponent(props) {
+
     const classes = useStyles();
     const [value, setValue] = React.useState(null);
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
-    const [coordinates, setCoordinates] = React.useState({lat: null, lng: null});
+    const updateMap = props.updateMap;
 
     Geocode.setApiKey("AIzaSyC-1_iM_0fSsAenW9hkQSGcQU36f2k8HAU");
     /*
@@ -83,8 +84,7 @@ export default function SearchFieldComponent() {
                     Geocode.fromAddress(value.description).then(
                         response => {
                             const { lat, lng } = response.results[0].geometry.location;
-                            setCoordinates({lat: lat, lng: lng});
-                            console.log(lat, lng);
+                            updateMap({lat: lat, lng: lng})
                         },
                         error => {
                             console.error(error);
