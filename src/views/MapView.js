@@ -32,6 +32,9 @@ export default function MapView() {
     const [leftMenuOpen, setLeftMenu] = useState(false);
     const [discussionOpen, setDiscussion] = useState(true);
 
+    //Munich: lat: 48.137154, lng: 11.576124, update with user location
+    const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124})
+
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -46,13 +49,20 @@ export default function MapView() {
         setDiscussion(!discussionOpen);
     };
 
+    const updateMap = (coordinates) => {
+        setCenter(coordinates);
+    }
+
     // Set container for map and disucssion pane
     let grid;
     if(discussionOpen) {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
-                    <MapComponent onDblClick={toggleDiscussion}/>
+                    <MapComponent
+                        defaultCenter={center}
+                        onDblClick={toggleDiscussion}
+                    />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
                     <CreateDiscussion />
@@ -62,13 +72,16 @@ export default function MapView() {
     } else {
         grid = (
             <Grid item xs={12} className={classes.element}>
-                <MapComponent onDblClick={toggleDiscussion}/>
+                <MapComponent
+                    defaultCenter={center}
+                    onDblClick={toggleDiscussion}
+                />
             </Grid>
         );
     }
 
     return (<div className={classes.root}>
-        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu}/>
+        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu} updateMap={updateMap}/>
         <Drawer anchor='left' open={leftMenuOpen} onClose={toggleLeftMenu(false)}>
             <Typography variant="h6" className={classes.menuElement}>
                 Test
