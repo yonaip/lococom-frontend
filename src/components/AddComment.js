@@ -11,6 +11,9 @@ import alertimg from '../resources/alert.png';
 import axios from 'axios';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import { Grid, Button, TextField, Box, TextareaAutosize, Typography, Fab, ButtonBase, Avatar } from '@material-ui/core';
+import PropTypes from "prop-types";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { findAllByDisplayValue } from '@testing-library/react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,14 +135,18 @@ const useStyles = makeStyles((theme) => ({
         background: '#62AEBB',
         textTransform: 'none',
         textAlign: "left",
-        width: '60%',
         flexgrow: 1,
         marginTop: "2%",
         borderRadius: theme.shape.borderRadius,
         color: "black",
         fontSize: 15,
-        float: 'left',
-        minHeight: "20px",
+       float: "left",
+        minHeight: "content",
+      height: "auto",
+      padding: "5px",
+      width: "60%",
+      
+      
       },
 
     newComment: {
@@ -149,14 +156,21 @@ const useStyles = makeStyles((theme) => ({
             borderRadius: theme.shape.borderRadius,
             overflow: "hidden",
             width: '80%',
-            marginTop: "45%",
+            marginTop: "2%",
             background: "white",
     },
     
     post: {
         float: 'left',
-        marginTop: "45%",
+        marginTop: "2%",
         marginLeft: "2.5%"
+    },
+    comments: {
+      
+      height: "400px", // used fixed values, otherwise overflow doesnt work
+      overflow: "scroll",
+      overflowX: "hidden",
+      
     },
   
 }));
@@ -171,39 +185,42 @@ export default function AddComment(props) {
   const [discussionId, setDiscussionId] = React.useState("");
   const [user, setUser] = React.useState("User123");
   const [commentcontent, setCommentContent] = React.useState("");
-  const [commentuser, setCommentUser] = React.useState(""); // just for testing, author of first comment shown on page
-  const [commenttext, setCommentText] = React.useState(""); // just for testing, Content of first comment shown on page
+  const [commentlist, setCommentlist] = React.useState([]);
 
- React.useEffect(() => {
-   let test ="";
+ React.useEffect( () => {
   function getDiscussion(){
-    let id = "";
-  axios
-  .get("/discussion/getDiscussion")
+  const temp= "5efda8ed7127c02fdc3fb70f" // placeholder, need to add ID from the discussion
+  const url = '/api/discussion/' + temp;
+   axios
+  .get(url) 
   .then(({ data }) => {
-    console.log(data[0]);
-   setTitle(data[0].title);
-   setContent(data[0].content);
-   setTopic(data[0].topic);
-   setCreator(data[0].username);
-   setDiscussionId(data[0]._id);
+    console.log(data);
+   setTitle(data.title);
+   setContent(data.content);
+   setTopic(data.topic);
+   setCreator(data.username);
+   setDiscussionId(data._id);
+   const urlget = '/api/comment/' + data._id;
+   axios
+   .get(urlget) 
+   .then(({ data }) => {
+     console.log(data);
+     setCommentlist(data);
+   });
     }); }
    
-  function getComment(){
-    
-    axios
-    .post("/comment/getComment", {id: "5ef49b899e3feb20183b9126"}) // hardcoded, just for testing
-    .then(({ data }) => {
-      console.log(data);
-      setCommentUser(data[0].username);
-      setCommentText(data[0].content);
-    });
-  }
-getDiscussion();
-getComment();
+  getDiscussion();
 
 }, []);
-
+/*function getComment(){
+  const url = '/api/comments/' + discussionId;
+    axios
+    .get(url) 
+    .then(({ data }) => {
+      console.log(data);
+      setCommentlist(data);
+    });
+  }*/
 const onChangeContent = (event) => {
   setCommentContent(event.target.value);
 };
@@ -216,7 +233,7 @@ const handleSubmit = (event) => {
    discussionId: discussionId
   };
   axios
-  .post('/comment/createComment', comment)
+  .post('/api/comment', comment)
   .then(response => {console.log('Comment created')})
   .catch(err => {
     console.error(err);
@@ -224,6 +241,21 @@ const handleSubmit = (event) => {
   
 };
 
+function Comment(props) {
+  return (
+    <div className={classes.comment}>
+      <span style={{fontWeight: "bold"}}>{props.username}  :  </span>
+      <span>{props.commentcontent}</span>
+    </div>
+  );
+}
+
+function CommentList(props) {
+  return (
+    <div >  {props.commentlist.map(c => <Comment username={c.username} commentcontent={c.content} />)}
+    </div>
+  );
+}
 
   return (
     <Grid container className={classes.root} justify="space-around">
@@ -236,7 +268,6 @@ const handleSubmit = (event) => {
         </ButtonBase>
       </Grid>
       
-  
 
         <Grid item xs={12} className={classes.element}>
         <ButtonBase>
@@ -247,42 +278,25 @@ const handleSubmit = (event) => {
         </ButtonBase>
       </Grid>
 
-
-
-
-
       <Grid item xs={12} className={classes.element}>
         <div className={classes.image}> {content}
         </div>
       </Grid>
-        
+     
+      <div className={classes.comments}>
       <Grid item xs={12} className={classes.element}>
-
-      <ToggleButton className={classes.comment} style={{textAlign: 'left'}}
-      value="check"
-      selected={selected}
-      onChange={() => {
-        setSelected(!selected);
-      }}> 
-      <div className={classes.identifier}>
-            {commentuser}  
-        </div>
-        
-        <div className={classes.text}>
-      {commenttext}
-        </div>
-
-      </ToggleButton>
-
+      <div>
+      <CommentList commentlist={commentlist} />
+      </div>
       </Grid>
-
+      </div>
       <Grid item xs={12} className={classes.element}>
 
         <TextField
               onChange={onChangeContent}
               className={classes.newComment}
               id="outlined-margin-none"
-              placeholder="Your Title."
+              placeholder="Your Comment."
               variant="outlined"
               InputLabelProps={{
                 shrink: true,
