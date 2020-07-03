@@ -253,16 +253,18 @@ export default function CreateDiscussion(props) {
   const handleSubmit = (event) => {
     
     alert('Title: '+title+' Content: '+content+' Topic: '+topic)
-    event.preventDefault();
+    // event.preventDefault();
     
     const username = "Test123";// placeholder values
     const lat = 48.137154; // placeholder values
     const lng = 11.576124;// placeholder values
+    const votes = 0;
     const discussion = {
      title,
      content,
      topic,
      username,
+     votes,
      lat,
      lng,
     };

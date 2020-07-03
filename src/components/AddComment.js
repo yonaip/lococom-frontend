@@ -14,6 +14,8 @@ import { Grid, Button, TextField, Box, TextareaAutosize, Typography, Fab, Button
 import PropTypes from "prop-types";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { findAllByDisplayValue } from '@testing-library/react';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -118,9 +120,25 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1,3),
     },
 
-    rating: {
-
+    ratingnumber: {
+      color: '#706666',
+      textAlign: 'center',
+      
     },
+
+    ratingBlock: {
+      float: 'left',
+      
+    },
+
+    notRated: {
+      color: "#FFFFFFF",
+    },
+    Rated: {
+      color: "blue",
+    },
+
+
     image: {
         background: "black",
         /*margin:  theme.spacing(2,4),*/
@@ -143,8 +161,9 @@ const useStyles = makeStyles((theme) => ({
        float: "left",
         minHeight: "content",
       height: "auto",
-      padding: "5px",
-      width: "60%",
+      padding: "10px",
+      minWidth: "60%",
+      maxWidth:"content"
       
       
       },
@@ -167,10 +186,10 @@ const useStyles = makeStyles((theme) => ({
     },
     comments: {
       
-      height: "400px", // used fixed values, otherwise overflow doesnt work
-      overflow: "scroll",
-      overflowX: "hidden",
-      
+      height: "320px", // used fixed values, otherwise overflow doesnt work
+      width: "90%",
+      overflow: "auto",
+      float: "left",
     },
   
 }));
@@ -185,11 +204,14 @@ export default function AddComment(props) {
   const [discussionId, setDiscussionId] = React.useState("");
   const [user, setUser] = React.useState("User123");
   const [commentcontent, setCommentContent] = React.useState("");
+  const [ratingNum, setRatingNum] = React.useState("0");
   const [commentlist, setCommentlist] = React.useState([]);
+  const [voted, setVote] = React.useState("");
+  
 
  React.useEffect( () => {
   function getDiscussion(){
-  const temp= "5efda8ed7127c02fdc3fb70f" // placeholder, need to add ID from the discussion
+  const temp= "5eff2ac9ce371e50d8e69986" // placeholder, need to add ID from the discussion
   const url = '/api/discussion/' + temp;
    axios
   .get(url) 
@@ -200,6 +222,7 @@ export default function AddComment(props) {
    setTopic(data.topic);
    setCreator(data.username);
    setDiscussionId(data._id);
+   setRatingNum(data.votes);
    const urlget = '/api/comment/' + data._id;
    axios
    .get(urlget) 
@@ -212,25 +235,38 @@ export default function AddComment(props) {
   getDiscussion();
 
 }, []);
-/*function getComment(){
-  const url = '/api/comments/' + discussionId;
-    axios
-    .get(url) 
-    .then(({ data }) => {
-      console.log(data);
-      setCommentlist(data);
-    });
-  }*/
+
+
 const onChangeContent = (event) => {
   setCommentContent(event.target.value);
 };
+
+const upvoteDiscussion = (event) => {
+  if (voted === ""){
+    const url = "/api/discussion/upvote/" + discussionId
+  axios.put(url);
+  setVote("Yes");
+  
+  }
+  
+}
+
+const downvoteDiscussion = (event) => {
+  if (voted === ""){
+  const url = "/api/discussion/downvote/" + discussionId
+  axios.put(url);
+  setVote("No");
+}
+}
+
 // todo change
 const handleSubmit = (event) => {
-  event.preventDefault();
+  //event.preventDefault();
   const comment = {
    username: user,
    content: commentcontent,
-   discussionId: discussionId
+   discussionId: discussionId,
+   votes: 0
   };
   axios
   .post('/api/comment', comment)
@@ -246,6 +282,7 @@ function Comment(props) {
     <div className={classes.comment}>
       <span style={{fontWeight: "bold"}}>{props.username}  :  </span>
       <span>{props.commentcontent}</span>
+         
     </div>
   );
 }
@@ -259,37 +296,53 @@ function CommentList(props) {
 
   return (
     <Grid container className={classes.root} justify="space-around">
+      
       <Grid item xs={12} className={classes.element}>
+      
         <ButtonBase>
           <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
           <Typography variant="h6" className={classes.text}>
             {user}
           </Typography>
         </ButtonBase>
+       
       </Grid>
       
-
-        <Grid item xs={12} className={classes.element}>
+      <Grid container className={classes.element}>
+        <Grid item xs={10} >
+        
         <ButtonBase>
         <Button variant="outlined" className={topic === 'Nature' ? classes.nature : topic === 'Request' ? classes.request : topic === 'Walking' ? classes.walking : topic === 'Photo' ? classes.photo : topic === 'Hint' ? classes.hint : classes.hint}> </Button>
           <Typography variant="h6" className={classes.text}>
           Posted by {creator} <br/> {title}
           </Typography>
         </ButtonBase>
-      </Grid>
+          </Grid>
 
+          <Grid item xs={2} >
+          <div className={classes.ratingBlock}>
+      <KeyboardArrowUpIcon onClick={upvoteDiscussion} className={voted === 'Yes' ? classes.Rated : classes.notRated}/>
+      <div className={classes.ratingnumber}  style={{ fontWeight: "bold" }}>
+        {ratingNum}
+      </div>
+      <KeyboardArrowDownIcon onClick={downvoteDiscussion} className={voted === 'No' ? classes.Rated : classes.notRated}/>
+      </div>
+      
+     
+      </Grid>
+      </Grid>
       <Grid item xs={12} className={classes.element}>
         <div className={classes.image}> {content}
         </div>
       </Grid>
      
-      <div className={classes.comments}>
+     
       <Grid item xs={12} className={classes.element}>
-      <div>
+      <div className={classes.comments}>
       <CommentList commentlist={commentlist} />
       </div>
       </Grid>
-      </div>
+     
       <Grid item xs={12} className={classes.element}>
 
         <TextField
@@ -302,7 +355,8 @@ function CommentList(props) {
                 shrink: true,
               }}
           />
-      <Button onClick={handleSubmit} size="large" variant="contained" color="primary" className={classes.post}>
+           
+      <Button  onClick={() => {handleSubmit();}} size="large" variant="contained" color="primary" className={classes.post}>
             Post
         </Button>
       </Grid>
