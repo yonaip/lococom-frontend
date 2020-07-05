@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Box, Button, AppBar, Toolbar, Typography, IconButton} from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 
-import LoginStatus from "./LoginStatus";
 import SearchFieldComponent from './SearchFieldComponent';
 import LoginDialog from "./LoginDialog";
+import RegisterDialog from "./RegisterDialog";
 
 const config = require("../services/ConfigService");
 
@@ -28,9 +28,11 @@ export default function MapHeader(props) {
 
   const [user, setUser] = useState(null);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
 
   const handleDialogClose = () => {
     setLoginDialogOpen(false);
+    setRegisterDialogOpen(false);
     if(config.currentlyLoggedUsername != null) {
       setUser(config.currentlyLoggedUsername);
     }
@@ -38,6 +40,10 @@ export default function MapHeader(props) {
 
   const handleLoginButton = (event) => {
     setLoginDialogOpen(true);
+  }
+
+  const handleRegisterButton = (event) => {
+    setRegisterDialogOpen(true);
   }
 
   let userStatus = (user == null ?(
@@ -49,7 +55,7 @@ export default function MapHeader(props) {
       </Grid>
       <Grid item xs={3}>
         <Box className={classes.button}>
-          <Button color="secondary">Register</Button>
+          <Button color="secondary" onClick={handleRegisterButton}>Register</Button>
         </Box>
       </Grid>
     </Grid>
@@ -82,6 +88,7 @@ export default function MapHeader(props) {
         </Toolbar>
       </AppBar>
       <LoginDialog open={loginDialogOpen} handleClose={handleDialogClose}/>
+      <RegisterDialog open={registerDialogOpen} handleClose={handleDialogClose}/>
     </div>
   );
 }

@@ -22,6 +22,24 @@ async function loginUser(username, password) {
     return response;
 }
 
+/**
+ * Logs the user in
+ * @param username 
+ * @param password
+ */
+async function registerUser(username, password, email) {
+    const response = await axios.post('auth/register', {
+        "username": username,
+        "password": password,
+        "email": email
+    });
+
+    config.currentlyLoggedUsername = username;
+    config.jwtToken = response.data.jwtToken;
+
+    return response;
+}
+
 export {
-    loginUser
+    loginUser, registerUser
 }

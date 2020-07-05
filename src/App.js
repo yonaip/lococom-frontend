@@ -5,7 +5,7 @@ import MapView from "./views/MapView";
 import UserView from "./views/UserView";
 
 function App() {
-  return <UserView/>;
+  return <MapView/>;
 }
 
 export default App;
