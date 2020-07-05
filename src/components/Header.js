@@ -7,7 +7,7 @@ import LoginStatus from "./LoginStatus";
 import SearchFieldComponent from './SearchFieldComponent';
 import LoginDialog from "./LoginDialog";
 
-import {currentlyLoggedInUser} from "../services/ConfigService";
+const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,18 +26,21 @@ const useStyles = makeStyles((theme) => ({
 export default function MapHeader(props) {
   const classes = useStyles();
 
-  const [user, setUser] = useState(currentlyLoggedInUser);
+  const [user, setUser] = useState(null);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
-  const handleDialogClose = (event) => {
+  const handleDialogClose = () => {
     setLoginDialogOpen(false);
+    if(config.currentlyLoggedUsername != null) {
+      setUser(config.currentlyLoggedUsername);
+    }
   }
 
   const handleLoginButton = (event) => {
     setLoginDialogOpen(true);
   }
 
-  let userStatus = (
+  let userStatus = (user == null ?(
     <Grid container alignItems="center" justify = "flex-end">
       <Grid item xs={3}>
         <Box className={classes.button}>
@@ -50,7 +53,9 @@ export default function MapHeader(props) {
         </Box>
       </Grid>
     </Grid>
-  );
+  ):(<Box className={classes.button}>
+    <Button color="inherit" variant="outlined">{user}</Button>
+  </Box>));
 
   return (
     <div>

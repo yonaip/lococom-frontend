@@ -2,8 +2,12 @@
  *  Contains information about constant values used througout the front-ent
  */
 
- var currentlyLoggedInUser = null;
+var currentlyLoggedUsername = null;
+var jwtToken = null;
+const backendHost = "localhost:4000";
 
- module.exports = {
-    currentlyLoggedInUser
- }
+module.exports = {
+    jwtToken,
+    currentlyLoggedUsername,
+    backendHost
+}
