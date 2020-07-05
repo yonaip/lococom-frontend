@@ -46,22 +46,32 @@ export default function MapHeader(props) {
     setRegisterDialogOpen(true);
   }
 
-  let userStatus = (user == null ?(
+  let userStatus;
+  if(user == null) {
+    userStatus = (
+      <Grid container alignItems="center" justify = "flex-end">
+        <Grid item xs={2}>
+          <Box className={classes.button}>
+            <Button color="inherit" onClick={handleLoginButton}>Login</Button>
+          </Box>
+        </Grid>
+        <Grid item xs={2}>
+          <Box className={classes.button}>
+            <Button color="secondary" onClick={handleRegisterButton}>Register</Button>
+          </Box>
+        </Grid>
+      </Grid>
+    );
+  } else {
+    userStatus = (
     <Grid container alignItems="center" justify = "flex-end">
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <Box className={classes.button}>
-          <Button color="inherit" onClick={handleLoginButton}>Login</Button>
+          <Button color="inherit" variant="outlined">{user}</Button>
         </Box>
       </Grid>
-      <Grid item xs={3}>
-        <Box className={classes.button}>
-          <Button color="secondary" onClick={handleRegisterButton}>Register</Button>
-        </Box>
-      </Grid>
-    </Grid>
-  ):(<Box className={classes.button}>
-    <Button color="inherit" variant="outlined">{user}</Button>
-  </Box>));
+    </Grid>);
+  }
 
   return (
     <div>
