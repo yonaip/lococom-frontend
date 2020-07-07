@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
-import MapHeader from "../components/MapHeader";
+import MapHeader from "../components/Header";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/CreateDiscussion';
 import Discussion from "../components/Discussion";
