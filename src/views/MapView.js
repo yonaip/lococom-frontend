@@ -4,6 +4,7 @@ import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 import MapHeader from "../components/MapHeader";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/CreateDiscussion';
+import Discussion from "../components/Discussion";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,10 +36,12 @@ export default function MapView() {
     //Munich: lat: 48.137154, lng: 11.576124, update with user location
     const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124})
 
+    const [discussionCreated, setDiscussionStatus] = useState(false)
+
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-          return;
+            return;
         }
         setLeftMenu(open);
     };
@@ -53,9 +56,13 @@ export default function MapView() {
         setCenter(coordinates);
     }
 
+    const updateDiscussionPane = (discussionCreated) => {
+        setDiscussionStatus(discussionCreated)
+    }
+
     // Set container for map and disucssion pane
     let grid;
-    if(discussionOpen) {
+    if (!discussionOpen & !discussionCreated) {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
@@ -65,17 +72,31 @@ export default function MapView() {
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
-                    <CreateDiscussion />
+                    <CreateDiscussion updateDiscussionPane={updateDiscussionPane}/>
                 </Grid>
             </Grid>
         );
-    } else {
+    } else if (!discussionOpen & !discussionCreated) {
         grid = (
             <Grid item xs={12} className={classes.element}>
                 <MapComponent
                     defaultCenter={center}
                     onDblClick={toggleDiscussion}
                 />
+            </Grid>
+        );
+    } else {
+        grid = (
+            <Grid container>
+                <Grid item xs={8} className={classes.element}>
+                    <MapComponent
+                        defaultCenter={center}
+                        onDblClick={toggleDiscussion}
+                    />
+                </Grid>
+                <Grid item xs={4} className={classes.element}>
+                    <Discussion updateDiscussionPane={updateDiscussionPane}/>
+                </Grid>
             </Grid>
         );
     }

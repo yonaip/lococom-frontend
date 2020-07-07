@@ -242,6 +242,7 @@ export default function CreateDiscussion(props) {
   const [title, setTitle] = React.useState("");
   const [topic, setTopic] = React.useState("No topic selected");
   const [content, setContent] = React.useState("");
+  const updateDiscussionPane = props.updateDiscussionPane;
 
   // Clear input after discussion is saved
   const clear = () => {
@@ -376,7 +377,7 @@ export default function CreateDiscussion(props) {
           Cancel
         </Button>
         <Button
-            onClick={() => {clear(); handleSubmit();}}
+            onClick={() => {clear(); handleSubmit(); updateDiscussionPane(true)}}
             className={classes.confirm}
             variant="contained">
           Confirm
