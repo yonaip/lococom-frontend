@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
-import MapHeader from "../components/MapHeader";
+import Header from "../components/Header";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
-    mapHeader: {
+    header: {
         flexGrow: 1
     },
     menuElement: {
@@ -32,7 +32,7 @@ export default function UserView() {
     };
 
     return (<div className={classes.root}>
-        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu}/>
+        <Header className={classes.header} position={"fixed"} onLeftMenuClick={toggleLeftMenu}/>
         <Drawer anchor='left' open={leftMenuOpen} onClose={toggleLeftMenu(false)}>
             <Typography variant="h6" className={classes.menuElement}>
                 Test
