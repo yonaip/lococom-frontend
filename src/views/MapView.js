@@ -66,9 +66,9 @@ export default function MapView() {
         setDiscussionStatus(discussionCreated);
     }
 
-    const createdDiscussionId = (discussionId) => {
-        setDiscussionId(discussionId);
-        console.log(discussionId)
+    const createdDiscussionId = (id) => {
+         setDiscussionId(id);
+         console.log(id);
     }
 
     // Set container for map and disucssion pane

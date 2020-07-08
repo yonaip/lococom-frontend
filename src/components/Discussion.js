@@ -1,6 +1,5 @@
-import React from "react";
-import axios from 'axios';
-import {Button, ButtonBase, Grid, Typography, Paper} from "@material-ui/core";
+import React, { useState, useCallback, useEffect } from "react";
+import { ButtonBase, Grid, Typography } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -11,7 +10,8 @@ import natureimg from "../resources/nature.png";
 import photoimg from "../resources/photograph.png";
 import alertimg from "../resources/alert.png";
 import AddComment from "./AddComment";
-import {getDiscussion, upVoteDiscussion, downVoteDiscussion} from "../services/DiscussionService";
+import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../services/DiscussionService";
+import { getLoggedInUser } from "../services/AuthService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -83,21 +83,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Discussion(props) {
     const classes = useStyles();
-    const [title, setTitle] = React.useState("");
-    const [content, setContent] = React.useState("");
-    const [topic, setTopic] = React.useState("");
-    const [creator, setCreator] = React.useState("");
-    const [discussionId, setDiscussionId] = React.useState("");
-    const [ratingNum, setRatingNum] = React.useState("0");
-    const [commentList, setCommentList] = React.useState([]);
-    const [userHasVotedPositive, setUserHasVotedPositive] = React.useState(false);
-    const [userHasVotedNegative, setUserHasVotedNegative] = React.useState(false);
-    const [user, setUser] = React.useState("User123");
-    const createdDiscussionId = props.createdDiscussionId;
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [topic, setTopic] = useState("");
+    const [creator, setCreator] = useState("");
+    const [discussionId, setDiscussionId] = useState("");
+    const [ratingNum, setRatingNum] = useState("0");
+    const [commentList, setCommentList] = useState([]);
+    const [userHasVotedPositive, setUserHasVotedPositive] = useState(false);
+    const [userHasVotedNegative, setUserHasVotedNegative] = useState(false);
+    const [user, setUser] = useState("User123");
 
 
-    const loadDiscussion = React.useCallback(() => {
-        getDiscussion("5f02287ae89b7281eabbff57")
+    const loadDiscussion = useCallback(() => {
+        getDiscussion(props.createdDiscussionId)
             .then(({data}) => {
                 console.log(data);
                 setTitle(data.title);
@@ -108,17 +107,16 @@ export default function Discussion(props) {
                 setRatingNum(data.votes);
             })
             .catch(err => console.log(err));
-        console.log(createdDiscussionId);
     });
 
     // The discussion are loaded initially
-    React.useEffect(() => {
+    useEffect(() => {
         loadDiscussion();
     }, [loadDiscussion]);
 
     function handleUpVoteDiscussion() {
         if (!userHasVotedPositive & !userHasVotedNegative){
-            upVoteDiscussion("5f02287ae89b7281eabbff57")
+            upVoteDiscussion(props.createdDiscussionId)
                 .then((response) => {
                     loadDiscussion();
                     console.log(response)
@@ -132,7 +130,7 @@ export default function Discussion(props) {
 
     function handleDownVoteDiscussion() {
         if (!userHasVotedNegative & !userHasVotedPositive){
-            downVoteDiscussion("5f02287ae89b7281eabbff57")
+            downVoteDiscussion(props.createdDiscussionId)
                 .then((response) => {
                     loadDiscussion();
                     console.log(response)
@@ -173,7 +171,7 @@ export default function Discussion(props) {
                 <ButtonBase>
                     <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
                     <Typography variant="h6" className={classes.text}>
-                        {user}
+                        {getLoggedInUser()}
                     </Typography>
                 </ButtonBase>
             </Grid>
@@ -205,7 +203,7 @@ export default function Discussion(props) {
                 </div>
             </Grid>
 
-            <AddComment/>
+            <AddComment createdDiscussionId={props.discussionId}/>
         </Grid>
     );
 }

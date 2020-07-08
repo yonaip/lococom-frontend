@@ -1,13 +1,9 @@
-import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import FilterHdrIcon from '@material-ui/icons/FilterHdr';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import {Grid, Button, TextField, Box, TextareaAutosize, Typography, Fab, ButtonBase, Avatar} from '@material-ui/core';
-import PropTypes from "prop-types";
-import {findAllByDisplayValue} from '@testing-library/react';
-import {addComment, getCommentsByDiscussionId} from "../services/CommentService";
+import React, { useState, useEffect, useCallback } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Button, TextField } from '@material-ui/core';
+import { addComment, getCommentsByDiscussionId } from "../services/CommentService";
+import { getLoggedInUser } from "../services/AuthService";
+import SendIcon from '@material-ui/icons/Send';
 
 const useStyles = makeStyles((theme) => ({
     element: {
@@ -60,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         background: '#62AEBB',
         textTransform: 'none',
         textAlign: "left",
-        flexgrow: 1,
+        flexGrow: 1,
         marginTop: "2%",
         borderRadius: theme.shape.borderRadius,
         color: "black",
@@ -71,17 +67,15 @@ const useStyles = makeStyles((theme) => ({
         padding: "10px",
         minWidth: "60%",
         maxWidth: "content"
-
-
     },
 
     newComment: {
-        maxHeight: '10px',
-        float: 'left',
+        minHeight: "10%",
+        float: "left",
         color: "white",
         borderRadius: theme.shape.borderRadius,
         overflow: "hidden",
-        width: '80%',
+        width: "80%",
         marginTop: "2%",
         background: "white",
     },
@@ -89,7 +83,14 @@ const useStyles = makeStyles((theme) => ({
     post: {
         float: 'left',
         marginTop: "2%",
-        marginLeft: "2.5%"
+        marginLeft: "2.5%",
+        width: '3vw',
+        height: '6vh',
+        [theme.breakpoints.down('sm')]: {
+            width: '3vw',
+            height: '3vh',
+            fontSize: '65%'
+        },
     },
     comments: {
         height: "320px", // used fixed values, otherwise overflow doesnt work
@@ -102,20 +103,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddComment(props) {
     const classes = useStyles();
-    const [selected, setSelected] = React.useState(false);
-    const [user, setUser] = React.useState("User123");
+    const [selected, setSelected] = useState(false);
+    const [user, setUser] = useState("User123");
     const [commentContent, setCommentContent] = React.useState("");
     const [commentList, setCommentList] = React.useState([]);
-    const [discussionId, setDiscussionId] = React.useState("5f02287ae89b7281eabbff57");
-    const [voted, setVote] = React.useState("");
+    //const [discussionId, setDiscussionId] = React.useState("5f02287ae89b7281eabbff57");
+    const [voted, setVote] = useState("");
 
     const onChangeContent = (event) => {
         setCommentContent(event.target.value);
     };
 
+    console.log(props.createdDiscussionId);
     // Fetch comments from the backend
-    const loadComments = React.useCallback(() => {
-        getCommentsByDiscussionId(discussionId)
+    const loadComments = useCallback(() => {
+        getCommentsByDiscussionId(props.createdDiscussionId)
             .then(({data}) => {
                 console.log(data);
                 setCommentList(data);
@@ -126,14 +128,14 @@ export default function AddComment(props) {
     }, []);
 
     // The comments are loaded initially
-    React.useEffect(() => {
+    useEffect(() => {
         loadComments();
     }, [loadComments]);
 
     // TODO change
     function handleSubmit() {
         //event.preventDefault();
-        addComment(user, commentContent, 0, discussionId)
+        addComment(getLoggedInUser(), commentContent, 0, props.createdDiscussionId)
             .then((response) => {
                 // Reload the comments also the new one
                 loadComments();
@@ -178,10 +180,8 @@ export default function AddComment(props) {
                     variant="outlined"
                     InputLabelProps={{shrink: true}}
                 />
-                <Button onClick={() => {
-                    handleSubmit();
-                }} size="large" variant="contained" color="primary" className={classes.post}>
-                    Post
+                <Button onClick={() => {handleSubmit();}} size="large" variant="contained" color="primary" className={classes.post}>
+                    <SendIcon />
                 </Button>
             </Grid>
         </Grid>

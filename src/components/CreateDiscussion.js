@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import {Grid, Button, TextField, Typography, Fab, ButtonBase} from '@material-ui/core';
@@ -7,8 +7,8 @@ import walkerimg from '../resources/shoes.png';
 import photoimg from '../resources/photograph.png';
 import natureimg from '../resources/nature.png';
 import alertimg from '../resources/alert.png';
-import {createDiscussion} from "../services/DiscussionService";
-import {getLoggedInUser} from "../services/AuthService";
+import { createDiscussion } from "../services/DiscussionService";
+import { getLoggedInUser } from "../services/AuthService";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -190,8 +190,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundPosition: "center",
     },
 
-    textfield: {
-        width: "100",
+    textField: {
+        width: "90vw",
         height: "50vw",
     },
     user: {
@@ -237,10 +237,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateDiscussion(props) {
     const classes = useStyles();
-    const [title, setTitle] = React.useState("");
-    const [topic, setTopic] = React.useState("No topic selected");
-    const [content, setContent] = React.useState("");
-    const [discussionID, setDiscussionID] = React.useState(null);
+    const [title, setTitle] = useState("");
+    const [topic, setTopic] = useState("No topic selected");
+    const [content, setContent] = useState("");
     const updateDiscussionPane = props.updateDiscussionPane;
 
     /** Pass the discussionId to MapView and then from MapView to Discussion
@@ -263,12 +262,10 @@ export default function CreateDiscussion(props) {
 
         createDiscussion(username, title, topic, content, votes, lat, lng)
             .then((response) => {
-                const discussion = response.data;
-                setDiscussionID('${discussion}');
-                createdDiscussionId(discussionID);
-                console.log(discussionID);
+                createdDiscussionId(response.data._id);
+                console.log(response.data._id);
             }).catch((err) => {
-            console.log(err);
+              console.log(err);
         });
     }
 
