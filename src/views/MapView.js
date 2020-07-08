@@ -34,9 +34,15 @@ export default function MapView() {
     const [discussionOpen, setDiscussion] = useState(true);
 
     //Munich: lat: 48.137154, lng: 11.576124, update with user location
-    const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124})
+    const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124});
 
-    const [discussionCreated, setDiscussionStatus] = useState(false)
+    /** State is used for optional rendering in the discussion pane
+     *      - if false: renders CreateDiscussion
+     *      - if true: renders Discussion
+     */
+    const [discussionCreated, setDiscussionStatus] = useState(false);
+
+    const [discussionId, setDiscussionId] = useState(null);
 
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
@@ -57,12 +63,17 @@ export default function MapView() {
     }
 
     const updateDiscussionPane = (discussionCreated) => {
-        setDiscussionStatus(discussionCreated)
+        setDiscussionStatus(discussionCreated);
+    }
+
+    const createdDiscussionId = (discussionId) => {
+        setDiscussionId(discussionId);
+        console.log(discussionId)
     }
 
     // Set container for map and disucssion pane
     let grid;
-    if (!discussionOpen & !discussionCreated) {
+    if (discussionOpen & !discussionCreated) {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
@@ -72,7 +83,7 @@ export default function MapView() {
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
-                    <CreateDiscussion updateDiscussionPane={updateDiscussionPane}/>
+                    <CreateDiscussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={createdDiscussionId}/>
                 </Grid>
             </Grid>
         );
@@ -95,7 +106,7 @@ export default function MapView() {
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
-                    <Discussion updateDiscussionPane={updateDiscussionPane}/>
+                    <Discussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={discussionId}/>
                 </Grid>
             </Grid>
         );

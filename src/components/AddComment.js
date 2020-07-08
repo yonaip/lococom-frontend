@@ -1,38 +1,30 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
-import requestimg from '../resources/request.png';
-import walkerimg from '../resources/shoes.png';
-import photoimg from '../resources/photograph.png';
-import natureimg from '../resources/nature.png';
-import alertimg from '../resources/alert.png';
-import axios from 'axios';
 import ToggleButton from '@material-ui/lab/ToggleButton';
-import { Grid, Button, TextField, Box, TextareaAutosize, Typography, Fab, ButtonBase, Avatar } from '@material-ui/core';
+import {Grid, Button, TextField, Box, TextareaAutosize, Typography, Fab, ButtonBase, Avatar} from '@material-ui/core';
 import PropTypes from "prop-types";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { findAllByDisplayValue } from '@testing-library/react';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import {findAllByDisplayValue} from '@testing-library/react';
+import {addComment, getCommentsByDiscussionId} from "../services/CommentService";
 
 const useStyles = makeStyles((theme) => ({
-  element: {
-    position: 'relative',
-    justifyContent: 'inherit',
-  },
-  text: {
-    color: "black",
-    textAlign: 'left',
-    padding: theme.spacing(1),
-    flexGrow: 2,
-    marginBottom: "2%"
-  },
+    element: {
+        position: 'relative',
+        justifyContent: 'inherit',
+    },
+    text: {
+        color: "black",
+        textAlign: 'left',
+        padding: theme.spacing(1),
+        flexGrow: 2,
+        marginBottom: "2%"
+    },
 
-  icon: {
-    float: 'left',
-  },
+    icon: {
+        float: 'left',
+    },
     user: {
         background: '#62AEBB',
         height: '5vh',
@@ -42,24 +34,23 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 20,
         /*textAlign: 'center',*/
         float: 'left',
-      },
+    },
 
 
     identifier: {
-      fontSize: 15,
+        fontSize: 15,
         color: '#706666',
         float: 'left',
         marginBottom: "2%"
-       /* margin: theme.spacing(0,0.5),*/
+        /* margin: theme.spacing(0,0.5),*/
     },
-    
 
 
     image: {
         background: "black",
         /*margin:  theme.spacing(2,4),*/
         width: '90%',
-        height: '30vh', 
+        height: '30vh',
         float: 'left',
         color: "white",
         marginTop: "2.5%",
@@ -79,13 +70,13 @@ const useStyles = makeStyles((theme) => ({
         height: "auto",
         padding: "10px",
         minWidth: "60%",
-        maxWidth:"content"
+        maxWidth: "content"
 
-      
-      },
+
+    },
 
     newComment: {
-      maxHeight: '10px',
+        maxHeight: '10px',
         float: 'left',
         color: "white",
         borderRadius: theme.shape.borderRadius,
@@ -94,19 +85,19 @@ const useStyles = makeStyles((theme) => ({
         marginTop: "2%",
         background: "white",
     },
-    
+
     post: {
         float: 'left',
         marginTop: "2%",
         marginLeft: "2.5%"
     },
     comments: {
-      height: "320px", // used fixed values, otherwise overflow doesnt work
-      width: "90%",
-      overflow: "auto",
-      float: "left",
+        height: "320px", // used fixed values, otherwise overflow doesnt work
+        width: "90%",
+        overflow: "auto",
+        float: "left",
     },
-  
+
 }));
 
 export default function AddComment(props) {
@@ -124,13 +115,14 @@ export default function AddComment(props) {
 
     // Fetch comments from the backend
     const loadComments = React.useCallback(() => {
-        const urlGet = '/api/comment/' + discussionId;
-        axios
-            .get(urlGet)
+        getCommentsByDiscussionId(discussionId)
             .then(({data}) => {
                 console.log(data);
                 setCommentList(data);
-            });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }, []);
 
     // The comments are loaded initially
@@ -139,22 +131,15 @@ export default function AddComment(props) {
     }, [loadComments]);
 
     // TODO change
-    const handleSubmit = (event) => {
+    function handleSubmit() {
         //event.preventDefault();
-        const comment = {
-            username: user,
-            content: commentContent,
-            discussionId: discussionId,
-            votes: 0
-        };
-        axios
-            .post('/api/comment', comment)
-            .then(response => {
+        addComment(user, commentContent, 0, discussionId)
+            .then((response) => {
                 // Reload the comments also the new one
                 loadComments();
                 console.log('Comment created');
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(err);
             });
     };
@@ -162,7 +147,7 @@ export default function AddComment(props) {
     function Comment(props) {
         return (
             <div className={classes.comment}>
-                <span style={{fontWeight: "bold"}}>{props.username}  :  </span>
+                <span style={{fontWeight: "bold"}}>{props.username} :  </span>
                 <span>{props.commentcontent}</span>
             </div>
         );
@@ -171,7 +156,7 @@ export default function AddComment(props) {
     function CommentList(props) {
         return (
             <div>
-                {props.commentlist.map(c => <Comment username={c.username} commentcontent={c.content} />)}
+                {props.commentlist.map(c => <Comment username={c.username} commentcontent={c.content}/>)}
             </div>
         );
     }
@@ -180,7 +165,7 @@ export default function AddComment(props) {
         <Grid container>
             <Grid item xs={12} className={classes.element}>
                 <div className={classes.comments}>
-                    <CommentList commentlist={commentList} />
+                    <CommentList commentlist={commentList}/>
                 </div>
             </Grid>
 
@@ -193,12 +178,14 @@ export default function AddComment(props) {
                     variant="outlined"
                     InputLabelProps={{shrink: true}}
                 />
-                <Button onClick={() => {handleSubmit();}} size="large" variant="contained" color="primary" className={classes.post}>
+                <Button onClick={() => {
+                    handleSubmit();
+                }} size="large" variant="contained" color="primary" className={classes.post}>
                     Post
                 </Button>
             </Grid>
         </Grid>
-  );
+    );
 
 
 }

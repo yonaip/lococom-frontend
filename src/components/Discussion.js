@@ -11,6 +11,7 @@ import natureimg from "../resources/nature.png";
 import photoimg from "../resources/photograph.png";
 import alertimg from "../resources/alert.png";
 import AddComment from "./AddComment";
+import {getDiscussion, upVoteDiscussion, downVoteDiscussion} from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Discussion() {
+export default function Discussion(props) {
     const classes = useStyles();
     const [title, setTitle] = React.useState("");
     const [content, setContent] = React.useState("");
@@ -89,15 +90,14 @@ export default function Discussion() {
     const [discussionId, setDiscussionId] = React.useState("");
     const [ratingNum, setRatingNum] = React.useState("0");
     const [commentList, setCommentList] = React.useState([]);
-    const [voted, setVote] = React.useState("");
+    const [userHasVotedPositive, setUserHasVotedPositive] = React.useState(false);
+    const [userHasVotedNegative, setUserHasVotedNegative] = React.useState(false);
     const [user, setUser] = React.useState("User123");
+    const createdDiscussionId = props.createdDiscussionId;
 
 
     const loadDiscussion = React.useCallback(() => {
-        const temp = "5f02287ae89b7281eabbff57" // placeholder, need to add ID from the discussion
-        const url = '/api/discussion/' + temp;
-        axios
-            .get(url)
+        getDiscussion("5f02287ae89b7281eabbff57")
             .then(({data}) => {
                 console.log(data);
                 setTitle(data.title);
@@ -106,7 +106,9 @@ export default function Discussion() {
                 setCreator(data.username);
                 setDiscussionId(data._id);
                 setRatingNum(data.votes);
-            });
+            })
+            .catch(err => console.log(err));
+        console.log(createdDiscussionId);
     });
 
     // The discussion are loaded initially
@@ -114,23 +116,32 @@ export default function Discussion() {
         loadDiscussion();
     }, [loadDiscussion]);
 
-    const upVoteDiscussion = (event) => {
-        if (voted === ""){
-            const url = "/api/discussion/upvote/" + discussionId
-            axios.put(url);
-            setVote("Yes");
-
+    function handleUpVoteDiscussion() {
+        if (!userHasVotedPositive & !userHasVotedNegative){
+            upVoteDiscussion("5f02287ae89b7281eabbff57")
+                .then((response) => {
+                    loadDiscussion();
+                    console.log(response)
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
+            setUserHasVotedPositive(true);
         }
-        loadDiscussion();
     }
 
-    const downVoteDiscussion = (event) => {
-        if (voted === ""){
-            const url = "/api/discussion/downvote/" + discussionId
-            axios.put(url);
-            setVote("No");
+    function handleDownVoteDiscussion() {
+        if (!userHasVotedNegative & !userHasVotedPositive){
+            downVoteDiscussion("5f02287ae89b7281eabbff57")
+                .then((response) => {
+                    loadDiscussion();
+                    console.log(response)
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
+            setUserHasVotedNegative(true);
         }
-        loadDiscussion();
     }
 
     let topicIcon;
@@ -179,11 +190,11 @@ export default function Discussion() {
 
                 <Grid item xs={2} >
                     <div className={classes.ratingBlock}>
-                        <KeyboardArrowUpIcon onClick={upVoteDiscussion} className={voted === 'Yes' ? classes.Rated : classes.notRated}/>
+                        <KeyboardArrowUpIcon onClick={handleUpVoteDiscussion} className={userHasVotedPositive ? classes.Rated : classes.notRated}/>
                         <div className={classes.ratingNumber}  style={{ fontWeight: "bold" }}>
                             {ratingNum}
                         </div>
-                        <KeyboardArrowDownIcon onClick={downVoteDiscussion} className={voted === 'No' ? classes.Rated : classes.notRated}/>
+                        <KeyboardArrowDownIcon onClick={handleDownVoteDiscussion} className={userHasVotedNegative ? classes.Rated : classes.notRated}/>
                     </div>
                 </Grid>
             </Grid>
