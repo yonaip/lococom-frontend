@@ -11,7 +11,8 @@ import photoimg from "../resources/photograph.png";
 import alertimg from "../resources/alert.png";
 import AddComment from "./AddComment";
 import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../services/DiscussionService";
-import { getLoggedInUser } from "../services/AuthService";
+
+const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -171,7 +172,7 @@ export default function Discussion(props) {
                 <ButtonBase>
                     <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
                     <Typography variant="h6" className={classes.text}>
-                        {getLoggedInUser()}
+                        {config.currentlyLoggedUsername}
                     </Typography>
                 </ButtonBase>
             </Grid>

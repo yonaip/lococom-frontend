@@ -40,16 +40,6 @@ async function registerUser(username, password, email) {
     return response;
 }
 
-function getLoggedInUser() {
-    let username = config.currentlyLoggedUsername;
-
-    if(username != null) {
-        return username;
-    } else {
-        alert("Log in first");
-    }
-}
-
 export {
-    loginUser, registerUser, getLoggedInUser
+    loginUser, registerUser
 }
