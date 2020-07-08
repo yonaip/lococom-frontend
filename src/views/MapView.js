@@ -44,6 +44,8 @@ export default function MapView() {
 
     const [discussionId, setDiscussionId] = useState(null);
 
+    const [discussionLatLng, setDiscussionLatLng] = useState(null);
+
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -71,6 +73,10 @@ export default function MapView() {
          console.log(id);
     }
 
+    const setDiscussionCoordiantes = (coordinates) => {
+        setDiscussionLatLng(coordinates);
+    }
+
     // Set container for map and disucssion pane
     let grid;
     if (discussionOpen & !discussionCreated) {
@@ -80,10 +86,15 @@ export default function MapView() {
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={toggleDiscussion}
+                        setDiscussionCoordinates={discussionLatLng}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
-                    <CreateDiscussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={createdDiscussionId}/>
+                    <CreateDiscussion
+                        updateDiscussionPane={updateDiscussionPane}
+                        createdDiscussionId={createdDiscussionId}
+                        setDiscussionCoordinates={discussionLatLng}
+                    />
                 </Grid>
             </Grid>
         );
@@ -93,6 +104,7 @@ export default function MapView() {
                 <MapComponent
                     defaultCenter={center}
                     onDblClick={toggleDiscussion}
+                    setDiscussionCoordinates={discussionLatLng}
                 />
             </Grid>
         );
@@ -103,10 +115,14 @@ export default function MapView() {
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={toggleDiscussion}
+                        setDiscussionCoordinates={discussionLatLng}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
-                    <Discussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={discussionId}/>
+                    <Discussion
+                        updateDiscussionPane={updateDiscussionPane}
+                        createdDiscussionId={discussionId}
+                    />
                 </Grid>
             </Grid>
         );

@@ -29,6 +29,11 @@ async function getDiscussion(discussionID) {
     return response;
 }
 
+async function getAllDiscussions() {
+    const response = await axios.get('/api/discussion');
+    return response;
+}
+
 async function upVoteDiscussion(discussionID) {
     const response = axios.put( '/api/discussion/upvote/' + discussionID);
     return response;
@@ -44,4 +49,5 @@ export {
     getDiscussion,
     upVoteDiscussion,
     downVoteDiscussion,
+    getAllDiscussions
 }

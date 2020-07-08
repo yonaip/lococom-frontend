@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import  { GoogleMap, withGoogleMap, Marker, InfoWindow } from "react-google-maps";
 import * as places from "../resources/testPlaces.json"
 import nature from "../resources/nature-black.png"
+import { getAllDiscussions } from "../services/DiscussionService"
 
 export default function MapComponent(props) {
-    const [selectedPlace, setSelectedPlace] = React.useState(null);
-    const [markers, setMarkers] = React.useState([]);
+    const [selectedPlace, setSelectedPlace] = useState(null);
+    const [markers, setMarkers] = useState([]);
+    const setDiscussionCoordinates = props.setDiscussionCoordinates;
+    var getDiscussions = [];
 
-    React.useEffect(() => {
+    function loadAllDiscussions() {
+        getAllDiscussions()
+            .then((res) => {
+                getDiscussions = res.data;
+                console.log(res);
+            })
+            .catch(err => console.log(err));
+    }
+
+    console.log(getDiscussions);
+
+    useEffect(() => {
         const listener = e => {
             if (e.key === "Escape") {
                 setSelectedPlace(null);
@@ -18,9 +32,11 @@ export default function MapComponent(props) {
         return () => {
             window.removeEventListener("keydown", listener);
         };
-    }, []);
 
-    const onMapClick = React.useCallback((e) => {
+        loadAllDiscussions();
+    }, [loadAllDiscussions]);
+
+    const createDiscussion = useCallback((e) => {
         setMarkers((current) => [
             ...current,
             {
@@ -29,8 +45,11 @@ export default function MapComponent(props) {
                 time: new Date(),
             },
         ]);
+        //console.log(markers);
+        //setDiscussionCoordinates({ lat: markers[0].lat, lng: markers[0] })
     }, []);
 
+    console.log(markers);
     /**
      * withGoogleMap - initializes the map component
      */
@@ -42,8 +61,10 @@ export default function MapComponent(props) {
                     defaultZoom={14}
                     defaultCenter={props.defaultCenter}
                     options={{disableDefaultUI: true, zoomControl: true}}
-                    onDblClick={props.onDblClick}
-                    onClick={onMapClick}
+                    onDblClick={
+                        createDiscussion
+                    }
+                    //props.onDblClick();
                 >
                     {markers.map(marker => (
                         <Marker
@@ -61,12 +82,12 @@ export default function MapComponent(props) {
                         />
                     ))}
 
-                    {places.Munich.map(marker => (
+                    {getDiscussions.map(discussion => (
                         <Marker
-                            key={'${marker.lat}-${marker.lng}'}
-                            position={{lat: marker.lat, lng: marker.lng}}
+                            key={'${discussion.lat}-${discussion.lng}'}
+                            position={{lat: discussion.lat, lng: discussion.lng}}
                             onClick={() => {
-                                setSelectedPlace(marker);
+                                setSelectedPlace(discussion);
                             }}
                             icon={{
                                 url: nature,

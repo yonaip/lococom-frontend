@@ -256,8 +256,8 @@ export default function CreateDiscussion(props) {
 
     const handleCreateDiscussion = (event) => {
         const username = getLoggedInUser();
-        const lat = 48.137154; // placeholder values
-        const lng = 11.576124;// placeholder values
+        const lat = props.createdDiscussionId.lat; // placeholder values
+        const lng = props.createdDiscussionId.lng;// placeholder values
         const votes = 0;
 
         createDiscussion(username, title, topic, content, votes, lat, lng)
