@@ -86,14 +86,14 @@ export default function MapView() {
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={toggleDiscussion}
-                        setDiscussionCoordinates={discussionLatLng}
+                        setDiscussionCoordinates={center}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
                     <CreateDiscussion
                         updateDiscussionPane={updateDiscussionPane}
                         createdDiscussionId={createdDiscussionId}
-                        setDiscussionCoordinates={discussionLatLng}
+                        setDiscussionCoordinates={center}
                     />
                 </Grid>
             </Grid>
@@ -104,7 +104,7 @@ export default function MapView() {
                 <MapComponent
                     defaultCenter={center}
                     onDblClick={toggleDiscussion}
-                    setDiscussionCoordinates={discussionLatLng}
+                    setDiscussionCoordinates={center}
                 />
             </Grid>
         );
@@ -115,7 +115,7 @@ export default function MapView() {
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={toggleDiscussion}
-                        setDiscussionCoordinates={discussionLatLng}
+                        setDiscussionCoordinates={center}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>

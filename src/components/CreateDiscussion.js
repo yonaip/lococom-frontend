@@ -243,7 +243,7 @@ export default function CreateDiscussion(props) {
     const updateDiscussionPane = props.updateDiscussionPane;
 
     /** Pass the discussionId to MapView and then from MapView to Discussion
-     After discussion is created the newly created discussion appears
+      * After discussion is created the newly created discussion appears
      */
     const createdDiscussionId = props.createdDiscussionId;
 
@@ -256,8 +256,8 @@ export default function CreateDiscussion(props) {
 
     const handleCreateDiscussion = (event) => {
         const username = getLoggedInUser();
-        const lat = props.createdDiscussionId.lat; // placeholder values
-        const lng = props.createdDiscussionId.lng;// placeholder values
+        const lat = props.setDiscussionCoordinates.lat; // placeholder values
+        const lng = props.setDiscussionCoordinates.lng;// placeholder values
         const votes = 0;
 
         createDiscussion(username, title, topic, content, votes, lat, lng)
