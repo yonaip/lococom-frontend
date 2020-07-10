@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // View of user profile
-export default function UserView() {
+export default function FollowerView() {
 
     const classes = useStyles();
 
@@ -44,18 +44,16 @@ export default function UserView() {
             </Typography>
         </Drawer>
         <Grid container xs={12}>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
                 <ProfileComponent></ProfileComponent>
             </Grid> 
-            <Grid item xs={3}>
+            <Grid item xs={4}>
             <DiscussionOverview></DiscussionOverview>
             </Grid> 
-            <Grid item xs={3}>
+            <Grid item xs={4}>
             <CommentOverview></CommentOverview>
             </Grid> 
-            <Grid item xs={3}>
-            <Friendslist></Friendslist>
-            </Grid> 
+          
         </Grid>
     </div>);
 }
