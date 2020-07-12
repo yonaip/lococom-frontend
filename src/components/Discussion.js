@@ -106,7 +106,7 @@ export default function Discussion(props) {
             setRatingNum(props.showDiscussion.votes);
         } else {
          */
-            getDiscussion(props.createdDiscussionId)
+            getDiscussion(props.discussionId)
                 .then(({data}) => {
                     console.log(data);
                     setTitle(data.title);
@@ -115,7 +115,7 @@ export default function Discussion(props) {
                     setCreator(data.username);
                     setDiscussionId(data._id);
                     setRatingNum(data.votes);
-                    props.createdDiscussionId(null);
+                    //props.discussionId(null);
                 })
                 .catch(err => console.log(err));
     });
@@ -127,7 +127,7 @@ export default function Discussion(props) {
 
     function handleUpVoteDiscussion() {
         if (!userHasVotedPositive & !userHasVotedNegative){
-            upVoteDiscussion(props.createdDiscussionId)
+            upVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
                     console.log(response)
@@ -141,7 +141,7 @@ export default function Discussion(props) {
 
     function handleDownVoteDiscussion() {
         if (!userHasVotedNegative & !userHasVotedPositive){
-            downVoteDiscussion(props.createdDiscussionId)
+            downVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
                     console.log(response)
@@ -214,7 +214,7 @@ export default function Discussion(props) {
                 </div>
             </Grid>
 
-            <AddComment createdDiscussionId={props.discussionId}/>
+            <AddComment discussionId={props.discussionId}/>
         </Grid>
     );
 }

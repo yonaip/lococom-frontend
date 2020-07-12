@@ -115,10 +115,10 @@ export default function AddComment(props) {
         setCommentContent(event.target.value);
     };
 
-    console.log(props.createdDiscussionId);
+    console.log(props.discussionId);
     // Fetch comments from the backend
     const loadComments = useCallback(() => {
-        getCommentsByDiscussionId(props.createdDiscussionId)
+        getCommentsByDiscussionId(props.discussionId)
             .then(({data}) => {
                 console.log(data);
                 setCommentList(data);
@@ -136,7 +136,7 @@ export default function AddComment(props) {
     // TODO change
     function handleSubmit() {
         //event.preventDefault();
-        addComment(config.currentlyLoggedUsername, commentContent, 0, props.createdDiscussionId)
+        addComment(config.currentlyLoggedUsername, commentContent, 0, props.discussionId)
             .then((response) => {
                 // Reload the comments also the new one
                 loadComments();

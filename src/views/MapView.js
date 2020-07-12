@@ -5,6 +5,11 @@ import MapHeader from "../components/Header";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/CreateDiscussion';
 import Discussion from "../components/Discussion";
+import nature from "../resources/nature-black.png"
+import request from "../resources/request.png"
+import walking from "../resources/sport-black.png"
+import photo from "../resources/photograph.png"
+import hint from "../resources/attention.png"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,6 +47,7 @@ export default function MapView() {
     // const [discussionCreated, setDiscussionStatus] = useState(false);
     // const [discussionId, setDiscussionId] = useState(null);
 
+    // List of map markers created on double click
     const [markers, setMarkers] = useState([]);
 
     // Callback functions for opening/closing leftsideMenu
@@ -78,7 +84,12 @@ export default function MapView() {
     };
 
     const handleCreateDiscussionClose = (discussionId) => {
+        //setRightPane(<Discussion createdDiscussionId={discussionId}/>);
         console.log(discussionId);
+    };
+
+    const selectDiscussion = (discussion) => {
+        setRightPane(<Discussion discussionId={discussion._id}/>);
     };
 
     // const updateDiscussionPane = (discussionCreated) => {
@@ -100,6 +111,7 @@ export default function MapView() {
                         defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}
+                        selectDiscussion={selectDiscussion}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
@@ -115,6 +127,7 @@ export default function MapView() {
                         defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}
+                        selectDiscussion={selectDiscussion}
                     />
                 </Grid>
             </Grid>

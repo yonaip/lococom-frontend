@@ -59,20 +59,6 @@ export default function MapComponent(props) {
         }
     }
 
-
-    /*const createDiscussion = useCallback((e) => {
-        setMarkers((current) => [
-            ...current,
-            {
-                lat: e.latLng.lat(),
-                lng: e.latLng.lng(),
-                time: new Date(),
-            },
-        ]);
-    }, []);
-
-     */
-
     /**
      * withGoogleMap - initializes the map component
      */
@@ -112,6 +98,7 @@ export default function MapComponent(props) {
                         position={{lat: discussion.lat, lng: discussion.lng}}
                         onClick={() => {
                             setSelectedDiscussion(discussion);
+                            props.selectDiscussion(discussion);
                             //showDiscussion(selectedDiscussion);
                         }}
                         icon={{
