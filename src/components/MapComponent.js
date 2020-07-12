@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import  { GoogleMap, withGoogleMap, Marker, InfoWindow } from "react-google-maps";
-import * as places from "../resources/testPlaces.json"
 import nature from "../resources/nature-black.png"
+import request from "../resources/request.png"
+import walking from "../resources/sport-black.png"
+import photo from "../resources/photograph.png"
+import hint from "../resources/attention.png"
 import { getAllDiscussions } from "../services/DiscussionService"
 
 export default function MapComponent(props) {
-    const [selectedPlace, setSelectedPlace] = useState(null);
+    const [selectedDiscussion, setSelectedDiscussion] = useState(null);
     const [markers, setMarkers] = useState([]);
     const discussionCoordinates = props.setDiscussionCoordinates;
-    const [discussions, setDiscussions] = useState(null);
-    const [discussionLatLng, setDiscussionLatLng] = useState(null)
+    const [discussions, setDiscussions] = useState([]);
+    const [discussionLatLng, setDiscussionLatLng] = useState(null);
+    //const showDiscussion = props.showDiscussion;
 
     function loadAllDiscussions() {
         getAllDiscussions()
@@ -25,7 +29,7 @@ export default function MapComponent(props) {
     useEffect(() => {
         const listener = e => {
             if (e.key === "Escape") {
-                setSelectedPlace(null);
+                setSelectedDiscussion(null);
             }
         };
         window.addEventListener("keydown", listener);
@@ -35,6 +39,25 @@ export default function MapComponent(props) {
         };
 
     }, []);
+
+    useEffect(() => {
+       loadAllDiscussions();
+    },[]);
+
+    // topic icon chosen based on discussion topic
+    function chooseTopicIcon(discussion) {
+        if(discussion.topic === "Request") {
+            return request;
+        } else if(discussion.topic === "Nature") {
+            return nature;
+        } else if(discussion.topic === "Walking") {
+            return walking;
+        } else if(discussion.topic === "Photo") {
+            return photo;
+        } else if(discussion.topic === "Hint") {
+            return hint;
+        }
+    }
 
 
     //const createDiscussion = useCallback((e) => {
@@ -54,6 +77,7 @@ export default function MapComponent(props) {
      * withGoogleMap - initializes the map component
      */
     function Map() {
+        console.log(discussions);
         return (
             <GoogleMap
                 id="map"
@@ -68,7 +92,7 @@ export default function MapComponent(props) {
                         key={'${marker.lat}-${marker.lng}'}
                         position={{lat: discussionCoordinates.lat, lng: discussionCoordinates.lng}}
                         onClick={() => {
-                            setSelectedPlace(discussionCoordinates);
+                            setSelectedDiscussion(discussionCoordinates);
                         }}
                         /*
                         icon={{
@@ -81,32 +105,31 @@ export default function MapComponent(props) {
                     />
                 }
 
-
-
-                {places.Munich.map(discussion => (
+                {discussions.map(discussion => (
                     <Marker
-                        key={'${discussion.lat}-${discussion.lng}'}
+                        key={discussion._id}
                         position={{lat: discussion.lat, lng: discussion.lng}}
                         onClick={() => {
-                            setSelectedPlace(discussion);
+                            setSelectedDiscussion(discussion);
+                            //showDiscussion(selectedDiscussion);
                         }}
                         icon={{
-                            url: nature,
+                            url: chooseTopicIcon(discussion),
                             scaledSize: new window.google.maps.Size(30, 30),
                         }}
                     />
                 ))}
 
-                {selectedPlace && (
+                {selectedDiscussion && (
                     <InfoWindow
                         onCloseClick={() => {
-                            setSelectedPlace(null);
+                            setSelectedDiscussion(null);
                         }}
-                        position={{lat: selectedPlace.lat, lng: selectedPlace.lng}}
+                        position={{lat: selectedDiscussion.lat, lng: selectedDiscussion.lng}}
                     >
                         <div>
-                            <h2>{'New discussion'}</h2>
-                            <p>{'hiking app'}</p>
+                            <h2>{selectedDiscussion.title}</h2>
+                            <p>{selectedDiscussion.topic}</p>
                         </div>
                     </InfoWindow>
                 )}

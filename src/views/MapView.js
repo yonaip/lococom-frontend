@@ -44,7 +44,7 @@ export default function MapView() {
 
     const [discussionId, setDiscussionId] = useState(null);
 
-    const [discussionLatLng, setDiscussionLatLng] = useState(null);
+    const [selectedDiscussion, setSelectedDiscussion] = useState(null);
 
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
@@ -73,8 +73,8 @@ export default function MapView() {
          console.log(id);
     }
 
-    const setDiscussionCoordiantes = (coordinates) => {
-        setDiscussionLatLng(coordinates);
+    const showDiscussion = (discussion) => {
+        setSelectedDiscussion(discussion)
     }
 
     // Set container for map and disucssion pane
@@ -87,6 +87,7 @@ export default function MapView() {
                         defaultCenter={center}
                         onDblClick={toggleDiscussion}
                         setDiscussionCoordinates={center}
+                        showDiscussion={selectedDiscussion}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
@@ -105,6 +106,7 @@ export default function MapView() {
                     defaultCenter={center}
                     onDblClick={toggleDiscussion}
                     setDiscussionCoordinates={center}
+                    showDiscussion={selectedDiscussion}
                 />
             </Grid>
         );
@@ -116,12 +118,14 @@ export default function MapView() {
                         defaultCenter={center}
                         onDblClick={toggleDiscussion}
                         setDiscussionCoordinates={center}
+                        showDiscussion={selectedDiscussion}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
                     <Discussion
                         updateDiscussionPane={updateDiscussionPane}
                         createdDiscussionId={discussionId}
+                        showDiscussion={selectedDiscussion}
                     />
                 </Grid>
             </Grid>

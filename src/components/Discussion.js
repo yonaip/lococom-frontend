@@ -96,17 +96,27 @@ export default function Discussion(props) {
 
 
     const loadDiscussion = useCallback(() => {
-        getDiscussion(props.createdDiscussionId)
-            .then(({data}) => {
-                console.log(data);
-                setTitle(data.title);
-                setContent(data.content);
-                setTopic(data.topic);
-                setCreator(data.username);
-                setDiscussionId(data._id);
-                setRatingNum(data.votes);
-            })
-            .catch(err => console.log(err));
+        /*if (props.createdDiscussionId === null) {
+            setTitle(props.showDiscussion.title);
+            setContent(props.showDiscussion.content);
+            setTopic(props.showDiscussion.topic);
+            setCreator(props.showDiscussion.username);
+            setDiscussionId(props.showDiscussion._id);
+            setRatingNum(props.showDiscussion.votes);
+        } else {
+         */
+            getDiscussion(props.createdDiscussionId)
+                .then(({data}) => {
+                    console.log(data);
+                    setTitle(data.title);
+                    setContent(data.content);
+                    setTopic(data.topic);
+                    setCreator(data.username);
+                    setDiscussionId(data._id);
+                    setRatingNum(data.votes);
+                    props.createdDiscussionId(null);
+                })
+                .catch(err => console.log(err));
     });
 
     // The discussion are loaded initially
