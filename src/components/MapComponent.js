@@ -9,8 +9,8 @@ import { getAllDiscussions } from "../services/DiscussionService"
 
 export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
-    const [markers, setMarkers] = useState([]);
-    const discussionCoordinates = props.setDiscussionCoordinates;
+    const discussionCoordinates = null;
+    //props.setDiscussionCoordinates;
     const [discussions, setDiscussions] = useState([]);
     const [discussionLatLng, setDiscussionLatLng] = useState(null);
     //const showDiscussion = props.showDiscussion;
@@ -60,18 +60,18 @@ export default function MapComponent(props) {
     }
 
 
-    //const createDiscussion = useCallback((e) => {
-    //    setMarkers((current) => [
-    //        ...current,
-    //        {
-    //            lat: e.latLng.lat(),
-    //            lng: e.latLng.lng(),
-    //            time: new Date(),
-    //        },
-    //    ]);
-    //    console.log(markers);
-    //    setDiscussionCoordinates({ lat: markers[0].lat, lng: markers[0] })
-    //}, []);
+    /*const createDiscussion = useCallback((e) => {
+        setMarkers((current) => [
+            ...current,
+            {
+                lat: e.latLng.lat(),
+                lng: e.latLng.lng(),
+                time: new Date(),
+            },
+        ]);
+    }, []);
+
+     */
 
     /**
      * withGoogleMap - initializes the map component
@@ -85,12 +85,12 @@ export default function MapComponent(props) {
                 defaultCenter={props.defaultCenter}
                 options={{disableDefaultUI: true, zoomControl: true}}
                 onDblClick={props.onDblClick}
-                //createDiscussion();
+                //props.onDblClick;
             >
-                {
+                { (props.markers.length != 0) &&
                     <Marker
                         key={'${marker.lat}-${marker.lng}'}
-                        position={{lat: discussionCoordinates.lat, lng: discussionCoordinates.lng}}
+                        position={{lat: props.markers[props.markers.length - 1].lat, lng: props.markers[props.markers.length - 1].lng}}
                         onClick={() => {
                             setSelectedDiscussion(discussionCoordinates);
                         }}
@@ -104,6 +104,7 @@ export default function MapComponent(props) {
                          */
                     />
                 }
+
 
                 {discussions.map(discussion => (
                     <Marker

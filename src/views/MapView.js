@@ -42,6 +42,8 @@ export default function MapView() {
     // const [discussionCreated, setDiscussionStatus] = useState(false);
     // const [discussionId, setDiscussionId] = useState(null);
 
+    const [markers, setMarkers] = useState([]);
+
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -52,7 +54,7 @@ export default function MapView() {
 
     const updateMap = (coordinates) => {
         setCenter(coordinates);
-    }
+    };
 
     const createDiscussion = (event) => {
         const lat = event.latLng.lat();
@@ -64,11 +66,20 @@ export default function MapView() {
         });
 
         setRightPane(<CreateDiscussion lat={lat} lng={lng} handleClose={handleCreateDiscussionClose}/>);
+
+        setMarkers((current) => [
+            ...current,
+            {
+                lat: lat,
+                lng: lng,
+                time: new Date(),
+            },
+        ]);
     };
 
     const handleCreateDiscussionClose = (discussionId) => {
         console.log(discussionId);
-    }
+    };
 
     // const updateDiscussionPane = (discussionCreated) => {
     //     setDiscussionStatus(discussionCreated);
@@ -88,6 +99,7 @@ export default function MapView() {
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={createDiscussion}
+                        markers={markers}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
@@ -102,6 +114,7 @@ export default function MapView() {
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={createDiscussion}
+                        markers={markers}
                     />
                 </Grid>
             </Grid>
