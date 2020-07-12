@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField } from '@material-ui/core';
 import { addComment, getCommentsByDiscussionId } from "../services/CommentService";
-import { getLoggedInUser } from "../services/AuthService";
 import SendIcon from '@material-ui/icons/Send';
+
+const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     element: {
@@ -135,7 +136,7 @@ export default function AddComment(props) {
     // TODO change
     function handleSubmit() {
         //event.preventDefault();
-        addComment(getLoggedInUser(), commentContent, 0, props.createdDiscussionId)
+        addComment(config.currentlyLoggedUsername, commentContent, 0, props.createdDiscussionId)
             .then((response) => {
                 // Reload the comments also the new one
                 loadComments();
