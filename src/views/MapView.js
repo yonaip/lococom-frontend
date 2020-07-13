@@ -5,11 +5,6 @@ import MapHeader from "../components/Header";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/CreateDiscussion';
 import Discussion from "../components/Discussion";
-import nature from "../resources/nature-black.png"
-import request from "../resources/request.png"
-import walking from "../resources/sport-black.png"
-import photo from "../resources/photograph.png"
-import hint from "../resources/attention.png"
 import {getAllDiscussions} from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({

@@ -119,7 +119,7 @@ export default function AddComment(props) {
 
     const handleEmojiSelect = (emoji) => {
         console.log(emoji);
-        setCommentContent(commentContent + emoji.native);
+        setCommentContent(`${commentContent}${emoji.native}`);
         togglePicker();
     };
 
