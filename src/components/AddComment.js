@@ -181,6 +181,7 @@ export default function AddComment(props) {
 
             <Grid item xs={12} className={classes.element}>
                 <TextField
+                    value={commentContent}
                     onChange={onChangeContent}
                     className={classes.newComment}
                     id="outlined-margin-none"
