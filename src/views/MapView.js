@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
 import MapHeader from "../components/Header";
@@ -10,6 +10,7 @@ import request from "../resources/request.png"
 import walking from "../resources/sport-black.png"
 import photo from "../resources/photograph.png"
 import hint from "../resources/attention.png"
+import {getAllDiscussions} from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,6 +51,8 @@ export default function MapView() {
     // List of map markers created on double click
     const [markers, setMarkers] = useState([]);
 
+    const [discussions, setDiscussions] = useState([]);
+
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -84,15 +87,33 @@ export default function MapView() {
     };
 
     const handleCreateDiscussionClose = (discussionId) => {
-        //updateMap({lat: });
         setRightPane(<Discussion discussionId={discussionId}/>);
         console.log(discussionId);
+
+        // After discussion is created the red map marker is no longer needed and thus setMarkers([])
+        setMarkers([]);
     };
 
     const selectDiscussion = (discussion) => {
         updateMap({lat: discussion.lat, lng: discussion.lng});
         setRightPane(<Discussion discussionId={discussion._id}/>);
     };
+
+    function loadAllDiscussions() {
+        getAllDiscussions()
+            .then((res) => {
+                console.log(res);
+                setDiscussions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    // TODO: check how to memorize discussions array and add render only the newly created discussion
+    useEffect(() => {
+       loadAllDiscussions();
+    },[rightPane]);
 
     // const updateDiscussionPane = (discussionCreated) => {
     //     setDiscussionStatus(discussionCreated);
@@ -114,6 +135,7 @@ export default function MapView() {
                         onDblClick={createDiscussion}
                         markers={markers}
                         selectDiscussion={selectDiscussion}
+                        discussions={discussions}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
@@ -130,6 +152,7 @@ export default function MapView() {
                         onDblClick={createDiscussion}
                         markers={markers}
                         selectDiscussion={selectDiscussion}
+                        discussions={discussions}
                     />
                 </Grid>
             </Grid>

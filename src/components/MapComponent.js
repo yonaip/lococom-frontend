@@ -11,20 +11,8 @@ export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
     const discussionCoordinates = null;
     //props.setDiscussionCoordinates;
-    const [discussions, setDiscussions] = useState([]);
     const [discussionLatLng, setDiscussionLatLng] = useState(null);
     //const showDiscussion = props.showDiscussion;
-
-    function loadAllDiscussions() {
-        getAllDiscussions()
-            .then((res) => {
-                console.log(res);
-                setDiscussions(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
 
     useEffect(() => {
         const listener = e => {
@@ -39,10 +27,6 @@ export default function MapComponent(props) {
         };
 
     }, []);
-
-    useEffect(() => {
-       loadAllDiscussions();
-    },[]);
 
     // topic icon chosen based on discussion topic
     function chooseTopicIcon(discussion) {
@@ -63,7 +47,7 @@ export default function MapComponent(props) {
      * withGoogleMap - initializes the map component
      */
     function Map() {
-        console.log(discussions);
+        console.log(props.discussions);
         return (
             <GoogleMap
                 id="map"
@@ -92,7 +76,7 @@ export default function MapComponent(props) {
                 }
 
 
-                {discussions.map(discussion => (
+                {props.discussions.map(discussion => (
                     <Marker
                         key={discussion._id}
                         position={{lat: discussion.lat, lng: discussion.lng}}
