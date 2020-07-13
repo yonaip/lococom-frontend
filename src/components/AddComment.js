@@ -1,8 +1,11 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, TextField } from '@material-ui/core';
+import { Grid, Button, TextField, IconButton } from '@material-ui/core';
 import { addComment, getCommentsByDiscussionId } from "../services/CommentService";
 import SendIcon from '@material-ui/icons/Send';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SentimentSatisfiedRoundedIcon from '@material-ui/icons/SentimentSatisfiedRounded';
+import EmojiPicker from "./EmojiPicker";
 
 const config = require("../services/ConfigService");
 
@@ -71,20 +74,16 @@ const useStyles = makeStyles((theme) => ({
     },
 
     newComment: {
-        minHeight: "10%",
         float: "left",
         color: "white",
         borderRadius: theme.shape.borderRadius,
         overflow: "hidden",
         width: "80%",
-        marginTop: "2%",
         background: "white",
     },
 
     post: {
         float: 'left',
-        marginTop: "2%",
-        marginLeft: "2.5%",
         width: '3vw',
         height: '6vh',
         [theme.breakpoints.down('sm')]: {
@@ -108,6 +107,21 @@ export default function AddComment(props) {
     const [commentContent, setCommentContent] = React.useState("");
     const [commentList, setCommentList] = React.useState([]);
     const [voted, setVote] = useState("");
+    const [showPicker, setShowPicker] = useState(false);
+
+    const togglePicker = () => {
+        if(showPicker) {
+            setShowPicker(false);
+        } else {
+            setShowPicker(true);
+        }
+    };
+
+    const handleEmojiSelect = (emoji) => {
+        console.log(emoji);
+        setCommentContent(commentContent + emoji.native);
+        togglePicker();
+    };
 
     const onChangeContent = (event) => {
         setCommentContent(event.target.value);
@@ -179,18 +193,28 @@ export default function AddComment(props) {
                 </div>
             </Grid>
 
+            {showPicker && <EmojiPicker handleEmojiSelect={handleEmojiSelect}/>}
             <Grid item xs={12} className={classes.element}>
                 <TextField
                     value={commentContent}
                     onChange={onChangeContent}
                     className={classes.newComment}
                     id="outlined-margin-none"
-                    placeholder="Your Comment."
+                    placeholder="Type your comment here..."
                     variant="outlined"
                     InputLabelProps={{shrink: true}}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={togglePicker} edge="end">
+                                    <SentimentSatisfiedRoundedIcon fontSize="inherit"/>
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
                 />
-                <Button onClick={handleSubmit} size="large" variant="contained" color="primary" className={classes.post}>
-                    <SendIcon />
+                <Button onClick={handleSubmit}>
+                    <SendIcon fontSize="large" color="primary"/>
                 </Button>
             </Grid>
         </Grid>
