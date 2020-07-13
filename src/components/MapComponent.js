@@ -73,7 +73,7 @@ export default function MapComponent(props) {
                 onDblClick={props.onDblClick}
                 //props.onDblClick;
             >
-                { (props.markers.length != 0) &&
+                {(props.markers.length != 0) &&
                     <Marker
                         key={'${marker.lat}-${marker.lng}'}
                         position={{lat: props.markers[props.markers.length - 1].lat, lng: props.markers[props.markers.length - 1].lng}}

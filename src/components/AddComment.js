@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField } from '@material-ui/core';
 import { addComment, getCommentsByDiscussionId } from "../services/CommentService";
@@ -105,19 +105,21 @@ const useStyles = makeStyles((theme) => ({
 export default function AddComment(props) {
     const classes = useStyles();
     const [selected, setSelected] = useState(false);
-    const [user, setUser] = useState("User123");
     const [commentContent, setCommentContent] = React.useState("");
     const [commentList, setCommentList] = React.useState([]);
-    //const [discussionId, setDiscussionId] = React.useState("5f02287ae89b7281eabbff57");
     const [voted, setVote] = useState("");
 
     const onChangeContent = (event) => {
         setCommentContent(event.target.value);
     };
 
+    function clear() {
+        setCommentContent("");
+    }
+
     console.log(props.discussionId);
     // Fetch comments from the backend
-    const loadComments = useCallback(() => {
+    function loadComments() {
         getCommentsByDiscussionId(props.discussionId)
             .then(({data}) => {
                 console.log(data);
@@ -126,21 +128,26 @@ export default function AddComment(props) {
             .catch((err) => {
                 console.log(err);
             })
-    }, []);
+    }
 
     // The comments are loaded initially
     useEffect(() => {
         loadComments();
-    }, [loadComments]);
+    }, [props.discussionId]);
 
     // TODO change
     function handleSubmit() {
-        //event.preventDefault();
+        if(!config.currentlyLoggedUsername) {
+            alert("Please log in first!");
+            return;
+        }
+
         addComment(config.currentlyLoggedUsername, commentContent, 0, props.discussionId)
             .then((response) => {
                 // Reload the comments also the new one
                 loadComments();
                 console.log('Comment created');
+                clear();
             })
             .catch((err) => {
                 console.error(err);
@@ -181,7 +188,7 @@ export default function AddComment(props) {
                     variant="outlined"
                     InputLabelProps={{shrink: true}}
                 />
-                <Button onClick={() => {handleSubmit();}} size="large" variant="contained" color="primary" className={classes.post}>
+                <Button onClick={handleSubmit} size="large" variant="contained" color="primary" className={classes.post}>
                     <SendIcon />
                 </Button>
             </Grid>

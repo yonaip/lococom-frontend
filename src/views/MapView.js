@@ -84,11 +84,13 @@ export default function MapView() {
     };
 
     const handleCreateDiscussionClose = (discussionId) => {
-        //setRightPane(<Discussion createdDiscussionId={discussionId}/>);
+        //updateMap({lat: });
+        setRightPane(<Discussion discussionId={discussionId}/>);
         console.log(discussionId);
     };
 
     const selectDiscussion = (discussion) => {
+        updateMap({lat: discussion.lat, lng: discussion.lng});
         setRightPane(<Discussion discussionId={discussion._id}/>);
     };
 

@@ -116,6 +116,7 @@ export default function Discussion(props) {
                     setDiscussionId(data._id);
                     setRatingNum(data.votes);
                     //props.discussionId(null);
+                    console.log(props.discussionId);
                 })
                 .catch(err => console.log(err));
     });

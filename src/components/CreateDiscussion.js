@@ -91,7 +91,7 @@ export default function CreateDiscussion(props) {
 
         createDiscussion(username, title, selectedTopic, content, votes, lat, lng)
             .then(response => {
-                clear()
+                clear();
                 props.handleClose(response.data._id);
             }).catch((err) => {
                 console.log(err);
@@ -99,8 +99,8 @@ export default function CreateDiscussion(props) {
     }
 
     const handleCancel = () => {
-        clear()
-        props.handleClose()
+        clear();
+        //props.handleClose();
     }
 
     const onChangeContent = (event) => {
