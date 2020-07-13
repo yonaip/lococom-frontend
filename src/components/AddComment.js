@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, TextField } from '@material-ui/core';
+import { Grid, Button, TextField, IconButton } from '@material-ui/core';
 import { addComment, getCommentsByDiscussionId } from "../services/CommentService";
-import { getLoggedInUser } from "../services/AuthService";
 import SendIcon from '@material-ui/icons/Send';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SentimentSatisfiedRoundedIcon from '@material-ui/icons/SentimentSatisfiedRounded';
+import EmojiPicker from "./EmojiPicker";
+
+const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     element: {
@@ -70,20 +74,16 @@ const useStyles = makeStyles((theme) => ({
     },
 
     newComment: {
-        minHeight: "10%",
         float: "left",
         color: "white",
         borderRadius: theme.shape.borderRadius,
         overflow: "hidden",
         width: "80%",
-        marginTop: "2%",
         background: "white",
     },
 
     post: {
         float: 'left',
-        marginTop: "2%",
-        marginLeft: "2.5%",
         width: '3vw',
         height: '6vh',
         [theme.breakpoints.down('sm')]: {
@@ -104,20 +104,37 @@ const useStyles = makeStyles((theme) => ({
 export default function AddComment(props) {
     const classes = useStyles();
     const [selected, setSelected] = useState(false);
-    const [user, setUser] = useState("User123");
     const [commentContent, setCommentContent] = React.useState("");
     const [commentList, setCommentList] = React.useState([]);
-    //const [discussionId, setDiscussionId] = React.useState("5f02287ae89b7281eabbff57");
     const [voted, setVote] = useState("");
+    const [showPicker, setShowPicker] = useState(false);
+
+    const togglePicker = () => {
+        if(showPicker) {
+            setShowPicker(false);
+        } else {
+            setShowPicker(true);
+        }
+    };
+
+    const handleEmojiSelect = (emoji) => {
+        console.log(emoji);
+        setCommentContent(commentContent + emoji.native);
+        togglePicker();
+    };
 
     const onChangeContent = (event) => {
         setCommentContent(event.target.value);
     };
 
-    console.log(props.createdDiscussionId);
+    function clear() {
+        setCommentContent("");
+    }
+
+    console.log(props.discussionId);
     // Fetch comments from the backend
-    const loadComments = useCallback(() => {
-        getCommentsByDiscussionId(props.createdDiscussionId)
+    function loadComments() {
+        getCommentsByDiscussionId(props.discussionId)
             .then(({data}) => {
                 console.log(data);
                 setCommentList(data);
@@ -125,21 +142,26 @@ export default function AddComment(props) {
             .catch((err) => {
                 console.log(err);
             })
-    }, []);
+    }
 
     // The comments are loaded initially
     useEffect(() => {
         loadComments();
-    }, [loadComments]);
+    }, [props.discussionId]);
 
     // TODO change
     function handleSubmit() {
-        //event.preventDefault();
-        addComment(getLoggedInUser(), commentContent, 0, props.createdDiscussionId)
+        if(!config.currentlyLoggedUsername) {
+            alert("Please log in first!");
+            return;
+        }
+
+        addComment(config.currentlyLoggedUsername, commentContent, 0, props.discussionId)
             .then((response) => {
                 // Reload the comments also the new one
                 loadComments();
                 console.log('Comment created');
+                clear();
             })
             .catch((err) => {
                 console.error(err);
@@ -171,17 +193,28 @@ export default function AddComment(props) {
                 </div>
             </Grid>
 
+            {showPicker && <EmojiPicker handleEmojiSelect={handleEmojiSelect}/>}
             <Grid item xs={12} className={classes.element}>
                 <TextField
+                    value={commentContent}
                     onChange={onChangeContent}
                     className={classes.newComment}
                     id="outlined-margin-none"
-                    placeholder="Your Comment."
+                    placeholder="Type your comment here..."
                     variant="outlined"
                     InputLabelProps={{shrink: true}}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={togglePicker} edge="end">
+                                    <SentimentSatisfiedRoundedIcon fontSize="inherit"/>
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
                 />
-                <Button onClick={() => {handleSubmit();}} size="large" variant="contained" color="primary" className={classes.post}>
-                    <SendIcon />
+                <Button onClick={handleSubmit}>
+                    <SendIcon fontSize="large" color="primary"/>
                 </Button>
             </Grid>
         </Grid>

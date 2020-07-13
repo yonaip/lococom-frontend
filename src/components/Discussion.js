@@ -11,7 +11,8 @@ import photoimg from "../resources/photograph.png";
 import alertimg from "../resources/alert.png";
 import AddComment from "./AddComment";
 import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../services/DiscussionService";
-import { getLoggedInUser } from "../services/AuthService";
+
+const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -96,17 +97,28 @@ export default function Discussion(props) {
 
 
     const loadDiscussion = useCallback(() => {
-        getDiscussion(props.createdDiscussionId)
-            .then(({data}) => {
-                console.log(data);
-                setTitle(data.title);
-                setContent(data.content);
-                setTopic(data.topic);
-                setCreator(data.username);
-                setDiscussionId(data._id);
-                setRatingNum(data.votes);
-            })
-            .catch(err => console.log(err));
+        /*if (props.createdDiscussionId === null) {
+            setTitle(props.showDiscussion.title);
+            setContent(props.showDiscussion.content);
+            setTopic(props.showDiscussion.topic);
+            setCreator(props.showDiscussion.username);
+            setDiscussionId(props.showDiscussion._id);
+            setRatingNum(props.showDiscussion.votes);
+        } else {
+         */
+            getDiscussion(props.discussionId)
+                .then(({data}) => {
+                    console.log(data);
+                    setTitle(data.title);
+                    setContent(data.content);
+                    setTopic(data.topic);
+                    setCreator(data.username);
+                    setDiscussionId(data._id);
+                    setRatingNum(data.votes);
+                    //props.discussionId(null);
+                    console.log(props.discussionId);
+                })
+                .catch(err => console.log(err));
     });
 
     // The discussion are loaded initially
@@ -116,7 +128,7 @@ export default function Discussion(props) {
 
     function handleUpVoteDiscussion() {
         if (!userHasVotedPositive & !userHasVotedNegative){
-            upVoteDiscussion(props.createdDiscussionId)
+            upVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
                     console.log(response)
@@ -130,7 +142,7 @@ export default function Discussion(props) {
 
     function handleDownVoteDiscussion() {
         if (!userHasVotedNegative & !userHasVotedPositive){
-            downVoteDiscussion(props.createdDiscussionId)
+            downVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
                     console.log(response)
@@ -171,7 +183,7 @@ export default function Discussion(props) {
                 <ButtonBase>
                     <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
                     <Typography variant="h6" className={classes.text}>
-                        {getLoggedInUser()}
+                        {config.currentlyLoggedUsername}
                     </Typography>
                 </ButtonBase>
             </Grid>
@@ -203,7 +215,7 @@ export default function Discussion(props) {
                 </div>
             </Grid>
 
-            <AddComment createdDiscussionId={props.discussionId}/>
+            <AddComment discussionId={props.discussionId}/>
         </Grid>
     );
 }

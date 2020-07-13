@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import {Grid, Button, TextField, Typography, Fab, ButtonBase} from '@material-ui/core';
-import requestimg from '../resources/request.png';
-import walkerimg from '../resources/shoes.png';
-import photoimg from '../resources/photograph.png';
-import natureimg from '../resources/nature.png';
-import alertimg from '../resources/alert.png';
-import { createDiscussion } from "../services/DiscussionService";
-import { getLoggedInUser } from "../services/AuthService";
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Button, TextField, Typography, Box } from '@material-ui/core';
 
+import { createDiscussion } from "../services/DiscussionService";
+import Topic from "./Topic";
+
+const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,291 +17,114 @@ const useStyles = makeStyles((theme) => ({
 
     element: {
         position: 'relative',
-        justifyContent: 'inherit',
-    },
-
-    subElement: {
-        justifyContent: 'inherit',
-    },
-
-    icon: {
-        //margin: theme.spacing(0,3),
-        float: 'left',
-    },
-
-    text: {
-        color: "black",
-        textAlign: 'left',
+        justifyContent: 'center',
         padding: theme.spacing(1),
-        flexGrow: 2,
-        marginTop: "2%"
     },
 
-    rectangle: {
-        background: '#B9CFD4',
-        height: '7vh',
-        marginBottom: theme.spacing(2),
-    },
-
-    rectangleTop: {
-        background: '#B9CFD4',
-        height: '7vh',
-        marginTop: theme.spacing(2),
+    title: {
+        marginBottom: theme.spacing(0)
     },
 
     titleField: {
         background: "white",
         borderRadius: "5px",
+        justifyContent: 'inherit',
         width: '90%',
-        margin: theme.spacing(0, 2.5),
+        margin: theme.spacing(0),
     },
 
     contentField: {
         width: '90%',
         background: "white",
         borderRadius: "5px",
-        margin: theme.spacing(0, 2.5),
+        margin: theme.spacing(0),
     },
 
-    request: {
-        backgroundColor: "#B5CDD0",
-        width: "3.5vw",
-        height: "3.5vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + requestimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    walking: {
-        backgroundColor: "#B5CDD0",
-        width: "3.5vw",
-        height: "3.5vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + walkerimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    nature: {
-        backgroundColor: "#B5CDD0",
-        width: "3.5vw",
-        height: "3.5vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + natureimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    photo: {
-        backgroundColor: "#B5CDD0",
-        width: "3.5vw",
-        height: "3.5vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + photoimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    hint: {
-        backgroundColor: "#B5CDD0",
-        width: "3.5vw",
-        height: "3.5vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + alertimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-        [theme.breakpoints.down('sm')]: {},
-
-    },
-    pickedRequest: {
-        backgroundColor: "#62AEBB",
-        width: "4.2vw",
-        height: "4.2vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + requestimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    pickedWalking: {
-        backgroundColor: "#62AEBB",
-        width: "4.2vw",
-        height: "4.2vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + walkerimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    pickedNature: {
-        backgroundColor: "#62AEBB",
-        width: "4.2vw",
-        height: "4.2vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + natureimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    pickedPhoto: {
-        backgroundColor: "#62AEBB",
-        width: "4.2vw",
-        height: "4.2vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + photoimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-    pickedHint: {
-        backgroundColor: "#62AEBB",
-        width: "4.2vw",
-        height: "4.2vw",
-        borderRadius: "50%",
-        marginRight: "5%",
-        marginTop: "3%",
-        backgroundImage: 'url(' + alertimg + ')',
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "70%",
-        backgroundPosition: "center",
-    },
-
-    textField: {
-        width: "90vw",
-        height: "50vw",
-    },
-    user: {
-        background: '#62AEBB',
-        height: '5vh',
-        width: '8vw',
-        margin: theme.spacing(1, 0, 0, 0),
-        borderRadius: theme.shape.borderRadius,
-        color: "white",
-        fontSize: 20,
+    cancel: {
         float: 'left',
-        textAlign: 'center'
+        margin: theme.spacing(1)
     },
 
     confirm: {
-        background: '#49D147',
-        color: "white",
-        minWidth: '8vw',
-        minHeight: '6.5vh',
-        marginTop: "12%",
-        marginLeft: "10%",
-        [theme.breakpoints.down('sm')]: {
-            width: '10vw',
-            height: '5vh',
-            fontSize: '65%'
-        },
-    },
-    cancel: {
-        marginTop: "12%",
-        marginLeft: "20%",
-        minWidth: '8vw',
-        minHeight: '6.5vh',
-        [theme.breakpoints.down('sm')]: {
-            width: '9vw',
-            height: '5vh',
-            fontSize: '65%'
-        },
+        float: 'center',
+        margin: theme.spacing(1)
     },
 
+    buttonBox: {
+        float: 'center',
+    }
 
 }));
 
-
+/** Component for creation of discussions
+ * 
+ * @param {*} props
+ * @param {Number} props.lat
+ * @param {Number} props.lng
+ * @param {()} handleClose returns the id of the newly created discussion or nothing
+ */
 export default function CreateDiscussion(props) {
-    const classes = useStyles();
-    const [title, setTitle] = useState("");
-    const [topic, setTopic] = useState("No topic selected");
-    const [content, setContent] = useState("");
-    const updateDiscussionPane = props.updateDiscussionPane;
 
-    /** Pass the discussionId to MapView and then from MapView to Discussion
-     After discussion is created the newly created discussion appears
-     */
-    const createdDiscussionId = props.createdDiscussionId;
+    const classes = useStyles();
+
+    const [title, setTitle] = useState("");
+    const [selectedTopic, setSelectedTopic] = useState("");
+    const [content, setContent] = useState("");
 
     // Clear input after discussion is saved
     const clear = () => {
         setTitle("");
         setContent("");
-        setTopic("No topic selected");
+        setSelectedTopic("");
     }
 
-    const handleCreateDiscussion = (event) => {
-        const username = getLoggedInUser();
-        const lat = 48.137154; // placeholder values
-        const lng = 11.576124;// placeholder values
+    const handleCreate = () => {
+        if(!config.currentlyLoggedUsername) {
+            alert("Please log in first!");
+            return;
+        }
+
+        const username = config.currentlyLoggedUsername;
+        const lat = props.lat;
+        const lng = props.lng;
         const votes = 0;
 
-        createDiscussion(username, title, topic, content, votes, lat, lng)
-            .then((response) => {
-                createdDiscussionId(response.data._id);
-                console.log(response.data._id);
+        createDiscussion(username, title, selectedTopic, content, votes, lat, lng)
+            .then(response => {
+                clear();
+                props.handleClose(response.data._id);
             }).catch((err) => {
-              console.log(err);
-        });
+                console.log(err);
+            });
+    }
+
+    const handleCancel = () => {
+        clear();
+        //props.handleClose();
     }
 
     const onChangeContent = (event) => {
         setContent(event.target.value);
-    };
+    }
+
     const onChangeTitle = (event) => {
         setTitle(event.target.value);
     }
-    const topicRequest = (event) => {
-        setTopic("Request");
-    }
-    const topicNature = (event) => {
-        setTopic("Nature");
-    }
-    const topicWalking = (event) => {
-        setTopic("Walking");
-    }
-    const topicPhoto = (event) => {
-        setTopic("Photo");
-    }
-    const topicHint = (event) => {
-        setTopic("Hint");
+
+    const selectTopic = (topic) => {
+        setSelectedTopic(topic);
     }
 
     return (
         <Grid container className={classes.root} justify="center">
-            <Grid item xs={12} className={classes.element}>
-                <ButtonBase>
-                    <AccountCircleIcon className={classes.icon} color="disabled" style={{fontSize: 65}}/>
-                    <Typography variant="h6" className={classes.text}>
-                        Username
-                    </Typography>
-                </ButtonBase>
-            </Grid>
 
             <Grid item xs={12} className={classes.element}>
-                <div className={classes.text}>
+                <Typography variant="h6" className={classes.title} gutterBottom>
                     Create a discussion
-                </div>
+                </Typography>
+                <Typography variant="caption" gutterBottom>
+                    at ({props.lat.toFixed(6)}, {props.lng.toFixed(6)})
+                </Typography>
             </Grid>
 
             <Grid item xs={12} className={classes.element}>
@@ -323,23 +142,23 @@ export default function CreateDiscussion(props) {
             </Grid>
 
             <Grid item xs={12} className={classes.element}>
-                <div className={classes.text}>
+                <Typography variant="h6" className={classes.title} gutterBottom>
                     Select a Topic
-                </div>
+                </Typography>
             </Grid>
 
             <Grid container xs={12} className={classes.element}>
-                <Fab onClick={topicRequest} className={topic === 'Request' ? classes.pickedRequest : classes.request}/>
-                <Fab onClick={topicNature} className={topic === 'Nature' ? classes.pickedNature : classes.nature}/>
-                <Fab onClick={topicWalking} className={topic === 'Walking' ? classes.pickedWalking : classes.walking}/>
-                <Fab onClick={topicPhoto} className={topic === 'Photo' ? classes.pickedPhoto : classes.photo}/>
-                <Fab onClick={topicHint} className={topic === 'Hint' ? classes.pickedHint : classes.hint}/>
+                <Topic onClick={selectTopic} type={'Request'} picked={selectedTopic === 'Request'} />
+                <Topic onClick={selectTopic} type={'Nature'} picked={selectedTopic === 'Nature'} />
+                <Topic onClick={selectTopic} type={'Walking'} picked={selectedTopic === 'Walking'} />
+                <Topic onClick={selectTopic} type={'Photo'} picked={selectedTopic === 'Photo'} />
+                <Topic onClick={selectTopic} type={'Hint'} picked={selectedTopic === 'Hint'} />
             </Grid>
 
             <Grid item xs={12} className={classes.element}>
-                <div className={classes.text}>
+                <Typography variant="h6" className={classes.title} gutterBottom>
                     Enter text | content
-                </div>
+                </Typography>
             </Grid>
 
             <Grid item xs={12} className={classes.element}>
@@ -351,31 +170,28 @@ export default function CreateDiscussion(props) {
                     rows={'10'}
                     variant="outlined"
                     placeholder="Enter Text..."
-                    InputProps={{inputProps: {rowsMax: 15}}}
-
+                    InputProps={{ inputProps: { rowsMax: 15 } }}
                 />
             </Grid>
 
             <Grid item xs={12} className={classes.element}>
-                <Button
-                    onClick={clear}
-                    className={classes.cancel}
-                    variant="contained"
-                    color="secondary">
-                    Cancel
-                </Button>
-                <Button
-                    onClick={() => {
-                        clear();
-                        handleCreateDiscussion();
-                        updateDiscussionPane(true)
-                    }}
-                    className={classes.confirm}
-                    variant="contained">
-                    Confirm
-                </Button>
+                <Box className={classes.buttonBox}>
+                    <Button
+                        onClick={handleCancel}
+                        className={classes.cancel}
+                        variant="contained"
+                        color="secondary">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleCreate}
+                        className={classes.confirm}
+                        variant="contained"
+                        color="inherit">
+                        Confirm
+                    </Button>
+                </Box>
             </Grid>
-
         </Grid>
     );
 }
