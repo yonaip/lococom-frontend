@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const config = require("./ConfigService");
+
 /**
  * Creates discussion
  * @param title
@@ -10,15 +12,16 @@ import axios from "axios";
  * @param lat
  * @param lng
  */
-async function createDiscussion(username, title, topic, content, votes, lat, lng) {
+async function createDiscussion(title, topic, content, votes, lat, lng) {
     const response = await axios.post('api/discussion', {
-        "username": username,
         "title": title,
         "topic": topic,
         "content": content,
         "votes": votes,
         "lat": lat,
         "lng": lng
+    }, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
     });
 
     return response;

@@ -84,12 +84,11 @@ export default function CreateDiscussion(props) {
             return;
         }
 
-        const username = config.currentlyLoggedUsername;
         const lat = props.lat;
         const lng = props.lng;
         const votes = 0;
 
-        createDiscussion(username, title, selectedTopic, content, votes, lat, lng)
+        createDiscussion(title, selectedTopic, content, votes, lat, lng)
             .then(response => {
                 clear();
                 props.handleClose(response.data._id);
