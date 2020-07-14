@@ -61,10 +61,6 @@ const useStyles = makeStyles((theme) => ({
         color: "blue",
     },
 
-    icon: {
-        float: 'left',
-    },
-
     discussionContent: {
         background: "black",
         /*margin:  theme.spacing(2,4),*/
@@ -95,30 +91,21 @@ export default function Discussion(props) {
     const [userHasVotedNegative, setUserHasVotedNegative] = useState(false);
     const [user, setUser] = useState("User123");
 
-
+    // TODO: Add backend endpoint for users (creatorId)
     const loadDiscussion = useCallback(() => {
-        /*if (props.createdDiscussionId === null) {
-            setTitle(props.showDiscussion.title);
-            setContent(props.showDiscussion.content);
-            setTopic(props.showDiscussion.topic);
-            setCreator(props.showDiscussion.username);
-            setDiscussionId(props.showDiscussion._id);
-            setRatingNum(props.showDiscussion.votes);
-        } else {
-         */
-            getDiscussion(props.discussionId)
-                .then(({data}) => {
-                    console.log(data);
-                    setTitle(data.title);
-                    setContent(data.content);
-                    setTopic(data.topic);
-                    setCreator(data.username);
-                    setDiscussionId(data._id);
-                    setRatingNum(data.votes);
-                    //props.discussionId(null);
-                    console.log(props.discussionId);
-                })
-                .catch(err => console.log(err));
+        getDiscussion(props.discussionId)
+            .then(({data}) => {
+                console.log(data);
+                setTitle(data.title);
+                setContent(data.content);
+                setTopic(data.topic);
+                setCreator(data.username);
+                setDiscussionId(data._id);
+                setRatingNum(data.votes);
+                //props.discussionId(null);
+                console.log(props.discussionId);
+            })
+            .catch(err => console.log(err));
     });
 
     // The discussion are loaded initially
@@ -179,15 +166,6 @@ export default function Discussion(props) {
 
     return (
         <Grid container className={classes.root} justify="space-around">
-            <Grid item xs={12} className={classes.element}>
-                <ButtonBase>
-                    <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
-                    <Typography variant="h6" className={classes.text}>
-                        {config.currentlyLoggedUsername}
-                    </Typography>
-                </ButtonBase>
-            </Grid>
-
             <Grid container className={classes.element}>
                 <Grid item xs={10} >
                     <ButtonBase>
