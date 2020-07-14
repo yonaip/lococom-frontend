@@ -144,6 +144,21 @@ export default function AddComment(props) {
             })
     }
 
+    // Send message on enter
+    useEffect(() => {
+        const listener = e => {
+            if (e.key === "Enter" && config.currentlyLoggedUsername) {
+                handleSubmit();
+            }
+        };
+
+        window.addEventListener("keydown", listener);
+
+        return () => {
+            window.removeEventListener("keydown", listener);
+        };
+    });
+
     // The comments are loaded initially
     useEffect(() => {
         loadComments();
