@@ -64,7 +64,7 @@ export default function MapComponent(props) {
      * withGoogleMap - initializes the map component
      */
     function Map() {
-        console.log(props.discussions);
+        //console.log(props.discussions);
         return (
             <GoogleMap
                 id="map"

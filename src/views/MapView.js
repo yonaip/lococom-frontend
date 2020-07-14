@@ -40,9 +40,6 @@ export default function MapView() {
     // TODO: implement leftsideMenu
     const [leftMenuOpen, setLeftMenu] = useState(false);
 
-    // const [discussionCreated, setDiscussionStatus] = useState(false);
-    // const [discussionId, setDiscussionId] = useState(null);
-
     // List of map markers created on double click
     const [markers, setMarkers] = useState([]);
 
@@ -110,15 +107,6 @@ export default function MapView() {
        loadAllDiscussions();
     },[rightPane]);
 
-    // const updateDiscussionPane = (discussionCreated) => {
-    //     setDiscussionStatus(discussionCreated);
-    // }
-
-    // const createdDiscussionId = (id) => {
-    //     setDiscussionId(id);
-    //     console.log(id);
-    // }
-
     // Set container for map and disucssion pane
     let grid;
     if (rightPane) {
@@ -153,44 +141,6 @@ export default function MapView() {
             </Grid>
         );
     }
-    // if (discussionOpen & !discussionCreated) {
-    //     grid = (
-    //         <Grid container>
-    //             <Grid item xs={8} className={classes.element}>
-    //                 <MapComponent
-    //                     defaultCenter={center}
-    //                     onDblClick={toggleDiscussion}
-    //                 />
-    //             </Grid>
-    //             <Grid item xs={4} className={classes.element}>
-    //                 <CreateDiscussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={createdDiscussionId}/>
-    //             </Grid>
-    //         </Grid>
-    //     );
-    // } else if (!discussionOpen & !discussionCreated) {
-    //     grid = (
-    //         <Grid item xs={12} className={classes.element}>
-    //             <MapComponent
-    //                 defaultCenter={center}
-    //                 onDblClick={toggleDiscussion}
-    //             />
-    //         </Grid>
-    //     );
-    // } else {
-    //     grid = (
-    //         <Grid container>
-    //             <Grid item xs={8} className={classes.element}>
-    //                 <MapComponent
-    //                     defaultCenter={center}
-    //                     onDblClick={toggleDiscussion}
-    //                 />
-    //             </Grid>
-    //             <Grid item xs={4} className={classes.element}>
-    //                 <Discussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={discussionId}/>
-    //             </Grid>
-    //         </Grid>
-    //     );
-    // }
 
     return (<div className={classes.root}>
         <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu} updateMap={updateMap} />
