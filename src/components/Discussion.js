@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ButtonBase, Grid, Typography } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import {makeStyles} from "@material-ui/core/styles";
@@ -11,8 +10,6 @@ import photoimg from "../resources/photograph.png";
 import alertimg from "../resources/alert.png";
 import AddComment from "./AddComment";
 import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../services/DiscussionService";
-
-const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,10 +58,6 @@ const useStyles = makeStyles((theme) => ({
         color: "blue",
     },
 
-    icon: {
-        float: 'left',
-    },
-
     discussionContent: {
         background: "black",
         /*margin:  theme.spacing(2,4),*/
@@ -90,35 +83,24 @@ export default function Discussion(props) {
     const [creator, setCreator] = useState("");
     const [discussionId, setDiscussionId] = useState("");
     const [ratingNum, setRatingNum] = useState("0");
-    const [commentList, setCommentList] = useState([]);
     const [userHasVotedPositive, setUserHasVotedPositive] = useState(false);
     const [userHasVotedNegative, setUserHasVotedNegative] = useState(false);
-    const [user, setUser] = useState("User123");
 
-
+    // TODO: Add backend endpoint for users (creatorId)
     const loadDiscussion = useCallback(() => {
-        /*if (props.createdDiscussionId === null) {
-            setTitle(props.showDiscussion.title);
-            setContent(props.showDiscussion.content);
-            setTopic(props.showDiscussion.topic);
-            setCreator(props.showDiscussion.username);
-            setDiscussionId(props.showDiscussion._id);
-            setRatingNum(props.showDiscussion.votes);
-        } else {
-         */
-            getDiscussion(props.discussionId)
-                .then(({data}) => {
-                    console.log(data);
-                    setTitle(data.title);
-                    setContent(data.content);
-                    setTopic(data.topic);
-                    setCreator(data.username);
-                    setDiscussionId(data._id);
-                    setRatingNum(data.votes);
-                    //props.discussionId(null);
-                    console.log(props.discussionId);
-                })
-                .catch(err => console.log(err));
+        getDiscussion(props.discussionId)
+            .then(({data}) => {
+                console.log(data);
+                setTitle(data.title);
+                setContent(data.content);
+                setTopic(data.topic);
+                setCreator(data.username);
+                setDiscussionId(data._id);
+                setRatingNum(data.votes);
+                //props.discussionId(null);
+                console.log(props.discussionId);
+            })
+            .catch(err => console.log(err));
     });
 
     // The discussion are loaded initially
@@ -127,7 +109,7 @@ export default function Discussion(props) {
     }, [loadDiscussion]);
 
     function handleUpVoteDiscussion() {
-        if (!userHasVotedPositive & !userHasVotedNegative){
+        if (!userHasVotedPositive && !userHasVotedNegative){
             upVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
@@ -141,7 +123,7 @@ export default function Discussion(props) {
     }
 
     function handleDownVoteDiscussion() {
-        if (!userHasVotedNegative & !userHasVotedPositive){
+        if (!userHasVotedNegative && !userHasVotedPositive){
             downVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
@@ -179,15 +161,6 @@ export default function Discussion(props) {
 
     return (
         <Grid container className={classes.root} justify="space-around">
-            <Grid item xs={12} className={classes.element}>
-                <ButtonBase>
-                    <AccountCircleIcon className={classes.icon} color="disabled" style={{ fontSize: 65 }}/>
-                    <Typography variant="h6" className={classes.text}>
-                        {config.currentlyLoggedUsername}
-                    </Typography>
-                </ButtonBase>
-            </Grid>
-
             <Grid container className={classes.element}>
                 <Grid item xs={10} >
                     <ButtonBase>

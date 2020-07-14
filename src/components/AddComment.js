@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, IconButton } from '@material-ui/core';
 import { addComment, getCommentsByDiscussionId } from "../services/CommentService";
@@ -103,10 +103,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddComment(props) {
     const classes = useStyles();
-    const [selected, setSelected] = useState(false);
     const [commentContent, setCommentContent] = React.useState("");
     const [commentList, setCommentList] = React.useState([]);
-    const [voted, setVote] = useState("");
     const [showPicker, setShowPicker] = useState(false);
 
     const togglePicker = () => {
@@ -119,7 +117,7 @@ export default function AddComment(props) {
 
     const handleEmojiSelect = (emoji) => {
         console.log(emoji);
-        setCommentContent(commentContent + emoji.native);
+        setCommentContent(`${commentContent}${emoji.native}`);
         togglePicker();
     };
 
@@ -144,6 +142,21 @@ export default function AddComment(props) {
             })
     }
 
+    // Send message on enter
+    useEffect(() => {
+        const listener = e => {
+            if (e.key === "Enter" && config.currentlyLoggedUsername) {
+                handleSubmit();
+            }
+        };
+
+        window.addEventListener("keydown", listener);
+
+        return () => {
+            window.removeEventListener("keydown", listener);
+        };
+    });
+
     // The comments are loaded initially
     useEffect(() => {
         loadComments();
@@ -166,7 +179,7 @@ export default function AddComment(props) {
             .catch((err) => {
                 console.error(err);
             });
-    };
+    }
 
     function Comment(props) {
         return (
