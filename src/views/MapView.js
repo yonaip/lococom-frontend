@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
 import MapHeader from "../components/Header";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/CreateDiscussion';
+import Discussion from "../components/Discussion";
+import nature from "../resources/nature-black.png"
+import request from "../resources/request.png"
+import walking from "../resources/sport-black.png"
+import photo from "../resources/photograph.png"
+import hint from "../resources/attention.png"
+import {getAllDiscussions} from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,59 +36,169 @@ export default function MapView() {
 
     const classes = useStyles();
 
-    const [leftMenuOpen, setLeftMenu] = useState(false);
-    const [discussionOpen, setDiscussion] = useState(true);
+    // Munich: lat: 48.137154, lng: 11.576124, TODO: update with user location
+    const [center, setCenter] = useState({ lat: 48.137154, lng: 11.576124 });
+    
+    // Sets the content of the right pane 
+    const [rightPane, setRightPane] = useState(null);
 
-    //Munich: lat: 48.137154, lng: 11.576124, update with user location
-    const [center, setCenter] = useState({lat: 48.137154, lng: 11.576124})
+    // TODO: implement leftsideMenu
+    const [leftMenuOpen, setLeftMenu] = useState(false);
+
+    // const [discussionCreated, setDiscussionStatus] = useState(false);
+    // const [discussionId, setDiscussionId] = useState(null);
+
+    // List of map markers created on double click
+    const [markers, setMarkers] = useState([]);
+
+    const [discussions, setDiscussions] = useState([]);
 
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-          return;
+            return;
         }
         setLeftMenu(open);
     };
 
-    const toggleDiscussion = (event) => {
-        // Do additional checks if required
-        console.log(event);
-        setDiscussion(!discussionOpen);
-    };
-
     const updateMap = (coordinates) => {
         setCenter(coordinates);
-    }
+    };
+
+    const createDiscussion = (event) => {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        
+        updateMap({
+            "lat":lat, 
+            "lng":lng
+        });
+
+        setRightPane(<CreateDiscussion lat={lat} lng={lng} handleClose={handleCreateDiscussionClose}/>);
+
+        setMarkers((current) => [
+            ...current,
+            {
+                lat: lat,
+                lng: lng,
+                time: new Date(),
+            },
+        ]);
+    };
+
+    const handleCreateDiscussionClose = (discussionId) => {
+        setRightPane(<Discussion discussionId={discussionId}/>);
+        console.log(discussionId);
+
+        // After discussion is created the red map marker is no longer needed and thus setMarkers([])
+        setMarkers([]);
+    };
+
+    const selectDiscussion = (discussion) => {
+        updateMap({lat: discussion.lat, lng: discussion.lng});
+        setRightPane(<Discussion discussionId={discussion._id}/>);
+    };
+
+    function loadAllDiscussions() {
+        getAllDiscussions()
+            .then((res) => {
+                console.log(res);
+                setDiscussions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    // TODO: check how to memorize discussions array and add render only the newly created discussion
+    useEffect(() => {
+       loadAllDiscussions();
+    },[rightPane]);
+
+    // const updateDiscussionPane = (discussionCreated) => {
+    //     setDiscussionStatus(discussionCreated);
+    // }
+
+    // const createdDiscussionId = (id) => {
+    //     setDiscussionId(id);
+    //     console.log(id);
+    // }
 
     // Set container for map and disucssion pane
     let grid;
-    if(discussionOpen) {
+    if (rightPane) {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
                     <MapComponent
                         defaultCenter={center}
-                        onDblClick={toggleDiscussion}
+                        onDblClick={createDiscussion}
+                        markers={markers}
+                        selectDiscussion={selectDiscussion}
+                        discussions={discussions}
                     />
                 </Grid>
                 <Grid item xs={4} className={classes.element}>
-                    <CreateDiscussion />
+                    {rightPane}
                 </Grid>
             </Grid>
         );
     } else {
         grid = (
-            <Grid item xs={12} className={classes.element}>
-                <MapComponent
-                    defaultCenter={center}
-                    onDblClick={toggleDiscussion}
-                />
+            <Grid container>
+                <Grid item xs={12} className={classes.element}>
+                    <MapComponent
+                        defaultCenter={center}
+                        onDblClick={createDiscussion}
+                        markers={markers}
+                        selectDiscussion={selectDiscussion}
+                        discussions={discussions}
+                    />
+                </Grid>
             </Grid>
         );
     }
+    // if (discussionOpen & !discussionCreated) {
+    //     grid = (
+    //         <Grid container>
+    //             <Grid item xs={8} className={classes.element}>
+    //                 <MapComponent
+    //                     defaultCenter={center}
+    //                     onDblClick={toggleDiscussion}
+    //                 />
+    //             </Grid>
+    //             <Grid item xs={4} className={classes.element}>
+    //                 <CreateDiscussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={createdDiscussionId}/>
+    //             </Grid>
+    //         </Grid>
+    //     );
+    // } else if (!discussionOpen & !discussionCreated) {
+    //     grid = (
+    //         <Grid item xs={12} className={classes.element}>
+    //             <MapComponent
+    //                 defaultCenter={center}
+    //                 onDblClick={toggleDiscussion}
+    //             />
+    //         </Grid>
+    //     );
+    // } else {
+    //     grid = (
+    //         <Grid container>
+    //             <Grid item xs={8} className={classes.element}>
+    //                 <MapComponent
+    //                     defaultCenter={center}
+    //                     onDblClick={toggleDiscussion}
+    //                 />
+    //             </Grid>
+    //             <Grid item xs={4} className={classes.element}>
+    //                 <Discussion updateDiscussionPane={updateDiscussionPane} createdDiscussionId={discussionId}/>
+    //             </Grid>
+    //         </Grid>
+    //     );
+    // }
 
     return (<div className={classes.root}>
-        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu} updateMap={updateMap}/>
+        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu} updateMap={updateMap} />
         <Drawer anchor='left' open={leftMenuOpen} onClose={toggleLeftMenu(false)}>
             <Typography variant="h6" className={classes.menuElement}>
                 Test
