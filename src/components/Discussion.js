@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ButtonBase, Grid, Typography } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import {makeStyles} from "@material-ui/core/styles";
@@ -11,8 +10,6 @@ import photoimg from "../resources/photograph.png";
 import alertimg from "../resources/alert.png";
 import AddComment from "./AddComment";
 import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../services/DiscussionService";
-
-const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -86,10 +83,8 @@ export default function Discussion(props) {
     const [creator, setCreator] = useState("");
     const [discussionId, setDiscussionId] = useState("");
     const [ratingNum, setRatingNum] = useState("0");
-    const [commentList, setCommentList] = useState([]);
     const [userHasVotedPositive, setUserHasVotedPositive] = useState(false);
     const [userHasVotedNegative, setUserHasVotedNegative] = useState(false);
-    const [user, setUser] = useState("User123");
 
     // TODO: Add backend endpoint for users (creatorId)
     const loadDiscussion = useCallback(() => {
@@ -114,7 +109,7 @@ export default function Discussion(props) {
     }, [loadDiscussion]);
 
     function handleUpVoteDiscussion() {
-        if (!userHasVotedPositive & !userHasVotedNegative){
+        if (!userHasVotedPositive && !userHasVotedNegative){
             upVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
@@ -128,7 +123,7 @@ export default function Discussion(props) {
     }
 
     function handleDownVoteDiscussion() {
-        if (!userHasVotedNegative & !userHasVotedPositive){
+        if (!userHasVotedNegative && !userHasVotedPositive){
             downVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();

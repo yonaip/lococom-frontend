@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import  { GoogleMap, withGoogleMap, Marker, InfoWindow } from "react-google-maps";
+import React, { useState, useEffect } from "react";
+import  { GoogleMap, withGoogleMap, Marker } from "react-google-maps";
 import nature from "../resources/nature_marker.svg"
 import request from "../resources/request_marker.svg"
 import walking from "../resources/walking_marker.svg"
@@ -15,9 +15,6 @@ import hintRed from "../resources/attention_red_marker.svg"
 export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
     const discussionCoordinates = null;
-    //props.setDiscussionCoordinates;
-    const [discussionLatLng, setDiscussionLatLng] = useState(null);
-    //const showDiscussion = props.showDiscussion;
 
     useEffect(() => {
         const listener = e => {
@@ -36,27 +33,27 @@ export default function MapComponent(props) {
     // topic icon chosen based on discussion topic
     function chooseTopicIcon(discussion) {
         if(discussion.topic === "Request") {
-            if(discussion == selectedDiscussion) {
+            if(discussion === selectedDiscussion) {
                 return requestRed;
             }
             return request;
         } else if(discussion.topic === "Nature") {
-            if(discussion == selectedDiscussion) {
+            if(discussion === selectedDiscussion) {
                 return natureRed;
             }
             return nature;
         } else if(discussion.topic === "Walking") {
-            if(discussion == selectedDiscussion) {
+            if(discussion === selectedDiscussion) {
                 return walkingRed;
             }
             return walking;
         } else if(discussion.topic === "Photo") {
-            if(discussion == selectedDiscussion) {
+            if(discussion === selectedDiscussion) {
                 return photoRed;
             }
             return photo;
         } else if(discussion.topic === "Hint") {
-            if(discussion == selectedDiscussion) {
+            if(discussion === selectedDiscussion) {
                 return hintRed;
             }
             return hint;
@@ -76,9 +73,9 @@ export default function MapComponent(props) {
                 options={{disableDefaultUI: true, zoomControl: true}}
                 onDblClick={props.onDblClick}
             >
-                {(props.markers.length != 0) &&
+                {(props.markers.length !== 0) &&
                     <Marker
-                        key={'${marker.lat}-${marker.lng}'}
+                        key={`${marker.lat}-${marker.lng}`}
                         position={{lat: props.markers[props.markers.length - 1].lat, lng: props.markers[props.markers.length - 1].lng}}
                         onClick={() => {
                             setSelectedDiscussion(discussionCoordinates);

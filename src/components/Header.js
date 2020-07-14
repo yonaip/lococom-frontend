@@ -36,15 +36,15 @@ export default function MapHeader(props) {
     if(config.currentlyLoggedUsername != null) {
       setUser(config.currentlyLoggedUsername);
     }
-  }
+  };
 
-  const handleLoginButton = (event) => {
+  const handleLoginButton = () => {
     setLoginDialogOpen(true);
-  }
+  };
 
-  const handleRegisterButton = (event) => {
+  const handleRegisterButton = () => {
     setRegisterDialogOpen(true);
-  }
+  };
 
   let userStatus;
   if(user == null) {

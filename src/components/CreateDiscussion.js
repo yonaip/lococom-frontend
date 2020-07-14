@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
  * @param {*} props
  * @param {Number} props.lat
  * @param {Number} props.lng
- * @param {()} handleClose returns the id of the newly created discussion or nothing
+ * @param {()} props.handleClose returns the id of the newly created discussion or nothing
  */
 export default function CreateDiscussion(props) {
 
@@ -76,7 +76,7 @@ export default function CreateDiscussion(props) {
         setTitle("");
         setContent("");
         setSelectedTopic("");
-    }
+    };
 
     const handleCreate = () => {
         if(!config.currentlyLoggedUsername) {
@@ -95,24 +95,24 @@ export default function CreateDiscussion(props) {
             }).catch((err) => {
                 console.log(err);
             });
-    }
+    };
 
     const handleCancel = () => {
         clear();
         //props.handleClose();
-    }
+    };
 
     const onChangeContent = (event) => {
         setContent(event.target.value);
-    }
+    };
 
     const onChangeTitle = (event) => {
         setTitle(event.target.value);
-    }
+    };
 
     const selectTopic = (topic) => {
         setSelectedTopic(topic);
-    }
+    };
 
     return (
         <Grid container className={classes.root} justify="center">
