@@ -3,13 +3,13 @@ import { ButtonBase, Grid, Typography } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import {makeStyles} from "@material-ui/core/styles";
-import requestimg from "../resources/request.png";
-import walkerimg from "../resources/shoes.png";
-import natureimg from "../resources/nature.png";
-import photoimg from "../resources/photograph.png";
-import alertimg from "../resources/alert.png";
+import requestimg from "../../resources/request.png";
+import walkerimg from "../../resources/shoes.png";
+import natureimg from "../../resources/nature.png";
+import photoimg from "../../resources/photograph.png";
+import alertimg from "../../resources/alert.png";
 import AddComment from "./AddComment";
-import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../services/DiscussionService";
+import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
     root: {

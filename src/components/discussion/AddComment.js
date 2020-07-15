@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, IconButton } from '@material-ui/core';
-import { addComment, getCommentsByDiscussionId } from "../services/CommentService";
+import { addComment, getCommentsByDiscussionId } from "../../services/CommentService";
 import SendIcon from '@material-ui/icons/Send';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SentimentSatisfiedRoundedIcon from '@material-ui/icons/SentimentSatisfiedRounded';
 import EmojiPicker from "./EmojiPicker";
 
-const config = require("../services/ConfigService");
+const config = require("../../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     element: {

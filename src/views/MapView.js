@@ -3,8 +3,8 @@ import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
 import MapHeader from "../components/Header";
 import MapComponent from "../components/MapComponent";
-import CreateDiscussion from '../components/CreateDiscussion';
-import Discussion from "../components/Discussion";
+import CreateDiscussion from '../components/discussion/CreateDiscussion';
+import Discussion from "../components/discussion/Discussion";
 import {getAllDiscussions} from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({

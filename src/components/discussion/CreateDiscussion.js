@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, Typography, Box } from '@material-ui/core';
 
-import { createDiscussion } from "../services/DiscussionService";
+import { createDiscussion } from "../../services/DiscussionService";
 import Topic from "./Topic";
 
-const config = require("../services/ConfigService");
+const config = require("../../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {

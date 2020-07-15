@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Fab } from '@material-ui/core';
 
-import requestimg from '../resources/request.png';
-import walkerimg from '../resources/shoes.png';
-import photoimg from '../resources/photograph.png';
-import natureimg from '../resources/nature.png';
-import alertimg from '../resources/alert.png';
+import requestimg from '../../resources/request.png';
+import walkerimg from '../../resources/shoes.png';
+import photoimg from '../../resources/photograph.png';
+import natureimg from '../../resources/nature.png';
+import alertimg from '../../resources/alert.png';
 
 // TODO: squish them to two classes
 const useStyles = makeStyles((theme) => ({
