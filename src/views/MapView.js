@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
 import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
 
-import MapHeader from "../components/Header";
+import Header from "../components/Header";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/discussion/CreateDiscussion';
 import Discussion from "../components/discussion/Discussion";
+import LeftDrawerMenu from '../components/LeftDrawerMenu';
+
 import {getAllDiscussions} from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
@@ -146,12 +148,8 @@ export default function MapView() {
     }
 
     return (<div className={classes.root}>
-        <MapHeader className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu} updateMap={updateMap} />
-        <Drawer anchor='left' open={leftMenuOpen} onClose={toggleLeftMenu(false)}>
-            <Typography variant="h6" className={classes.menuElement}>
-                Test
-            </Typography>
-        </Drawer>
+        <Header className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={updateMap} />
         {grid}
+        <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)}/>
     </div>);
 }

@@ -79,7 +79,7 @@ export default function MapHeader(props) {
         <Toolbar>
           <Grid container alignItems="center" justify = "flex-start">
             <Grid item xs={1}>
-              <IconButton edge="start" className={classes.menuButton} onClick={props.onLeftMenuClick(true)} color="inherit" aria-label="menu">
+              <IconButton edge="start" className={classes.menuButton} onClick={props.onLeftMenuClick} color="inherit" aria-label="menu">
                 <MenuIcon />
               </IconButton>
             </Grid>
