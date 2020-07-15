@@ -9,16 +9,19 @@ import {getAllDiscussions} from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        position:"fixed",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+    },
+    header: {
         flexGrow: 1,
+        height: "5vh"
     },
-    mapHeader: {
-        flexGrow: 1
-    },
-    element: {
-        margin: theme.spacing(0),
-        padding: theme.spacing(0),
-        height: "100vh",
-        border: theme.palette.primary
+    content: {
+        flexGrow: 1,
+        height: "95vh"
     },
     menuElement: {
         width: "15vw",
@@ -111,8 +114,8 @@ export default function MapView() {
     let grid;
     if (rightPane) {
         grid = (
-            <Grid container>
-                <Grid item xs={8} className={classes.element}>
+            <Grid container className={classes.content}>
+                <Grid item xs={8}>
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={createDiscussion}
@@ -121,15 +124,15 @@ export default function MapView() {
                         discussions={discussions}
                     />
                 </Grid>
-                <Grid item xs={4} className={classes.element}>
+                <Grid item xs={4}>
                     {rightPane}
                 </Grid>
             </Grid>
         );
     } else {
         grid = (
-            <Grid container>
-                <Grid item xs={12} className={classes.element}>
+            <Grid container className={classes.content}>
+                <Grid item xs={12}>
                     <MapComponent
                         defaultCenter={center}
                         onDblClick={createDiscussion}
