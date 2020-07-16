@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Grid, Drawer, makeStyles, Typography, Paper } from "@material-ui/core";
 
 import Header from "../components/Header";
 import MapComponent from "../components/MapComponent";
@@ -7,11 +7,11 @@ import CreateDiscussion from '../components/discussion/CreateDiscussion';
 import Discussion from "../components/discussion/Discussion";
 import LeftDrawerMenu from '../components/leftmenu/LeftDrawerMenu';
 
-import {getAllDiscussions} from "../services/DiscussionService";
+import { getAllDiscussions } from "../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        position:"fixed",
+        position: "fixed",
         top: 0,
         bottom: 0,
         left: 0,
@@ -28,6 +28,15 @@ const useStyles = makeStyles((theme) => ({
     menuElement: {
         width: "15vw",
         padding: theme.spacing(1)
+    },
+    container: {
+        position: "absolute",
+        overflow: 'auto',
+        top: "15vh",
+        right: theme.spacing(1),
+        zIndex: 1000,
+        height: "70vh",
+        width: "30vw",
     }
 }));
 
@@ -38,7 +47,7 @@ export default function MapView() {
 
     // Munich: lat: 48.137154, lng: 11.576124, TODO: update with user location
     const [center, setCenter] = useState({ lat: 48.137154, lng: 11.576124 });
-    
+
     // Sets the content of the right pane 
     const [rightPane, setRightPane] = useState(null);
 
@@ -65,13 +74,17 @@ export default function MapView() {
     const createDiscussion = (event) => {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
-        
+
         updateMap({
-            "lat":lat, 
-            "lng":lng
+            "lat": lat,
+            "lng": lng
         });
 
-        setRightPane(<CreateDiscussion lat={lat} lng={lng} handleClose={handleCreateDiscussionClose}/>);
+        setRightPane(
+            <Paper className={classes.container} elevation={3}>
+                <CreateDiscussion lat={lat} lng={lng} handleClose={handleCreateDiscussionClose} />
+            </Paper>
+        );
 
         setMarkers((current) => [
             ...current,
@@ -84,16 +97,23 @@ export default function MapView() {
     };
 
     const handleCreateDiscussionClose = (discussionId) => {
-        setRightPane(<Discussion discussionId={discussionId}/>);
-        console.log(discussionId);
+        if (!discussionId) {
+            setRightPane(null);
+        } else {
+            setRightPane(<Discussion discussionId={discussionId} />);
+        }
 
         // After discussion is created the red map marker is no longer needed and thus setMarkers([])
         setMarkers([]);
     };
 
     const selectDiscussion = (discussion) => {
-        updateMap({lat: discussion.lat, lng: discussion.lng});
-        setRightPane(<Discussion discussionId={discussion._id}/>);
+        updateMap({ lat: discussion.lat, lng: discussion.lng });
+        setRightPane(
+            <Paper className={classes.container} elevation={3}>
+                <Discussion discussionId={discussion._id} />
+            </Paper>
+        );
     };
 
     function loadAllDiscussions() {
@@ -109,47 +129,58 @@ export default function MapView() {
 
     // TODO: check how to memorize discussions array and add render only the newly created discussion
     useEffect(() => {
-       loadAllDiscussions();
-    },[rightPane]);
+        loadAllDiscussions();
+    }, [rightPane]);
 
     // Set container for map and disucssion pane
-    let grid;
-    if (rightPane) {
-        grid = (
-            <Grid container className={classes.content}>
-                <Grid item xs={8}>
-                    <MapComponent
-                        defaultCenter={center}
-                        onDblClick={createDiscussion}
-                        markers={markers}
-                        selectDiscussion={selectDiscussion}
-                        discussions={discussions}
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    {rightPane}
-                </Grid>
-            </Grid>
-        );
-    } else {
-        grid = (
-            <Grid container className={classes.content}>
-                <Grid item xs={12}>
-                    <MapComponent
-                        defaultCenter={center}
-                        onDblClick={createDiscussion}
-                        markers={markers}
-                        selectDiscussion={selectDiscussion}
-                        discussions={discussions}
-                    />
-                </Grid>
-            </Grid>
-        );
-    }
+    // let grid;
+    // if (rightPane) {
+    //     grid = (
+    //         <Grid container className={classes.content}>
+    //             <Grid item xs={8}>
+    //                 <MapComponent
+    //                     defaultCenter={center}
+    //                     onDblClick={createDiscussion}
+    //                     markers={markers}
+    //                     selectDiscussion={selectDiscussion}
+    //                     discussions={discussions}
+    //                 />
+    //             </Grid>
+    //             <Grid item xs={4}>
+    //                 {rightPane}
+    //             </Grid>
+    //         </Grid>
+    //     );
+    // } else {
+    //     grid = (
+    //         <Grid container className={classes.content}>
+    //             <Grid item xs={12}>
+    //                 <MapComponent
+    //                     defaultCenter={center}
+    //                     onDblClick={createDiscussion}
+    //                     markers={markers}
+    //                     selectDiscussion={selectDiscussion}
+    //                     discussions={discussions}
+    //                 />
+    //             </Grid>
+    //         </Grid>
+    //     );
+    // }
 
     return (<div className={classes.root}>
         <Header className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={updateMap} />
-        {grid}
-        <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)}/>
+        <Grid container className={classes.content}>
+            <Grid item xs={12}>
+                <MapComponent
+                    defaultCenter={center}
+                    onDblClick={createDiscussion}
+                    markers={markers}
+                    selectDiscussion={selectDiscussion}
+                    discussions={discussions}
+                />
+            </Grid>
+        </Grid>
+        <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} />
+        {rightPane}
     </div>);
 }

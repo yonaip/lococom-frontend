@@ -49,7 +49,6 @@ export default function LeftDrawerMenu(props) {
     const handleTick = async() => {
         if(config.jwtToken) {
             let response = await getNotifications();
-            console.log(response.data);
             if(notifications != response.data) {
                 setNotifications(response.data);
             }

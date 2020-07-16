@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { ButtonBase, Grid, Typography } from "@material-ui/core";
+import { ButtonBase, Grid, Typography, Paper } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import requestimg from "../../resources/request.png";
 import walkerimg from "../../resources/shoes.png";
 import natureimg from "../../resources/nature.png";
@@ -33,10 +33,8 @@ const useStyles = makeStyles((theme) => ({
     },
 
     topic: {
-        width: 60,
-        height: 60,
         float: 'left',
-        margin: theme.spacing(1,3),
+        margin: theme.spacing(1, 3),
     },
 
     ratingNumber: {
@@ -47,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
 
     ratingBlock: {
         float: 'left',
-
     },
 
     notRated: {
@@ -61,8 +58,6 @@ const useStyles = makeStyles((theme) => ({
     discussionContent: {
         background: "black",
         /*margin:  theme.spacing(2,4),*/
-        width: '90%',
-        height: '30vh',
         float: 'left',
         color: "white",
         marginTop: "2.5%",
@@ -89,7 +84,7 @@ export default function Discussion(props) {
     // TODO: Add backend endpoint for users (creatorId)
     const loadDiscussion = useCallback(() => {
         getDiscussion(props.discussionId)
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log(data);
                 setTitle(data.title);
                 setContent(data.content);
@@ -109,7 +104,7 @@ export default function Discussion(props) {
     }, [loadDiscussion]);
 
     function handleUpVoteDiscussion() {
-        if (!userHasVotedPositive && !userHasVotedNegative){
+        if (!userHasVotedPositive && !userHasVotedNegative) {
             upVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
@@ -123,7 +118,7 @@ export default function Discussion(props) {
     }
 
     function handleDownVoteDiscussion() {
-        if (!userHasVotedNegative && !userHasVotedPositive){
+        if (!userHasVotedNegative && !userHasVotedPositive) {
             downVoteDiscussion(props.discussionId)
                 .then((response) => {
                     loadDiscussion();
@@ -137,58 +132,60 @@ export default function Discussion(props) {
     }
 
     let topicIcon;
-    if(topic === 'Nature') {
+    if (topic === 'Nature') {
         topicIcon = (
-            <img alt='nature' src={natureimg} className={classes.topicIcon}/>
+            <img alt='nature' src={natureimg} className={classes.topicIcon} />
         );
-    } else if(topic === 'Request') {
+    } else if (topic === 'Request') {
         topicIcon = (
-            <img alt='request' src={requestimg} className={classes.topicIcon}/>
+            <img alt='request' src={requestimg} className={classes.topicIcon} />
         );
-    } else if(topic === 'Walking') {
+    } else if (topic === 'Walking') {
         topicIcon = (
-            <img alt='walking' src={walkerimg} className={classes.topicIcon}/>
+            <img alt='walking' src={walkerimg} className={classes.topicIcon} />
         );
-    } else if(topic === 'Photo') {
+    } else if (topic === 'Photo') {
         topicIcon = (
-            <img alt='photo' src={photoimg} className={classes.topicIcon}/>
+            <img alt='photo' src={photoimg} className={classes.topicIcon} />
         );
-    } else if(topic === 'Hint') {
+    } else if (topic === 'Hint') {
         topicIcon = (
-            <img alt='hint' src={alertimg} className={classes.topicIcon}/>
+            <img alt='hint' src={alertimg} className={classes.topicIcon} />
         );
     }
 
     return (
-        <Grid container className={classes.root} justify="space-around">
-            <Grid container className={classes.element}>
-                <Grid item xs={10} >
-                    <ButtonBase>
-                        {topicIcon}
-                        <Typography variant="h6" className={classes.text}>
-                            Posted by {creator} <br/> {title}
-                        </Typography>
-                    </ButtonBase>
+        <Paper>
+            <Grid container className={classes.root} justify="space-around">
+                <Grid container className={classes.element}>
+                    <Grid item xs={10} >
+                        <ButtonBase>
+                            {topicIcon}
+                            <Typography variant="h6" className={classes.text}>
+                                Posted by {creator} <br /> {title}
+                            </Typography>
+                        </ButtonBase>
+                    </Grid>
+
+                    <Grid item xs={2} >
+                        <div className={classes.ratingBlock}>
+                            <KeyboardArrowUpIcon onClick={handleUpVoteDiscussion} className={userHasVotedPositive ? classes.Rated : classes.notRated} />
+                            <div className={classes.ratingNumber} style={{ fontWeight: "bold" }}>
+                                {ratingNum}
+                            </div>
+                            <KeyboardArrowDownIcon onClick={handleDownVoteDiscussion} className={userHasVotedNegative ? classes.Rated : classes.notRated} />
+                        </div>
+                    </Grid>
                 </Grid>
 
-                <Grid item xs={2} >
-                    <div className={classes.ratingBlock}>
-                        <KeyboardArrowUpIcon onClick={handleUpVoteDiscussion} className={userHasVotedPositive ? classes.Rated : classes.notRated}/>
-                        <div className={classes.ratingNumber}  style={{ fontWeight: "bold" }}>
-                            {ratingNum}
-                        </div>
-                        <KeyboardArrowDownIcon onClick={handleDownVoteDiscussion} className={userHasVotedNegative ? classes.Rated : classes.notRated}/>
+                <Grid item xs={12} className={classes.element}>
+                    <div
+                        className={classes.discussionContent}> {content}
                     </div>
                 </Grid>
-            </Grid>
 
-            <Grid item xs={12} className={classes.element}>
-                <div
-                    className={classes.discussionContent}> {content}
-                </div>
+                <AddComment discussionId={props.discussionId} />
             </Grid>
-
-            <AddComment discussionId={props.discussionId}/>
-        </Grid>
+        </Paper>
     );
 }
