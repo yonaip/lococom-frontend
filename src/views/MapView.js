@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/discussion/CreateDiscussion';
 import Discussion from "../components/discussion/Discussion";
-import LeftDrawerMenu from '../components/LeftDrawerMenu';
+import LeftDrawerMenu from '../components/leftmenu/LeftDrawerMenu';
 
 import {getAllDiscussions} from "../services/DiscussionService";
 
