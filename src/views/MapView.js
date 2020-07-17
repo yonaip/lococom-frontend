@@ -5,7 +5,8 @@ import MapHeader from "../components/Header";
 import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/CreateDiscussion';
 import Discussion from "../components/Discussion";
-import {getAllDiscussions} from "../services/DiscussionService";
+import {getAllDiscussions, getDiscussion} from "../services/DiscussionService";
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // View of mapview page
-export default function MapView() {
+export default function MapView(props) {
 
     const classes = useStyles();
 
@@ -45,6 +46,16 @@ export default function MapView() {
 
     const [discussions, setDiscussions] = useState([]);
 
+    useEffect(() => {
+       if(props.id)
+       {
+       /* setRightPane(<Discussion discussionId={props.id}/>);*/
+        getDiscussion(props.id).then(({data}) => {selectDiscussion(data);})
+       }
+       else{
+       
+       }
+      }, [props.id]);
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -109,6 +120,7 @@ export default function MapView() {
 
     // Set container for map and disucssion pane
     let grid;
+    
     if (rightPane) {
         grid = (
             <Grid container>
