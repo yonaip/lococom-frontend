@@ -9,6 +9,13 @@ const getNotifications = async() => {
     return response;
 }
 
+const deleteNotification = async(notificationId) => {
+    const response = await axios.delete(`api/notification/${notificationId}`, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    });
+    return response;
+}
+
 export {
-    getNotifications
+    getNotifications, deleteNotification
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Grid, Drawer, makeStyles, Typography, Paper } from "@material-ui/core";
 
 import Header from "../components/Header";
@@ -87,6 +87,8 @@ export default function MapView() {
     };
 
     const createDiscussion = (event) => {
+        console.log(event);
+
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
 
@@ -154,19 +156,24 @@ export default function MapView() {
     // TODO: check how to memorize discussions array and add render only the newly created discussion
     useEffect(() => {
         loadAllDiscussions();
-    }, [rightPane]);
+    }, []);
+
+    // const mapComponent = useMemo(() => 
+    //     <MapComponent defaultCenter={{ lat: 48.137154, lng: 11.576124 }}
+    //         onDblClick={createDiscussion}
+    //         markers={markers}
+    //         selectDiscussion={selectDiscussion}
+    //         discussions={discussions}/>, [discussions, markers]);
 
     return (<div className={classes.root}>
         <Header className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={updateMap} />
         <Grid container className={classes.content}>
             <Grid item xs={12}>
-                <MapComponent
-                    defaultCenter={center}
+                <MapComponent defaultCenter={center}
                     onDblClick={createDiscussion}
                     markers={markers}
                     selectDiscussion={selectDiscussion}
-                    discussions={discussions}
-                />
+                    discussions={discussions}/>
             </Grid>
         </Grid>
         <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} />

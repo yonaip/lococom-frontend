@@ -6,7 +6,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import Notification from './Notification';
 
-import { getNotifications } from "../../services/NotificationService";
+import { getNotifications, deleteNotification } from "../../services/NotificationService";
 
 const config = require("../../services/ConfigService");
 
@@ -59,8 +59,14 @@ export default function LeftDrawerMenu(props) {
         setNotificaitonsOpen(!notificationsOpen);
     }
 
+    const onNotificationDelete = async(notificationId) => {
+        const notification = await deleteNotification(notificationId);
+        handleTick();
+        console.log(notification);
+    };
+
     const notificationContent = notifications.map((element, i) => (
-        <Notification key={i} type={element.type} message={element.message}/>
+        <Notification key={i} id={element._id} type={element.type} message={element.message} onDelete={onNotificationDelete}/>
     ));
 
     return (

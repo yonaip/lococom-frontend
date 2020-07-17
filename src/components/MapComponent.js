@@ -14,6 +14,8 @@ import hintRed from "../resources/attention_red_marker.svg"
 
 export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
+    //const [mapRef, setMapRef] = useState(null);
+
     const discussionCoordinates = null;
 
     useEffect(() => {
@@ -60,7 +62,8 @@ export default function MapComponent(props) {
         }
     }
 
-    /**
+    let mapRef;
+    /** ref={map => map && map.panTo(props.center)}
      * withGoogleMap - initializes the map component
      */
     function Map() {
@@ -68,10 +71,11 @@ export default function MapComponent(props) {
         return (
             <GoogleMap
                 id="map"
+                ref={(ref) => { mapRef = ref }}
                 defaultZoom={14}
                 defaultCenter={props.defaultCenter}
                 options={{disableDefaultUI: true, zoomControl: true}}
-                onDblClick={props.onDblClick}
+                onDblClick={handleDblClick}
             >
                 {(props.markers.length !== 0) &&
                     <Marker
@@ -116,6 +120,15 @@ export default function MapComponent(props) {
                 )}
             </GoogleMap>
         )
+    }
+
+    const handleDblClick= (event) => {
+        // console.log(mapRef);
+        // mapRef.panTo({
+        //     "lat": event.latLng.lat(),
+        //     "lng": event.latLng.lng()
+        // });
+        props.onDblClick(event);
     }
 
     const WrappedMap = withGoogleMap(Map);

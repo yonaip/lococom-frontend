@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { makeStyles, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import StarBorder from '@material-ui/icons/StarBorder';
+import { makeStyles, List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButton } from "@material-ui/core";
 import ThumbUp from '@material-ui/icons/ThumbUp';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
     nested: {
@@ -29,6 +29,11 @@ export default function Notification(props) {
                 <ThumbUp />
             </ListItemIcon>
             <ListItemText primary={primaryText} secondary={props.message}/>
+            <ListItemSecondaryAction>
+              <IconButton edge="end" aria-label="comments" onClick={() => props.onDelete(props.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
         </ListItem>
     );
 }
