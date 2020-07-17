@@ -11,6 +11,9 @@ import requestRed from "../resources/request_red_marker.svg"
 import walkingRed from "../resources/walking_red_marker.svg"
 import photoRed from "../resources/photo_red_marker.svg"
 import hintRed from "../resources/attention_red_marker.svg"
+import discussionMarkers from './DiscussionMarkers';
+import supercluster from "points-cluster";
+import {markersData} from "./MarkersData";
 
 export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
@@ -59,7 +62,32 @@ export default function MapComponent(props) {
         }
     }
 
-    const markersData = props.discussions.map((discussion) => {return {lat: discussion.lat, lng: discussion.lng}})
+    const [mapOptions, setMapOptions] = useState({center: props.center, zoom: 14});
+    const [clusters, setCluster] = useState([]);
+
+    useEffect(() => createClusters(mapOptions), [mapOptions]);
+
+    const getClusters = () => {
+        const output = supercluster(markersData, {
+            minZoom: 0,
+            maxZoom: 16,
+            radius: 60,
+        });
+        return output(mapOptions);
+    };
+
+    const createClusters = (props) => {
+        console.log(mapOptions.bounds);
+        if(mapOptions.bounds) {
+            setCluster(getClusters(props).map(({wx, wy, numPoints, points}) => ({
+                lat: wy, lng: wx, numPoints, id: `${numPoints}_${points[0].id}`, points,
+            })));
+        } else {
+            setCluster([]);
+        }
+    };
+
+    let mapRef;
 
     /**
      * withGoogleMap - initializes the map component
@@ -73,7 +101,8 @@ export default function MapComponent(props) {
                 defaultCenter={props.defaultCenter}
                 options={{disableDefaultUI: true, zoomControl: true}}
                 onDblClick={props.onDblClick}
-
+                ref={(ref) => mapRef = ref}
+                onCenterChanged={printPos}
             >
                 {(props.markers.length !== 0) && (
                     <Marker
@@ -115,6 +144,11 @@ export default function MapComponent(props) {
                 )}
             </GoogleMap>
         )
+    }
+
+    function printPos() {
+        console.log("Here I am! Doing SEBA again!")
+        console.log(mapRef);
     }
 
     const WrappedMap = withGoogleMap(Map);

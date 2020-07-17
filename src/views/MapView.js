@@ -119,7 +119,7 @@ export default function MapView() {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
-                    <TestGoogleMap
+                    <MapComponent
                         defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}
@@ -136,7 +136,7 @@ export default function MapView() {
         grid = (
             <Grid container>
                 <Grid item xs={12} className={classes.element}>
-                    <TestGoogleMap
+                    <MapComponent
                         defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}
