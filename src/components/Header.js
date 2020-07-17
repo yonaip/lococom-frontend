@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Grid, Box, Button, AppBar, Toolbar, Typography, IconButton} from "@material-ui/core";
+import { Grid, Box, Button, AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 
 import SearchFieldComponent from './SearchFieldComponent';
@@ -12,6 +12,7 @@ const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    zIndex: theme.zIndex.drawer + 1,
   },
   menuButton: {
     width: '50%',
@@ -33,7 +34,7 @@ export default function MapHeader(props) {
   const handleDialogClose = () => {
     setLoginDialogOpen(false);
     setRegisterDialogOpen(false);
-    if(config.currentlyLoggedUsername != null) {
+    if (config.currentlyLoggedUsername != null) {
       setUser(config.currentlyLoggedUsername);
     }
   };
@@ -47,9 +48,9 @@ export default function MapHeader(props) {
   };
 
   let userStatus;
-  if(user == null) {
+  if (user == null) {
     userStatus = (
-      <Grid container alignItems="center" justify = "flex-end">
+      <Grid container alignItems="center" justify="flex-end">
         <Grid item xs={2}>
           <Box className={classes.button}>
             <Button color="inherit" onClick={handleLoginButton}>Login</Button>
@@ -64,41 +65,39 @@ export default function MapHeader(props) {
     );
   } else {
     userStatus = (
-    <Grid container alignItems="center" justify = "flex-end">
-      <Grid item xs={2}>
-        <Box className={classes.button}>
-          <Button color="inherit" variant="outlined">{user}</Button>
-        </Box>
-      </Grid>
-    </Grid>);
+      <Grid container alignItems="center" justify="flex-end">
+        <Grid item xs={2}>
+          <Box className={classes.button}>
+            <Button color="inherit" variant="outlined">{user}</Button>
+          </Box>
+        </Grid>
+      </Grid>);
   }
 
   return (
-    <div>
-      <AppBar className={classes.root} position="static">
-        <Toolbar>
-          <Grid container alignItems="center" justify = "flex-start">
-            <Grid item xs={1}>
-              <IconButton edge="start" className={classes.menuButton} onClick={props.onLeftMenuClick(true)} color="inherit" aria-label="menu">
-                <MenuIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="h6" className={classes.title}>
-                LoCoCom
+    <AppBar className={classes.root} position="static">
+      <Toolbar>
+        <Grid container alignItems="center" justify="flex-start">
+          <Grid item xs={1}>
+            <IconButton edge="start" className={classes.menuButton} onClick={props.onLeftMenuClick} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="h6" className={classes.title}>
+              LoCoCom
               </Typography>
-            </Grid>
           </Grid>
-          <Grid container alignItems="center" justify = "center">
-            <Grid item xs={7}>
-              <SearchFieldComponent updateMap={props.updateMap}/>
-            </Grid>
+        </Grid>
+        <Grid container alignItems="center" justify="center">
+          <Grid item xs={7}>
+            <SearchFieldComponent updateMap={props.updateMap} />
           </Grid>
-          {userStatus}
-        </Toolbar>
-      </AppBar>
-      <LoginDialog open={loginDialogOpen} handleClose={handleDialogClose}/>
-      <RegisterDialog open={registerDialogOpen} handleClose={handleDialogClose}/>
-    </div>
+        </Grid>
+        {userStatus}
+      </Toolbar>
+      <LoginDialog open={loginDialogOpen} handleClose={handleDialogClose} />
+      <RegisterDialog open={registerDialogOpen} handleClose={handleDialogClose} />
+    </AppBar>
   );
 }
