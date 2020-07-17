@@ -139,7 +139,7 @@ export default function Discussion(props) {
     useEffect(() => {
         loadDiscussion(props.discussionId);
         loadComments(props.discussionId);
-    }, []);
+    }, [props.discussionId]);
 
     // Register listener on enter
     useEffect(() => {

@@ -59,6 +59,21 @@ export default function MapView() {
 
     const [discussions, setDiscussions] = useState([]);
 
+    // Register listener on escape
+    useEffect(() => {
+        const listener = e => {
+            if (e.key === "Escape") {
+                handleClose();
+            }
+        };
+
+        window.addEventListener("keydown", listener);
+
+        return () => {
+            window.removeEventListener("keydown", listener);
+        };
+    });
+
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -100,14 +115,23 @@ export default function MapView() {
         if (!discussionId) {
             setRightPane(null);
         } else {
-            setRightPane(<Discussion discussionId={discussionId} />);
+            setRightPane(
+                <Paper className={classes.container} elevation={3}>
+                    <Discussion discussionId={discussionId} />
+                </Paper>
+            );
         }
 
         // After discussion is created the red map marker is no longer needed and thus setMarkers([])
         setMarkers([]);
     };
 
+    const handleClose = () => {
+        setRightPane(null);
+    }
+
     const selectDiscussion = (discussion) => {
+        //console.log(discussion);
         updateMap({ lat: discussion.lat, lng: discussion.lng });
         setRightPane(
             <Paper className={classes.container} elevation={3}>
@@ -119,7 +143,7 @@ export default function MapView() {
     function loadAllDiscussions() {
         getAllDiscussions()
             .then((res) => {
-                console.log(res);
+                //console.log(res);
                 setDiscussions(res.data);
             })
             .catch((err) => {
