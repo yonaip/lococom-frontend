@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, TextField, IconButton } from '@material-ui/core';
+import { Grid, Button, TextField, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import { addComment, getCommentsByDiscussionId } from "../../services/CommentService";
 import SendIcon from '@material-ui/icons/Send';
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -10,7 +10,7 @@ import EmojiPicker from "./EmojiPicker";
 const config = require("../../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
-    
+
     root: {
         top: 0,
         bottom: 0,
@@ -122,7 +122,7 @@ export default function CommentSection(props) {
     const [showPicker, setShowPicker] = useState(false);
 
     const togglePicker = () => {
-        if(showPicker) {
+        if (showPicker) {
             setShowPicker(false);
         } else {
             setShowPicker(true);
@@ -147,7 +147,7 @@ export default function CommentSection(props) {
     // Fetch comments from the backend
     function loadComments() {
         getCommentsByDiscussionId(props.discussionId)
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log(data);
                 setCommentList(data);
             })
@@ -178,7 +178,7 @@ export default function CommentSection(props) {
 
     // TODO change
     function handleSubmit() {
-        if(!config.currentlyLoggedUsername) {
+        if (!config.currentlyLoggedUsername) {
             alert("Please log in first!");
             return;
         }
@@ -198,7 +198,7 @@ export default function CommentSection(props) {
     function Comment(props) {
         return (
             <div className={classes.comment}>
-                <span style={{fontWeight: "bold"}}>{props.username} :  </span>
+                <span style={{ fontWeight: "bold" }}>{props.username} :  </span>
                 <span>{props.commentcontent}</span>
             </div>
         );
@@ -206,9 +206,15 @@ export default function CommentSection(props) {
 
     function CommentList(props) {
         return (
-            <div>
-                {props.commentlist.map(c => <Comment username={c.username} commentcontent={c.content}/>)}
-            </div>
+            <List className={classes.list}>
+                {/*commentlist.map(c => <Comment username={c.username} commentcontent={c.content} />)*/
+                    commentList.map(comment => 
+                        <ListItem>
+                            <ListItemText primary={comment.content} secondary={comment.username} />
+                        </ListItem>
+                    )
+                }
+            </List>
         );
     }
 
@@ -216,11 +222,11 @@ export default function CommentSection(props) {
         <Grid container className={classes.root}>
             <Grid item xs={12} className={classes.element}>
                 <div className={classes.comments}>
-                    <CommentList commentlist={commentList}/>
+                    <CommentList commentlist={commentList} />
                 </div>
             </Grid>
 
-            {showPicker && <EmojiPicker handleEmojiSelect={handleEmojiSelect}/>}
+            {showPicker && <EmojiPicker handleEmojiSelect={handleEmojiSelect} />}
 
             <Grid item xs={12} className={classes.footer}>
                 <TextField
@@ -230,19 +236,19 @@ export default function CommentSection(props) {
                     id="outlined-margin-none"
                     placeholder="Type your comment here..."
                     variant="outlined"
-                    InputLabelProps={{shrink: true}}
+                    InputLabelProps={{ shrink: true }}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={togglePicker} edge="end">
-                                    <SentimentSatisfiedRoundedIcon fontSize="inherit"/>
+                                    <SentimentSatisfiedRoundedIcon fontSize="inherit" />
                                 </IconButton>
                             </InputAdornment>
                         )
                     }}
                 />
                 <Button onClick={handleSubmit}>
-                    <SendIcon fontSize="large" color="primary"/>
+                    <SendIcon fontSize="large" color="primary" />
                 </Button>
             </Grid>
         </Grid>

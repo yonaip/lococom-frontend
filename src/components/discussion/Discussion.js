@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Divider, Grid, Typography, TextField, Box } from "@material-ui/core";
+import { Divider, Grid, Typography, TextField, Box, Paper } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,12 +19,6 @@ const useStyles = makeStyles((theme) => ({
         top: 0,
         bottom: 0,
         height: "100%",
-        padding: theme.spacing(1),
-    },
-
-    element: {
-        position: 'relative',
-        justifyContent: 'center',
         padding: theme.spacing(1),
     },
 
@@ -165,9 +159,9 @@ export default function Discussion(props) {
     }
 
     return (
-        <Grid container className={classes.root} justify="center">
+        <Grid container direction="column" justify="space-between" alignItems="stretch" className={classes.root}>
             {/* Header of discussion. TODO: Add discussion topic */}
-            <Grid item xs={12}>
+            {/* <Grid item xs={2}>
                 <Grid container justify='left'>
                     <Grid item xs={2}>
                         <DoneOutline className={classes.topicIcon} />
@@ -199,7 +193,7 @@ export default function Discussion(props) {
                 <Divider />
             </Grid>
 
-            <Grid item xs={12} className={classes.element}>
+            <Grid item xs={4} className={classes.element}>
                 <TextField
                     className={classes.contentField}
                     value={content}
@@ -211,8 +205,54 @@ export default function Discussion(props) {
                 />
             </Grid>
 
-            <Grid item xs={12} className={classes.element}>
+            <Grid item xs={6} className={classes.element}>
                 <CommentSection discussionId={props.discussionId} />
+            </Grid> */}
+
+            <Grid item>
+                <Grid container direction="row" justify="space-between" alignItems="flex-start">
+                    <Grid item xs={2}>
+                        <Box>
+                            <DoneOutline />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <Typography variant="h6" align="left">
+                            {title}
+                        </Typography>
+                        <Typography variant="caption" className={classes.text}>
+                            Posted by somebody
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Grid container direction="column" justify="space-between" alignItems="center">
+                            <Grid item>
+                                <KeyboardArrowUpIcon onClick={handleUpVoteDiscussion} className={userHasVotedPositive ? classes.Rated : classes.notRated} />
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h6" align="center">
+                                    {ratingNum}
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <KeyboardArrowDownIcon onClick={handleDownVoteDiscussion} className={userHasVotedNegative ? classes.Rated : classes.notRated} />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Divider />
+            </Grid>
+
+            <Grid item>
+                <Typography variant="h6">
+                    Placeholder
+                </Typography>
+            </Grid>
+
+            <Grid item>
+                <Typography variant="h6">
+                    Placeholder
+                </Typography>
             </Grid>
         </Grid>
     );
