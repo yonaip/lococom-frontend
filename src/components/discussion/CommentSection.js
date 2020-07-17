@@ -10,10 +10,24 @@ import EmojiPicker from "./EmojiPicker";
 const config = require("../../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
+    
+    root: {
+        top: 0,
+        bottom: 0,
+        display: 'flex'
+    },
+
     element: {
         position: 'relative',
         justifyContent: 'inherit',
+        flexGrow: 2
     },
+
+    footer: {
+        bottom: 0,
+        position: 'relative',
+    },
+
     text: {
         color: "black",
         textAlign: 'left',
@@ -101,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function AddComment(props) {
+export default function CommentSection(props) {
     const classes = useStyles();
     const [commentContent, setCommentContent] = React.useState("");
     const [commentList, setCommentList] = React.useState([]);
@@ -199,7 +213,7 @@ export default function AddComment(props) {
     }
 
     return (
-        <Grid container>
+        <Grid container className={classes.root}>
             <Grid item xs={12} className={classes.element}>
                 <div className={classes.comments}>
                     <CommentList commentlist={commentList}/>
@@ -207,7 +221,8 @@ export default function AddComment(props) {
             </Grid>
 
             {showPicker && <EmojiPicker handleEmojiSelect={handleEmojiSelect}/>}
-            <Grid item xs={12} className={classes.element}>
+
+            <Grid item xs={12} className={classes.footer}>
                 <TextField
                     value={commentContent}
                     onChange={onChangeContent}

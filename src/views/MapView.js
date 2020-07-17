@@ -132,41 +132,6 @@ export default function MapView() {
         loadAllDiscussions();
     }, [rightPane]);
 
-    // Set container for map and disucssion pane
-    // let grid;
-    // if (rightPane) {
-    //     grid = (
-    //         <Grid container className={classes.content}>
-    //             <Grid item xs={8}>
-    //                 <MapComponent
-    //                     defaultCenter={center}
-    //                     onDblClick={createDiscussion}
-    //                     markers={markers}
-    //                     selectDiscussion={selectDiscussion}
-    //                     discussions={discussions}
-    //                 />
-    //             </Grid>
-    //             <Grid item xs={4}>
-    //                 {rightPane}
-    //             </Grid>
-    //         </Grid>
-    //     );
-    // } else {
-    //     grid = (
-    //         <Grid container className={classes.content}>
-    //             <Grid item xs={12}>
-    //                 <MapComponent
-    //                     defaultCenter={center}
-    //                     onDblClick={createDiscussion}
-    //                     markers={markers}
-    //                     selectDiscussion={selectDiscussion}
-    //                     discussions={discussions}
-    //                 />
-    //             </Grid>
-    //         </Grid>
-    //     );
-    // }
-
     return (<div className={classes.root}>
         <Header className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={updateMap} />
         <Grid container className={classes.content}>

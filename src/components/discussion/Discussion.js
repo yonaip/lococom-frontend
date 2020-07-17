@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { ButtonBase, Grid, Typography, Paper } from "@material-ui/core";
+import { Divider, Grid, Typography, TextField, Box } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,28 +8,35 @@ import walkerimg from "../../resources/shoes.png";
 import natureimg from "../../resources/nature.png";
 import photoimg from "../../resources/photograph.png";
 import alertimg from "../../resources/alert.png";
-import AddComment from "./AddComment";
+
+import DoneOutline from "@material-ui/icons/DoneOutline";
+
+import CommentSection from "./CommentSection";
 import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../../services/DiscussionService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        background: '#CAE2E5',
-        marginLeft: theme.spacing(2),
-        marginTop: theme.spacing(1),
-        flexGrow: 1,
+        top: 0,
+        bottom: 0,
+        height: "100%",
+        padding: theme.spacing(1),
     },
 
     element: {
         position: 'relative',
-        justifyContent: 'inherit',
+        justifyContent: 'center',
+        padding: theme.spacing(1),
+    },
+
+    footerElement: {
+        bottom: 0,
+        position: 'relative',
+        justifyContent: 'center',
+        padding: theme.spacing(1),
     },
 
     text: {
-        color: "black",
         textAlign: 'left',
-        padding: theme.spacing(1),
-        flexGrow: 2,
-        marginBottom: "2%"
     },
 
     topic: {
@@ -44,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     ratingBlock: {
-        float: 'left',
+        float: 'right',
     },
 
     notRated: {
@@ -55,18 +62,16 @@ const useStyles = makeStyles((theme) => ({
         color: "blue",
     },
 
-    discussionContent: {
-        background: "black",
-        /*margin:  theme.spacing(2,4),*/
-        float: 'left',
-        color: "white",
-        marginTop: "2.5%",
-        borderRadius: theme.shape.borderRadius,
+    contentField: {
+        display: 'flex',
+        padding: theme.spacing(1),
+        background: "white",
+        borderRadius: "5px",
+        justifyContent: 'inherit',
     },
 
     topicIcon: {
-        height: "10%",
-        width: "10%",
+        flexGrow: 1
     },
 }));
 
@@ -78,11 +83,14 @@ export default function Discussion(props) {
     const [creator, setCreator] = useState("");
     const [discussionId, setDiscussionId] = useState("");
     const [ratingNum, setRatingNum] = useState("0");
+
+    // const [discussion, setDiscussion] = useState(null);
+
     const [userHasVotedPositive, setUserHasVotedPositive] = useState(false);
     const [userHasVotedNegative, setUserHasVotedNegative] = useState(false);
 
     // TODO: Add backend endpoint for users (creatorId)
-    const loadDiscussion = useCallback(() => {
+    const loadDiscussion = async (discussionId) => {
         getDiscussion(props.discussionId)
             .then(({ data }) => {
                 console.log(data);
@@ -96,12 +104,14 @@ export default function Discussion(props) {
                 console.log(props.discussionId);
             })
             .catch(err => console.log(err));
-    });
+        // const discussion = await getDiscussion(discussionId);
+        // setDiscussion(discussion);
+    };
 
     // The discussion are loaded initially
     useEffect(() => {
         loadDiscussion();
-    }, [loadDiscussion]);
+    }, []);
 
     function handleUpVoteDiscussion() {
         if (!userHasVotedPositive && !userHasVotedNegative) {
@@ -155,37 +165,55 @@ export default function Discussion(props) {
     }
 
     return (
-        <Paper>
-            <Grid container className={classes.root} justify="space-around">
-                <Grid container className={classes.element}>
-                    <Grid item xs={10} >
-                        <ButtonBase>
-                            {topicIcon}
-                            <Typography variant="h6" className={classes.text}>
-                                Posted by {creator} <br /> {title}
-                            </Typography>
-                        </ButtonBase>
+        <Grid container className={classes.root} justify="center">
+            {/* Header of discussion. TODO: Add discussion topic */}
+            <Grid item xs={12}>
+                <Grid container justify='left'>
+                    <Grid item xs={2}>
+                        <DoneOutline className={classes.topicIcon} />
                     </Grid>
-
-                    <Grid item xs={2} >
-                        <div className={classes.ratingBlock}>
-                            <KeyboardArrowUpIcon onClick={handleUpVoteDiscussion} className={userHasVotedPositive ? classes.Rated : classes.notRated} />
-                            <div className={classes.ratingNumber} style={{ fontWeight: "bold" }}>
-                                {ratingNum}
-                            </div>
-                            <KeyboardArrowDownIcon onClick={handleDownVoteDiscussion} className={userHasVotedNegative ? classes.Rated : classes.notRated} />
-                        </div>
+                    <Grid item xs={8}>
+                        <Typography variant="h6" align="left">
+                            {title}
+                        </Typography>
+                        <Typography variant="caption" className={classes.text}>
+                            Posted by somebody
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Grid container spacing={0} direction="column" alignItems="center" justify="center">
+                            <Grid item>
+                                <KeyboardArrowUpIcon onClick={handleUpVoteDiscussion} className={userHasVotedPositive ? classes.Rated : classes.notRated} />
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h6" className={classes.text}>
+                                    {ratingNum}
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <KeyboardArrowDownIcon onClick={handleDownVoteDiscussion} className={userHasVotedNegative ? classes.Rated : classes.notRated} />
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
-
-                <Grid item xs={12} className={classes.element}>
-                    <div
-                        className={classes.discussionContent}> {content}
-                    </div>
-                </Grid>
-
-                <AddComment discussionId={props.discussionId} />
+                <Divider />
             </Grid>
-        </Paper>
+
+            <Grid item xs={12} className={classes.element}>
+                <TextField
+                    className={classes.contentField}
+                    value={content}
+                    multiline
+                    disable={true}
+                    variant="outlined"
+                    placeholder="Enter Text..."
+                    InputProps={{ inputProps: { rowsMax: 15 } }}
+                />
+            </Grid>
+
+            <Grid item xs={12} className={classes.element}>
+                <CommentSection discussionId={props.discussionId} />
+            </Grid>
+        </Grid>
     );
 }
