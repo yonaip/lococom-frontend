@@ -1,19 +1,27 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Divider, Grid, Typography, TextField, Box, Paper } from "@material-ui/core";
+import { Divider, Grid, Typography, TextField, Box, InputAdornment, IconButton, Button } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { makeStyles } from "@material-ui/core/styles";
+
 import requestimg from "../../resources/request.png";
 import walkerimg from "../../resources/shoes.png";
 import natureimg from "../../resources/nature.png";
 import photoimg from "../../resources/photograph.png";
 import alertimg from "../../resources/alert.png";
+import SentimentSatisfiedRoundedIcon from '@material-ui/icons/SentimentSatisfiedRounded';
+import SendIcon from '@material-ui/icons/Send';
 
 import DoneOutline from "@material-ui/icons/DoneOutline";
 
 import CommentSection from "./CommentSection";
-import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../../services/DiscussionService";
 
+import { getDiscussion, upVoteDiscussion, downVoteDiscussion } from "../../services/DiscussionService";
+import { addComment, getCommentsByDiscussionId } from "../../services/CommentService";
+import { me } from "../../services/AuthService";
+
+const config = require("../../services/ConfigService");
+ 
 const useStyles = makeStyles((theme) => ({
     root: {
         top: 0,
@@ -23,10 +31,11 @@ const useStyles = makeStyles((theme) => ({
     },
 
     footerElement: {
-        bottom: 0,
-        position: 'relative',
-        justifyContent: 'center',
-        padding: theme.spacing(1),
+        margin: theme.spacing(1),
+    },
+
+    inputField: {
+        flexGrow: 1
     },
 
     text: {
@@ -71,68 +80,131 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Discussion(props) {
     const classes = useStyles();
+
+    // Discussion states
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [topic, setTopic] = useState("");
     const [creator, setCreator] = useState("");
-    const [discussionId, setDiscussionId] = useState("");
+    const [userId, setUserId] = useState(null);
     const [ratingNum, setRatingNum] = useState("0");
 
-    // const [discussion, setDiscussion] = useState(null);
-
+    // Voting states
     const [userHasVotedPositive, setUserHasVotedPositive] = useState(false);
     const [userHasVotedNegative, setUserHasVotedNegative] = useState(false);
 
-    // TODO: Add backend endpoint for users (creatorId)
+    // Comment states
+    const [comments, setComments] = useState([]);
+    const [commentContent, setCommentContent] = useState("");
+
+    /** Loads discussion
+     * 
+     * @param {*} discussionId 
+     */
     const loadDiscussion = async (discussionId) => {
-        getDiscussion(props.discussionId)
-            .then(({ data }) => {
-                console.log(data);
-                setTitle(data.title);
-                setContent(data.content);
-                setTopic(data.topic);
-                setCreator(data.username);
-                setDiscussionId(data._id);
-                setRatingNum(data.votes);
-                //props.discussionId(null);
-                console.log(props.discussionId);
-            })
-            .catch(err => console.log(err));
-        // const discussion = await getDiscussion(discussionId);
-        // setDiscussion(discussion);
+        try {
+            const {data} = await getDiscussion(discussionId);
+            setTitle(data.title);
+            setContent(data.content);
+            setTopic(data.topic);
+            setCreator(data.username);
+            setRatingNum(data.votes);
+
+            // Check if the user has voted
+            if(config.jwtToken) {
+                const {_id} = (await me()).data;
+                if(data.upvoters.includes(_id)) {
+                    setUserHasVotedPositive(true);
+                } else if(data.downvoters.includes(_id)) {
+                    setUserHasVotedNegative(true);
+                }
+                setUserId(_id);
+            }
+        } catch(err) {
+            console.log(err);
+        }
     };
 
-    // The discussion are loaded initially
-    useEffect(() => {
-        loadDiscussion();
-    }, []);
-
-    function handleUpVoteDiscussion() {
-        if (!userHasVotedPositive && !userHasVotedNegative) {
-            upVoteDiscussion(props.discussionId)
-                .then((response) => {
-                    loadDiscussion();
-                    console.log(response)
-                })
-                .catch((err) => {
-                    console.log(err)
-                });
-            setUserHasVotedPositive(true);
+    // Fetch comments from the backend
+    const loadComments = async (discussionId) => {
+        try {
+            const comments = await getCommentsByDiscussionId(props.discussionId);
+            setComments(comments.data);
+        } catch (err) {
+            console.log(err);
         }
     }
 
-    function handleDownVoteDiscussion() {
-        if (!userHasVotedNegative && !userHasVotedPositive) {
-            downVoteDiscussion(props.discussionId)
-                .then((response) => {
-                    loadDiscussion();
-                    console.log(response)
-                })
-                .catch((err) => {
-                    console.log(err)
-                });
-            setUserHasVotedNegative(true);
+    // The discussion are loaded initially
+    useEffect(() => {
+        loadDiscussion(props.discussionId);
+        loadComments(props.discussionId);
+    }, []);
+
+    // Register listener on enter
+    useEffect(() => {
+        const listener = e => {
+            if (e.key === "Enter" && config.currentlyLoggedUsername) {
+                handleSubmit();
+            }
+        };
+
+        window.addEventListener("keydown", listener);
+
+        return () => {
+            window.removeEventListener("keydown", listener);
+        };
+    });
+
+    const handleUpVoteDiscussion = async() => {
+        // Prerequisites
+        if(!config.jwtToken) {
+            alert("Please login first!");
+            return;
         }
+        if(userHasVotedPositive) {
+            return;
+        }
+
+        const {votes} = (await upVoteDiscussion(props.discussionId)).data;
+        setUserHasVotedPositive(true);
+        setUserHasVotedNegative(false);
+        setRatingNum(`${votes}`);
+    }
+
+    const handleDownVoteDiscussion = async() => {
+        if(!config.jwtToken) {
+            alert("Please login first!");
+            return;
+        }
+
+        if(userHasVotedNegative) {
+            return;
+        }
+
+        const {votes} = (await downVoteDiscussion(props.discussionId)).data;
+        setUserHasVotedPositive(false);
+        setUserHasVotedNegative(true);
+        setRatingNum(`${votes}`);
+    }
+
+    const onCommentContentChange = (event) => {
+        setCommentContent(event.target.value);
+    }
+
+    const handleSubmit = async() => {
+        if (!config.currentlyLoggedUsername) {
+            alert("Please log in first!");
+            return;
+        }
+
+        try {
+            await addComment(config.currentlyLoggedUsername, commentContent, 0, props.discussionId);
+            loadComments();
+            setCommentContent("");
+        } catch(err) {
+            console.log(err);
+        }  
     }
 
     let topicIcon;
@@ -160,55 +232,6 @@ export default function Discussion(props) {
 
     return (
         <Grid container direction="column" justify="space-between" alignItems="stretch" className={classes.root}>
-            {/* Header of discussion. TODO: Add discussion topic */}
-            {/* <Grid item xs={2}>
-                <Grid container justify='left'>
-                    <Grid item xs={2}>
-                        <DoneOutline className={classes.topicIcon} />
-                    </Grid>
-                    <Grid item xs={8}>
-                        <Typography variant="h6" align="left">
-                            {title}
-                        </Typography>
-                        <Typography variant="caption" className={classes.text}>
-                            Posted by somebody
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Grid container spacing={0} direction="column" alignItems="center" justify="center">
-                            <Grid item>
-                                <KeyboardArrowUpIcon onClick={handleUpVoteDiscussion} className={userHasVotedPositive ? classes.Rated : classes.notRated} />
-                            </Grid>
-                            <Grid item>
-                                <Typography variant="h6" className={classes.text}>
-                                    {ratingNum}
-                                </Typography>
-                            </Grid>
-                            <Grid item>
-                                <KeyboardArrowDownIcon onClick={handleDownVoteDiscussion} className={userHasVotedNegative ? classes.Rated : classes.notRated} />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Divider />
-            </Grid>
-
-            <Grid item xs={4} className={classes.element}>
-                <TextField
-                    className={classes.contentField}
-                    value={content}
-                    multiline
-                    disable={true}
-                    variant="outlined"
-                    placeholder="Enter Text..."
-                    InputProps={{ inputProps: { rowsMax: 15 } }}
-                />
-            </Grid>
-
-            <Grid item xs={6} className={classes.element}>
-                <CommentSection discussionId={props.discussionId} />
-            </Grid> */}
-
             <Grid item>
                 <Grid container direction="row" justify="space-between" alignItems="flex-start">
                     <Grid item xs={2}>
@@ -241,18 +264,42 @@ export default function Discussion(props) {
                     </Grid>
                 </Grid>
                 <Divider />
+                <TextField
+                    className={classes.contentField}
+                    value={content}
+                    helperText={`Created by somebody`}
+                    multiline
+                    disable={true}
+                    variant="outlined"
+                />
+                <CommentSection comments={comments} userId={userId}/>
             </Grid>
 
             <Grid item>
-                <Typography variant="h6">
-                    Placeholder
-                </Typography>
-            </Grid>
-
-            <Grid item>
-                <Typography variant="h6">
-                    Placeholder
-                </Typography>
+                <Divider />
+                <Box className={classes.footerElement}>
+                    <TextField
+                        value={commentContent}
+                        onChange={onCommentContentChange}
+                        className={classes.inputField}
+                        id="outlined-margin-none"
+                        placeholder="Type your comment here..."
+                        variant="outlined"
+                        InputLabelProps={{ shrink: true }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton onClick={() => {}} edge="end">
+                                        <SentimentSatisfiedRoundedIcon fontSize="inherit" />
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
+                    />
+                    <Button onClick={handleSubmit}>
+                        <SendIcon fontSize="large" color="primary" />
+                    </Button>
+                </Box>
             </Grid>
         </Grid>
     );

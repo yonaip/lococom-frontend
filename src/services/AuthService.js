@@ -40,6 +40,13 @@ async function registerUser(username, password, email) {
     return response;
 }
 
+async function me() {
+    const response = await axios.get('auth/me', {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    });
+    return response;
+}
+
 export {
-    loginUser, registerUser
+    loginUser, registerUser, me
 }
