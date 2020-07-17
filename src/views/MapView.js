@@ -6,6 +6,7 @@ import MapComponent from "../components/MapComponent";
 import CreateDiscussion from '../components/CreateDiscussion';
 import Discussion from "../components/Discussion";
 import {getAllDiscussions} from "../services/DiscussionService";
+import TestGoogleMap from "../components/TestGoogleMap"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,8 +34,8 @@ export default function MapView() {
 
     // Munich: lat: 48.137154, lng: 11.576124, TODO: update with user location
     const [center, setCenter] = useState({ lat: 48.137154, lng: 11.576124 });
-    
-    // Sets the content of the right pane 
+
+    // Sets the content of the right pane
     const [rightPane, setRightPane] = useState(null);
 
     // TODO: implement leftsideMenu
@@ -60,9 +61,9 @@ export default function MapView() {
     const createDiscussion = (event) => {
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
-        
+
         updateMap({
-            "lat":lat, 
+            "lat":lat,
             "lng":lng
         });
 
@@ -78,15 +79,20 @@ export default function MapView() {
         ]);
     };
 
-    const handleCreateDiscussionClose = (discussionId) => {
-        setRightPane(<Discussion discussionId={discussionId}/>);
-        console.log(discussionId);
+    const handleCreateDiscussionClose = (discussion) => {
+        setRightPane(<Discussion discussionId={discussion._id}/>);
+        console.log(discussion);
 
         // After discussion is created the red map marker is no longer needed and thus setMarkers([])
         setMarkers([]);
     };
 
     const selectDiscussion = (discussion) => {
+        /** set unused markers for creating new discussion to []
+         *  before selecting one of the existing discussions of the map
+         */
+        setMarkers([]);
+
         updateMap({lat: discussion.lat, lng: discussion.lng});
         setRightPane(<Discussion discussionId={discussion._id}/>);
     };
@@ -113,7 +119,7 @@ export default function MapView() {
         grid = (
             <Grid container>
                 <Grid item xs={8} className={classes.element}>
-                    <MapComponent
+                    <TestGoogleMap
                         defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}
@@ -130,7 +136,7 @@ export default function MapView() {
         grid = (
             <Grid container>
                 <Grid item xs={12} className={classes.element}>
-                    <MapComponent
+                    <TestGoogleMap
                         defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}

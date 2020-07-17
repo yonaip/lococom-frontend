@@ -91,7 +91,7 @@ export default function CreateDiscussion(props) {
         createDiscussion(title, selectedTopic, content, votes, lat, lng)
             .then(response => {
                 clear();
-                props.handleClose(response.data._id);
+                props.handleClose(response.data);
             }).catch((err) => {
                 console.log(err);
             });

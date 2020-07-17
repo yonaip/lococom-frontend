@@ -14,7 +14,6 @@ import hintRed from "../resources/attention_red_marker.svg"
 
 export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
-    const discussionCoordinates = null;
 
     useEffect(() => {
         const listener = e => {
@@ -60,6 +59,8 @@ export default function MapComponent(props) {
         }
     }
 
+    const markersData = props.discussions.map((discussion) => {return {lat: discussion.lat, lng: discussion.lng}})
+
     /**
      * withGoogleMap - initializes the map component
      */
@@ -72,20 +73,18 @@ export default function MapComponent(props) {
                 defaultCenter={props.defaultCenter}
                 options={{disableDefaultUI: true, zoomControl: true}}
                 onDblClick={props.onDblClick}
+
             >
-                {(props.markers.length !== 0) &&
+                {(props.markers.length !== 0) && (
                     <Marker
                         key={`${marker.lat}-${marker.lng}`}
                         position={{lat: props.markers[props.markers.length - 1].lat, lng: props.markers[props.markers.length - 1].lng}}
-                        onClick={() => {
-                            setSelectedDiscussion(discussionCoordinates);
-                        }}
                         icon={{
                             url: marker,
                             scaledSize: new window.google.maps.Size(30, 30),
                         }}
                     />
-                }
+                )}
 
 
                 {props.discussions.map(discussion => (
@@ -110,7 +109,7 @@ export default function MapComponent(props) {
                        position={{lat: selectedDiscussion.lat, lng: selectedDiscussion.lng}}
                        icon={{
                            url: chooseTopicIcon(selectedDiscussion),
-                           scaledSize: new window.google.maps.Size(30, 30),
+                           scaledSize: new window.google.maps.Size(40, 40),
                        }}
                    />
                 )}
