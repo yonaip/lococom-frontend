@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Grid, Drawer, makeStyles, Typography, Paper } from "@material-ui/core";
-import { useParams } from "react-router";
+import { useParams, useLocation } from "react-router";
 
 import Header from "../components/Header";
 import MapComponent from "../components/MapComponent";
@@ -8,6 +8,8 @@ import { getAllDiscussions, getDiscussion } from "../services/DiscussionService"
 import CreateDiscussion from '../components/discussion/CreateDiscussion';
 import Discussion from "../components/discussion/Discussion";
 import LeftDrawerMenu from '../components/leftmenu/LeftDrawerMenu';
+
+const qs = require('qs');
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,48 +43,48 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // View of mapview page
-export default function MapView(props) {
+export default function MapView() {
 
     const classes = useStyles();
 
-    /** Checks the path for parameters and makes coordinates out of them
+    /** Checks the path for query parameters and updates initial states accordingly
      * 
      */
-    let param = useParams();
+    let queryParam = useLocation().search;
+    let {lat, lng, discId} = qs.parse(queryParam, { ignoreQueryPrefix: true });
+    //let lng = qs.parse(queryParam, { ignoreQueryPrefix: true }).lng;
     let coordinates;
-    if (param && param.lat && param.lng) {
+    //console.log(`${lat}:${lng}`);
+    if (lat && lng) {
         coordinates = {
-            lat: parseFloat(param.lat),
-            lng: parseFloat(param.lng)
+            lat: parseFloat(lat),
+            lng: parseFloat(lng)
         }
     }
+    let preselectedDiscussion;
+    if(discId) {
+        preselectedDiscussion = (
+            <Paper className={classes.container} elevation={3}>
+                <Discussion discussionId={discId} />
+            </Paper>);
+    }
 
-    console.log(coordinates);
-
-    // Munich: lat: 48.137154, lng: 11.576124, TODO: update with user location
-    //const [center, setCenter] = useState(props.center? props.center : { lat: 48.137154, lng: 11.576124 });
-    const [center, setCenter] = useState(coordinates? coordinates : { lat: 48.137154, lng: 11.576124 });
-
-    // Sets the content of the right pane 
-    const [rightPane, setRightPane] = useState(null);
-
-    // TODO: implement leftsideMenu
+    // States
+    const [center, setCenter] = useState(coordinates? coordinates : { lat: 48.137154, lng: 11.576124 }); // Munich: lat: 48.137154, lng: 11.576124
+    const [rightPane, setRightPane] = useState(preselectedDiscussion);
     const [leftMenuOpen, setLeftMenu] = useState(false);
-
-    // List of map markers created on double click
     const [markers, setMarkers] = useState([]);
-
     const [discussions, setDiscussions] = useState([]);
 
-    useEffect(() => {
-        if (props.id) {
-            /* setRightPane(<Discussion discussionId={props.id}/>);*/
-            getDiscussion(props.id).then(({ data }) => { selectDiscussion(data); })
-        }
-        else {
+    // useEffect(() => {
+    //     if (props.id) {
+    //         /* setRightPane(<Discussion discussionId={props.id}/>);*/
+    //         getDiscussion(props.id).then(({ data }) => { selectDiscussion(data); })
+    //     }
+    //     else {
 
-        }
-    }, [props.id]);
+    //     }
+    // }, [props.id]);
     // Register listener on escape
     useEffect(() => {
         const listener = e => {

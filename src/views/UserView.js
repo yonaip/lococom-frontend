@@ -75,8 +75,9 @@ export default function UserView() {
     };
 
     const switchToMapView = (coordinates) => {
-        console.log(coordinates);
-        history.push(`/map/${coordinates.lat}/${coordinates.lng}`)
+        console.log(coordinates); //lat=:lat&lng=:lng"
+        //history.push(`/map/${coordinates.lat}/${coordinates.lng}`)
+        history.push(`/map?lat=${coordinates.lat}&lng=${coordinates.lng}`)
     }
 
     let grid;

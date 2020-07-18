@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/map/:lat/:lng" children={<MapView />} />
+        <Route path="/map?lat=:lat&lng=:lng" children={<MapView />} />
         <Route path="/profile">
           <UserView />
         </Route>
