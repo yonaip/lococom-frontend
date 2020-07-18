@@ -200,6 +200,7 @@ export default function MapView() {
                 activatedFilters={activatedFilters}
                 setActivatedFilters={setActivatedFilters}
                 loadAllDiscussions={loadAllDiscussions}
+                numberOfFilteredItems={discussions.length}
             />
             {rightPane}
         </div>);
