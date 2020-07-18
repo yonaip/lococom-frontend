@@ -171,7 +171,7 @@ export default function CommentOverview(props) {
 
   function Comment(props) {
     return (
-      <Link to={`/map/${props.discussionid}`}>
+      <Link to={`/map?lat=${props.lat}&lng=${props.lng}&discId=${props.id}`}>
 
         <div className={classes.comment}>
           <span style={{ fontWeight: "bold" }}>{props.username}:</span>
