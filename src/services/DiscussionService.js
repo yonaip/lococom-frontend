@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const config = require("./ConfigService");
+
 /**
  * Creates discussion
  * @param title
@@ -10,37 +12,44 @@ import axios from "axios";
  * @param lat
  * @param lng
  */
-async function createDiscussion(username, title, topic, content, votes, lat, lng) {
+const createDiscussion = async(title, topic, content, votes, lat, lng) => {
     const response = await axios.post('api/discussion', {
-        "username": username,
         "title": title,
         "topic": topic,
         "content": content,
         "votes": votes,
         "lat": lat,
         "lng": lng
+    }, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
     });
 
     return response;
 };
 
-async function getDiscussion(discussionID) {
+const getDiscussion = async(discussionID) => {
     const response = await axios.get('/api/discussion/' + discussionID);
     return response;
 }
 
-async function getAllDiscussions() {
+const getAllDiscussions = async() => {
     const response = await axios.get('/api/discussion');
     return response;
 }
 
-async function upVoteDiscussion(discussionID) {
-    const response = axios.put( '/api/discussion/upvote/' + discussionID);
+const upVoteDiscussion = async(discussionID) => {
+    const response = await axios.put( `/api/discussion/${discussionID}/upvote/`, 
+    {}, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    });
     return response;
 }
 
-async function downVoteDiscussion(discussionID) {
-    const response = axios.put( '/api/discussion/downvote/' + discussionID);
+const downVoteDiscussion = async(discussionID) => {
+    const response = await axios.put( `/api/discussion/${discussionID}/downvote/`,
+    {}, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    });
     return response;
 }
 

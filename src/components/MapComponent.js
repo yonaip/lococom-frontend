@@ -1,18 +1,22 @@
-import React, { useState, useEffect, useCallback } from "react";
-import  { GoogleMap, withGoogleMap, Marker, InfoWindow } from "react-google-maps";
-import nature from "../resources/nature-black.png"
-import request from "../resources/request.png"
-import walking from "../resources/sport-black.png"
-import photo from "../resources/photograph.png"
-import hint from "../resources/attention.png"
-import { getAllDiscussions } from "../services/DiscussionService"
+import React, { useState, useEffect } from "react";
+import  { GoogleMap, withGoogleMap, Marker } from "react-google-maps";
+import nature from "../resources/nature_marker.svg"
+import request from "../resources/request_marker.svg"
+import walking from "../resources/walking_marker.svg"
+import photo from "../resources/photo_marker.svg"
+import hint from "../resources/attention_marker.svg"
+import marker from "../resources/marker.svg"
+import natureRed from "../resources/nature_red_marker.svg"
+import requestRed from "../resources/request_red_marker.svg"
+import walkingRed from "../resources/walking_red_marker.svg"
+import photoRed from "../resources/photo_red_marker.svg"
+import hintRed from "../resources/attention_red_marker.svg"
 
 export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
+    //const [mapRef, setMapRef] = useState(null);
+
     const discussionCoordinates = null;
-    //props.setDiscussionCoordinates;
-    const [discussionLatLng, setDiscussionLatLng] = useState(null);
-    //const showDiscussion = props.showDiscussion;
 
     useEffect(() => {
         const listener = e => {
@@ -31,47 +35,59 @@ export default function MapComponent(props) {
     // topic icon chosen based on discussion topic
     function chooseTopicIcon(discussion) {
         if(discussion.topic === "Request") {
+            if(discussion === selectedDiscussion) {
+                return requestRed;
+            }
             return request;
         } else if(discussion.topic === "Nature") {
+            if(discussion === selectedDiscussion) {
+                return natureRed;
+            }
             return nature;
         } else if(discussion.topic === "Walking") {
+            if(discussion === selectedDiscussion) {
+                return walkingRed;
+            }
             return walking;
         } else if(discussion.topic === "Photo") {
+            if(discussion === selectedDiscussion) {
+                return photoRed;
+            }
             return photo;
         } else if(discussion.topic === "Hint") {
+            if(discussion === selectedDiscussion) {
+                return hintRed;
+            }
             return hint;
         }
     }
 
-    /**
+    let mapRef;
+    /** ref={map => map && map.panTo(props.center)}
      * withGoogleMap - initializes the map component
      */
     function Map() {
-        console.log(props.discussions);
+        //console.log(props.discussions);
         return (
             <GoogleMap
                 id="map"
+                ref={(ref) => { mapRef = ref }}
                 defaultZoom={14}
                 defaultCenter={props.defaultCenter}
                 options={{disableDefaultUI: true, zoomControl: true}}
-                onDblClick={props.onDblClick}
-                //props.onDblClick;
+                onDblClick={handleDblClick}
             >
-                {(props.markers.length != 0) &&
+                {(props.markers.length !== 0) &&
                     <Marker
-                        key={'${marker.lat}-${marker.lng}'}
+                        key={`${marker.lat}-${marker.lng}`}
                         position={{lat: props.markers[props.markers.length - 1].lat, lng: props.markers[props.markers.length - 1].lng}}
                         onClick={() => {
                             setSelectedDiscussion(discussionCoordinates);
                         }}
-                        /*
                         icon={{
-                            url: nature,
-                            origin: new window.google.maps.Point(0, 0),
-                            anchor: new window.google.maps.Point(15, 15),
+                            url: marker,
                             scaledSize: new window.google.maps.Size(30, 30),
                         }}
-                         */
                     />
                 }
 
@@ -83,7 +99,6 @@ export default function MapComponent(props) {
                         onClick={() => {
                             setSelectedDiscussion(discussion);
                             props.selectDiscussion(discussion);
-                            //showDiscussion(selectedDiscussion);
                         }}
                         icon={{
                             url: chooseTopicIcon(discussion),
@@ -92,21 +107,28 @@ export default function MapComponent(props) {
                     />
                 ))}
 
+
                 {selectedDiscussion && (
-                    <InfoWindow
-                        onCloseClick={() => {
-                            setSelectedDiscussion(null);
-                        }}
-                        position={{lat: selectedDiscussion.lat, lng: selectedDiscussion.lng}}
-                    >
-                        <div>
-                            <h2>{selectedDiscussion.title}</h2>
-                            <p>{selectedDiscussion.topic}</p>
-                        </div>
-                    </InfoWindow>
+                   <Marker
+                       key={selectedDiscussion._id}
+                       position={{lat: selectedDiscussion.lat, lng: selectedDiscussion.lng}}
+                       icon={{
+                           url: chooseTopicIcon(selectedDiscussion),
+                           scaledSize: new window.google.maps.Size(30, 30),
+                       }}
+                   />
                 )}
             </GoogleMap>
         )
+    }
+
+    const handleDblClick= (event) => {
+        // console.log(mapRef);
+        // mapRef.panTo({
+        //     "lat": event.latLng.lat(),
+        //     "lng": event.latLng.lng()
+        // });
+        props.onDblClick(event);
     }
 
     const WrappedMap = withGoogleMap(Map);
