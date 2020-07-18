@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Box, Button, AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+import { useHistory } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import SearchFieldComponent from './SearchFieldComponent';
@@ -30,6 +31,8 @@ export default function MapHeader(props) {
   const [user, setUser] = useState(null);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
+
+  const history = useHistory();
 
   const handleDialogClose = () => {
     setLoginDialogOpen(false);
@@ -68,7 +71,7 @@ export default function MapHeader(props) {
       <Grid container alignItems="center" justify="flex-end">
         <Grid item xs={2}>
           <Box className={classes.button}>
-            <Button color="inherit" variant="outlined">{user}</Button>
+            <Button color="inherit" variant="outlined" onClick={() => history.push('/profile')}>{user}</Button>
           </Box>
         </Grid>
       </Grid>);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, Typography, Fab, ButtonBase } from '@material-ui/core';
 import axios from 'axios';
@@ -6,16 +6,14 @@ import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
-import commentImage from '../resources/comment.svg';
+import { getCommentProfile } from "../services/ProfileService";
+import commentImage from '../resources/hand.jpg';
+import { Link } from 'react-router-dom';
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
 
   root: {
-    background: '#CAE2E5',
-    marginLeft: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    flexGrow: 1,
-    height: "140%",
+    marginTop: "15%",
   },
 
 
@@ -28,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   card: {
-    maxHeight: 750,
+    height: 750,
     maxWidth: 400,
     margin: "auto",
     transition: "0.3s",
@@ -38,13 +36,9 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   media: {
-    // paddingTop: "10%",
-    width: "15vw",
-    height: "15vw",
+    height: "40%",
     backgroundImage: 'url(' + commentImage + ')',
     backgroundRepeat: "no-repeat",
-    backgroundSize: "70%",
-    backgroundPosition: "right",
   },
   content: {
     textAlign: "left",
@@ -86,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   comment: {
-    background: '#E5E5E5',
+    background: '#DFE0F5',
     textTransform: 'none',
     textAlign: "left",
     flexgrow: 1,
@@ -95,11 +89,12 @@ const useStyles = makeStyles((theme) => ({
     color: "black",
     fontSize: 15,
     float: 'left',
-    minHeight: "20px",
+    minHeight: "40px",
     width: "95%",
-    padding: "2px",
-
-
+    padding: "4px",
+    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
+    display: "flex",
+    flexDirection: "row",
   },
   disc: {
 
@@ -113,49 +108,85 @@ const useStyles = makeStyles((theme) => ({
 
     textAlign: 'center',
     float: "right",
-
-
   },
+
+
+
 }));
 
 
 
 export default function CommentOverview(props) {
   const classes = useStyles();
-  const [user, setUser] = React.useState(null);
-  const [comments, setComments] = React.useState([])
-  const getUser = React.useCallback(() => {
-    setUser(config.currentlyLoggedUsername);
-  }, []);
-  React.useEffect(() => {
-    if (user == null) {
-      setInterval(() => {
-        getUser();
-        let url = "/api/comment/getCommentProfile/" + config.currentlyLoggedUsername
-        axios
-          .get(url)
-          .then(({ data }) => {
-            setComments(data);
-          });
-      }, 10000);;
+  const [user, setUser] = useState(null);
+  const [comments, setComments] = useState([])
+
+  useEffect(() => {
+    handleTick();
+    const interval = setInterval(() => handleTick(), 10000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [props.profile]);
+
+  const handleTick = () => {
+    if (props.profile == "") {
+      getCommentProfile(config.currentlyLoggedUsername).then(({ data }) => {
+        setComments(data)
+      });
+      setUser(config.currentlyLoggedUsername);
     }
-  }, [getUser]);
+    else {
+      console.log(props.profile);
+      getCommentProfile(props.profile).then(({ data }) => {
+        setUser(config.currentlyLoggedUsername);
+        setComments(data)
+      });
+    };
+  }
+
+  /*const handleTick = () => {
+    if (props.profile == "") {
+      let url = "/api/comment/CommentProfile/" + config.currentlyLoggedUsername
+      axios
+        .get(url)
+        .then(({ data }) => {
+          setComments(data);
+          setUser(config.currentlyLoggedUsername);
+        });
+    }
+    else {
+      let temp = "/api/comment/CommentProfile/" + props.profile
+      axios
+        .get(temp)
+        .then(({ data }) => {
+          setUser(config.currentlyLoggedUsername);
+          setComments(data);
+        });
+    }
+
+  };*/
+
 
 
   function Comment(props) {
     return (
-      <div className={classes.comment}>
-        <span style={{ fontWeight: "bold" }}>{props.username}  :  </span>
-        <span>{props.content}</span>
-      </div>
+      <Link to={`/map/${props.discussionid}`}>
 
+        <div className={classes.comment}>
+          <span style={{ fontWeight: "bold" }}>{props.username}:</span>
+          <span> {props.content}</span>
+        </div>
+
+      </Link>
     );
   }
 
   function CommentList(props) {
     return (
-      <div>
-        {props.commentList.map(c => <Comment content={c.content} username={c.username} />)}
+      <div className={classes.disc}>
+
+        {props.commentList.map(c => <Comment discussionid={c.discussionId} content={c.content} username={c.username} />)}
       </div>
     );
   }
@@ -185,7 +216,7 @@ export default function CommentOverview(props) {
               >
 
                 <Divider className={classes.divider} light />
-         My Comments
+          Comments
         </Typography>
 
               <div className={classes.element}>
