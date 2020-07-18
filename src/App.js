@@ -5,13 +5,19 @@ import MapView from "./views/MapView";
 import UserView from "./views/UserView";
 
 function App() {
-  return ( 
+  return (
     <Router>
-      <Route exact path="/map" component={MapView} />
-      <Route path="/profile" component= {UserView} />
-      <Route path="/map/:id"render={(props) => <MapView id={props.match.params.id} {...props} />}></Route>
-  </Router>
-     );
+      <Switch>
+        <Route path="/map/:lat/:lng" children={<MapView />} />
+        <Route path="/profile">
+          <UserView />
+        </Route>
+        <Route path="/">
+          <MapView />
+        </Route>
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;

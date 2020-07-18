@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Button, Grid, Drawer, makeStyles, Typography } from "@material-ui/core";
+import { useHistory } from 'react-router-dom';
 
+import LeftDrawerMenu from "../components/leftmenu/LeftDrawerMenu";
 import Header from "../components/Header";
 import ProfileComponent from "../components/ProfileComponent";
 import DiscussionOverview from "../components/DiscussionOverview";
 import CommentOverview from "../components/CommentOverview";
 import Friendslist from "../components/Friendslist";
-const config = require("../services/ConfigService");
 
+
+const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {
-       position: "fixed",
+        position: "fixed",
         bottom: 0,
         top: 0,
         right: 0,
-        left:0,
+        left: 0,
     },
     header: {
         flexGrow: 1
@@ -39,17 +42,22 @@ export default function UserView() {
     const [leftMenuOpen, setLeftMenu] = useState(false);
     const [differentuser, setDifferentuser] = useState("");
     const [user, setUser] = useState("");
+
+    const history = useHistory();
+
     useEffect(() => {
         handleTick()
         const interval = setInterval(() => handleTick(), 10000);
         return () => {
-          clearInterval(interval);
+            clearInterval(interval);
         };
-      }, []);
-      const handleTick = () => {
+    }, []);
+
+    const handleTick = () => {
         setUser(config.currentlyLoggedUsername);
-      };
-    
+    };
+
+    // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
@@ -61,68 +69,65 @@ export default function UserView() {
         setDifferentuser(data);
 
     };
+
     const clear = (event) => {
         setDifferentuser("");
-        
-       
     };
+
+    const switchToMapView = (coordinates) => {
+        console.log(coordinates);
+        history.push(`/map/${coordinates.lat}/${coordinates.lng}`)
+    }
+
     let grid;
-    if(user == null)
-    {
+    if (user == null) {
         grid = (<div></div>)
     }
-    else{
-    if (differentuser == "") {
-        grid = (
-            <div className={classes.root}>
-            <Grid container xs={12}>
-                <Grid item xs={3}>
-                    <ProfileComponent profile=""></ProfileComponent>
+    else {
+        if (differentuser == "") {
+            grid = (
+                <Grid container xs={12}>
+                    <Grid item xs={3}>
+                        <ProfileComponent profile=""></ProfileComponent>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <DiscussionOverview profile=""></DiscussionOverview>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <CommentOverview profile=""></CommentOverview>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Friendslist callbackFromParent={getData}></Friendslist>
+                    </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                    <DiscussionOverview profile=""></DiscussionOverview>
+            );
+        } else {
+            grid = (
+                <Grid container xs={12}>
+                    <Grid item xs={4}>
+                        <ProfileComponent profile={differentuser} ></ProfileComponent>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <DiscussionOverview profile={differentuser}></DiscussionOverview>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <CommentOverview profile={differentuser}></CommentOverview>
+                        <Button
+                            onClick={clear}
+                            className={classes.back}
+                            variant="contained"
+                            color="primary">
+                            Back
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                    <CommentOverview profile=""></CommentOverview>
-                </Grid>
-                <Grid item xs={3}>
-                    <Friendslist callbackFromParent={getData}></Friendslist>
-                </Grid>
-            </Grid>
-            </div>
-        );
-    } else {
-        grid = (
-            <div className={classes.root}>
-            <Grid container xs={12}>
-                <Grid item xs={4}>
-                    <ProfileComponent profile={differentuser} ></ProfileComponent>
-                </Grid>
-                <Grid item xs={4}>
-                    <DiscussionOverview profile={differentuser}></DiscussionOverview>
-                </Grid>
-                <Grid item xs={4}>
-                    <CommentOverview profile={differentuser}></CommentOverview>
-                    <Button
-             onClick={clear}
-             className={classes.back}
-             variant="contained"
-             color="primary">
-             Back
-         </Button>
-                </Grid>
-            </Grid>
-            </div>
-        );
-    }}
+            );
+        }
+    }
 
     return (<div className={classes.root}>
-        <Header className={classes.header} position={"fixed"} onLeftMenuClick={toggleLeftMenu} />
-        <Drawer anchor='left' open={leftMenuOpen} onClose={toggleLeftMenu(false)}>
-            <Typography variant="h6" className={classes.menuElement}>
-                Test
-            </Typography>
-        </Drawer>
+        <Header className={classes.header} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={switchToMapView}/>
+        <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} />
         {grid}
     </div>);
 }

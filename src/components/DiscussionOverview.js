@@ -226,16 +226,18 @@ export default function DiscussionOverview(props) {
         getDiscussions(data.discussions).then(data => {
           setDiscussions(createnewarray(data))
         });
-      })}
+      })
+    }
 
     else {
-    
-    getUser(props.profile).then(({ data }) => {
-      setUser(config.currentlyLoggedUsername);
-      getDiscussions(data.discussions).then(data => {
-        setDiscussions(createnewarray(data))
-      });
-    })}
+
+      getUser(props.profile).then(({ data }) => {
+        setUser(config.currentlyLoggedUsername);
+        getDiscussions(data.discussions).then(data => {
+          setDiscussions(createnewarray(data))
+        });
+      })
+    }
 
   };
 
