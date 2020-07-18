@@ -7,13 +7,17 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import { getCommentProfile } from "../services/ProfileService";
+import { deleteComment } from "../services/CommentService";
 import commentImage from '../resources/hand.jpg';
 import { Link } from 'react-router-dom';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 const config = require("../services/ConfigService");
+
 const useStyles = makeStyles((theme) => ({
 
   root: {
-    marginTop: "15%",
+    //marginTop: "15%",
   },
 
 
@@ -80,12 +84,11 @@ const useStyles = makeStyles((theme) => ({
   },
 
   comment: {
-    background: '#DFE0F5',
     textTransform: 'none',
     textAlign: "left",
     flexgrow: 1,
     marginTop: "1%",
-    borderRadius: theme.shape.borderRadius,
+    //borderRadius: theme.shape.borderRadius,
     color: "black",
     fontSize: 15,
     float: 'left',
@@ -98,8 +101,8 @@ const useStyles = makeStyles((theme) => ({
   },
   disc: {
 
-    maxHeight: "400px", // used fixed values, otherwise overflow doesnt work
-    width: "90%",
+    maxHeight: "350px", // used fixed values, otherwise overflow doesnt work
+    width: "95%",
     overflow: "auto",
     padding: "5px",
     float: "left",
@@ -109,8 +112,24 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     float: "right",
   },
-
-
+  deletecomment: {
+    float: "right",
+    marginTop: "8px",
+    height: "30px",
+  },
+  com: {
+    textTransform: 'none',
+    textAlign: "left",
+    flexgrow: 1,
+    marginTop: "1%",
+    float: 'left',
+    minHeight: "40px",
+    width: "95%",
+    padding: "3px",
+    display: "flex",
+    flexDirection: "row",
+  
+  },
 
 }));
 
@@ -137,7 +156,6 @@ export default function CommentOverview(props) {
       setUser(config.currentlyLoggedUsername);
     }
     else {
-      console.log(props.profile);
       getCommentProfile(props.profile).then(({ data }) => {
         setUser(config.currentlyLoggedUsername);
         setComments(data)
@@ -145,40 +163,30 @@ export default function CommentOverview(props) {
     };
   }
 
-  /*const handleTick = () => {
-    if (props.profile == "") {
-      let url = "/api/comment/CommentProfile/" + config.currentlyLoggedUsername
-      axios
-        .get(url)
-        .then(({ data }) => {
-          setComments(data);
-          setUser(config.currentlyLoggedUsername);
-        });
-    }
-    else {
-      let temp = "/api/comment/CommentProfile/" + props.profile
-      axios
-        .get(temp)
-        .then(({ data }) => {
-          setUser(config.currentlyLoggedUsername);
-          setComments(data);
-        });
-    }
 
-  };*/
-
+  const removeComment = (event) => {
+    deleteComment(event);
+    handleTick();
+    alert("Comment deleted");
+  }
 
 
   function Comment(props) {
     return (
-      <Link to={`/map/${props.discussionid}`}>
 
-        <div className={classes.comment}>
-          <span style={{ fontWeight: "bold" }}>{props.username}:</span>
-          <span> {props.content}</span>
-        </div>
 
-      </Link>
+      <div className={classes.comment}>
+       
+          <div className={classes.com}>
+          <Link to={`/map/${props.discussionid}`} style={{ color: "black" }}>
+            <span style={{ fontWeight: "bold" }}>{props.username}: </span>
+            <span> {props.content}</span>
+            </Link>
+          </div>
+      
+        <DeleteIcon onClick={e => removeComment(props.id)} color="default" className={classes.deletecomment} />
+      </div>
+
     );
   }
 
@@ -186,13 +194,42 @@ export default function CommentOverview(props) {
     return (
       <div className={classes.disc}>
 
-        {props.commentList.map(c => <Comment discussionid={c.discussionId} content={c.content} username={c.username} />)}
+        {props.commentList.map(c => <Comment id={c._id} discussionid={c.discussionId} content={c.content} username={c.username} />)}
       </div>
     );
   }
-  return (
 
-    <Grid container className={classes.root} justify="center">
+  function Commentprofile(props) {
+    return (
+
+
+      <div className={classes.comment}>
+        
+          <div className={classes.com}>
+            <span style={{ fontWeight: "bold" }}>{props.username}: </span>
+            <Link to={`/map/${props.discussionid}`} style={{ color: "black" }}>
+            <span> {props.content}</span>
+            </Link>
+          </div>
+       
+      </div>
+
+    );
+  }
+
+  function CommentListprofile(props) {
+    return (
+      <div className={classes.disc}>
+
+        {props.commentList.map(c => <Commentprofile id={c._id} discussionid={c.discussionId} content={c.content} username={c.username} />)}
+      </div>
+    );
+  }
+
+
+  let grid;
+  if (props.profile == "") {
+    grid = (<Grid container className={classes.root} justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
 
@@ -216,8 +253,8 @@ export default function CommentOverview(props) {
               >
 
                 <Divider className={classes.divider} light />
-          Comments
-        </Typography>
+            Comments
+          </Typography>
 
               <div className={classes.element}>
                 <Typography
@@ -234,6 +271,59 @@ export default function CommentOverview(props) {
 
       </Grid>
 
-    </Grid>
-  );
+    </Grid>)
+  }
+  else {
+    grid = (<Grid container className={classes.root} justify="center">
+      <Grid item xs={12} >
+        <Typography variant="h5" className={classes.headline} />
+
+
+      </Grid>
+
+      <Grid item xs={11} style={{ height: "100%" }}>
+
+        <div className="App">
+          <Card className={classes.card}>
+            <CardMedia
+              className={classes.media}
+
+            />
+            <CardContent className={classes.content}>
+
+              <Typography
+                className={"MuiTypography--heading"}
+                variant={"h6"}
+                gutterBottom
+              >
+
+                <Divider className={classes.divider} light />
+            Comments
+          </Typography>
+
+              <div className={classes.element}>
+                <Typography
+                  className={"MuiTypography--subheading"}
+                  variant={"caption"}
+                >
+                </Typography>
+                <Divider className={classes.divider} light />
+                <CommentListprofile commentList={comments} />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+      </Grid>
+
+    </Grid> )
+  }
+
+
+
+
+
+  return (<div>
+    {grid}</div>
+     );
 }

@@ -19,8 +19,16 @@ async function getCommentsByDiscussionId(discussionId) {
     const response = await axios.get('/api/comment/' + discussionId);
     return response;
 }
+async function deleteComment(id) {
+    const url = "/api/comment/" + id
+    const response = await axios.delete(url, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    })
+    return response;
+}
 
 export {
     addComment,
-    getCommentsByDiscussionId
+    getCommentsByDiscussionId,
+    deleteComment
 }

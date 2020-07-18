@@ -11,12 +11,13 @@ import friendsImage from '../resources/people.jpg';
 import { useState, useEffect } from 'react';
 import { currentlyLoggedUsername } from '../services/ConfigService';
 import { getUser, getNames, deleteFriend, addFriend } from "../services/ProfileService";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
 
   root: {
-    marginTop: "15%",
+    //marginTop: "15%",
   },
 
   headline: {
@@ -159,21 +160,7 @@ export default function Friendslist(props) {
     })}
 
 
-  /*const getName = async (idlist) => {
-    try {
-      var i;
-      var arrayresult = [];
-      for (i = 0; i < idlist.length; i++) {
-        arrayresult.push(
-          await axios.get("/api/user/id/" + idlist[i]))
-
-      }
-      var finalarray = createnewarray(arrayresult);
-      return finalarray;
-    }
-    catch{ }
-  }*/
-
+ 
   const createnewarray = (array) => {
 
     const arraynew = array.map(x => x.data.username);
@@ -182,50 +169,13 @@ export default function Friendslist(props) {
   const onChangeContent = (event) => {
     setinputfriends(event.target.value);
   };
- /* const removeFriend = (event) => {
-
-    deleteFriend(event)
-    axios
-      .get(url)
-      .then(({ data }) => {
-        axios.put('/api/user/removeFriend', {
-          "username": currentlyLoggedUsername,
-          "friend": data._id
-        });
-      });
-    handleTick();
-  }*/
+ 
   const removeFriend = (event) => {
     deleteFriend(event)
     handleTick();
     alert("Friend removed")
   }
- /* const handleSubmit = (event) => {
-    if (showfriends.includes(inputfriends) == true) {
-      alert('Friend is already in Friendlist');
-      clear();
-    }
-    else {
-      const friendslist = {
-        username: user,
-        friendname: inputfriends
-      };
-      axios
-        .post('/api/user/friendlist/', friendslist)
-        .then(response => {
-          console.log('handle submit')
-          alert('Friend added');
-          clear();
-          handleTick();
-        })
-        .catch(err => {
-          alert('Friend not found');
-          console.error(err);
-          clear();
-          handleTick();
-        });
-    }
-  };*/
+ 
 
   const handleSubmit = (event) => {
     if (showfriends.includes(inputfriends) == true) {
@@ -252,15 +202,13 @@ export default function Friendslist(props) {
 
   function Friend(props) {
     return (
-
+<div>
       <div className={classes.friend}>
-        <span style={{ fontWeight: "bold" }} onClick={e => sendNametoParent(props.username)}>{props.username}</span>
-        <Button size="small" variant="contained" onClick={e => removeFriend(props.username)} className={classes.delete}>
-          delete
-                </Button>
-
-        <Divider className={classes.divider} light />
+        <span style={{ fontWeight: "bold" }} onClick={e => sendNametoParent(props.username)}>{props.username}</span>  
+                 <DeleteIcon onClick={e => removeFriend(props.username)} className={classes.delete} />
       </div>
+       <Divider className={classes.divider} dark />
+       </div>
     );
   }
   const clear = () => {

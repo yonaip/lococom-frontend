@@ -11,7 +11,7 @@ import photoimg from "../../resources/photograph.png";
 import alertimg from "../../resources/alert.png";
 import SentimentSatisfiedRoundedIcon from '@material-ui/icons/SentimentSatisfiedRounded';
 import SendIcon from '@material-ui/icons/Send';
-
+import { getName } from "../../services//ProfileService";
 import DoneOutline from "@material-ui/icons/DoneOutline";
 
 import CommentSection from "./CommentSection";
@@ -73,8 +73,12 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'inherit',
     },
 
-    topicIcon: {
-        flexGrow: 1
+    topicicon: {
+       
+        float: "left",
+        height: "60%",
+        width: "60%",
+        padding: "3px"
     },
 }));
 
@@ -107,7 +111,7 @@ export default function Discussion(props) {
             setTitle(data.title);
             setContent(data.content);
             setTopic(data.topic);
-            setCreator(data.username);
+            getName(data.creatorId).then(({ data }) => setCreator(data.username));
             setRatingNum(data.votes);
 
             // Check if the user has voted
@@ -210,23 +214,23 @@ export default function Discussion(props) {
     let topicIcon;
     if (topic === 'Nature') {
         topicIcon = (
-            <img alt='nature' src={natureimg} className={classes.topicIcon} />
+            <img alt='nature' src={natureimg} className={classes.topicicon} />
         );
     } else if (topic === 'Request') {
         topicIcon = (
-            <img alt='request' src={requestimg} className={classes.topicIcon} />
+            <img alt='request' src={requestimg} className={classes.topicicon} />
         );
     } else if (topic === 'Walking') {
         topicIcon = (
-            <img alt='walking' src={walkerimg} className={classes.topicIcon} />
+            <img alt='walking' src={walkerimg} className={classes.topicicon} />
         );
     } else if (topic === 'Photo') {
         topicIcon = (
-            <img alt='photo' src={photoimg} className={classes.topicIcon} />
+            <img alt='photo' src={photoimg} className={classes.topicicon} />
         );
     } else if (topic === 'Hint') {
         topicIcon = (
-            <img alt='hint' src={alertimg} className={classes.topicIcon} />
+            <img alt='hint' src={alertimg} className={classes.topicicon} />
         );
     }
 
@@ -236,7 +240,7 @@ export default function Discussion(props) {
                 <Grid container direction="row" justify="space-between" alignItems="flex-start">
                     <Grid item xs={2}>
                         <Box>
-                            <DoneOutline />
+                            {topicIcon}
                         </Box>
                     </Grid>
                     <Grid item xs={9}>
@@ -244,7 +248,7 @@ export default function Discussion(props) {
                             {title}
                         </Typography>
                         <Typography variant="caption" className={classes.text}>
-                            Posted by somebody
+                            Posted by {creator}
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>

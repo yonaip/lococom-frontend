@@ -13,14 +13,16 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import commentImage from '../resources/comment.svg';
+import DeleteIcon from '@material-ui/icons/Delete';
 //import discussionImage from '../resources/plaudern.svg';
 import discussionImage from '../resources/globe.jpg';
 import { getUser, getDiscussions } from "../services/ProfileService";
+import { deleteDiscussion } from "../services/DiscussionService";
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: "15%",
+    //marginTop: "15%",
   },
 
 
@@ -92,64 +94,46 @@ const useStyles = makeStyles((theme) => ({
   },
 
   request: {
-    backgroundColor: "#B5CDD0",
-    //marginTop: "2%",
     width: "5px",
     height: "60px",
-    borderRadius: "50%",
     backgroundImage: 'url(' + requestimg + ')',
     backgroundRepeat: "no-repeat",
     backgroundSize: "60%",
     backgroundPosition: "center",
-    //float: 'left',
   },
   walking: {
-    backgroundColor: "#B5CDD0",
-    //marginTop: "2%",
     width: "5px",
     height: "60px",
-    borderRadius: "50%",
     backgroundImage: 'url(' + walkerimg + ')',
     backgroundRepeat: "no-repeat",
     backgroundSize: "60%",
     backgroundPosition: "center",
-    //float: 'left',
+  
+  
   },
   nature: {
-    backgroundColor: "#B5CDD0",
-    //marginTop: "2%",
     width: "5px",
     height: "60px",
-    borderRadius: "50%",
     backgroundImage: 'url(' + natureimg + ')',
     backgroundRepeat: "no-repeat",
     backgroundSize: "60%",
     backgroundPosition: "center",
-    //float: 'left',
   },
   photo: {
-    backgroundColor: "#B5CDD0",
-    //marginTop: "2%",
     width: "5px",
     height: "60px",
-    borderRadius: "50%",
     backgroundImage: 'url(' + photoimg + ')',
     backgroundRepeat: "no-repeat",
     backgroundSize: "60%",
     backgroundPosition: "center",
-    //float: 'left',
   },
   hint: {
-    backgroundColor: "#B5CDD0",
-    overflow: "hidden",
     width: "5px",
     height: "60px",
-    borderRadius: "50%",
-    backgroundImage: 'url(' + alertimg + ')',
+    backgroundImage: 'url(' + alertimg+ ')',
     backgroundRepeat: "no-repeat",
     backgroundSize: "60%",
     backgroundPosition: "center",
-    //float: 'left',
   },
   topic: {
     width: 60,
@@ -159,15 +143,14 @@ const useStyles = makeStyles((theme) => ({
   },
 
   discussion: {
-    background: '#DFE0F5',
     textTransform: 'none',
     textAlign: "left",
     //flexgrow: 1,
     marginTop: "2%",
     borderRadius: theme.shape.borderRadius,
-    fontSize: "20",
+    fontSize: 20,
     float: 'left',
-    height: "60px",
+    minHeight: "60px",
     width: "95%",
     padding: "4px",
     boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
@@ -176,30 +159,51 @@ const useStyles = makeStyles((theme) => ({
 
 
   },
-  wrapper: {
-    width: "60px",
-    float: "left",
-  },
-  block: {
-    display: "inline-block",
-    width: "50px",
-    float: "left",
-  },
-
+  
   disc: {
 
-    maxHeight: "400px", // used fixed values, otherwise overflow doesnt work
-    width: "90%",
+    maxHeight: "350px", // used fixed values, otherwise overflow doesnt work
+    width: "95%",
     overflow: "auto",
     padding: "5px",
     float: "left",
   },
+
+  disctext:{
+
+    textTransform: 'none',
+    textAlign: "left",
+    flexgrow: 1,
+    marginTop: "1%",
+    float: 'left',
+    minHeight: "60px",
+    width: "95%",
+    padding: "3px",
+    display: "flex",
+    flexDirection: "row",
+
+  },
+
   ratingNumber: {
 
     textAlign: 'center',
     float: "right",
+    height: "30px",
+    marginTop: "3px",
   },
+  deletedisc:{
+    
+    float: "right",
+    marginTop: "8px",
+    height: "30px",
 
+  },
+  package:{
+    
+    float: "right",
+    
+
+  },
 
 }));
 
@@ -241,59 +245,38 @@ export default function DiscussionOverview(props) {
 
   };
 
-  /*const handleTick = () => {
-
-    if (props.profile == "") {
-      let url = "/api/user/" + config.currentlyLoggedUsername
-      axios
-        .get(url)
-        .then(({ data }) => {
-          setUser(config.currentlyLoggedUsername);
-          getdiscussions(data.discussions).then(data => {
-            setDiscussions(createnewarray(data))
-            console.log(data)
-          }).catch(err => console.log(err))
-        });
-    }
-
-    else {
-      let url = "/api/user/" + props.profile
-      axios
-        .get(url)
-        .then(({ data }) => {
-          getdiscussions(data.discussions).then(data => {
-            setDiscussions(createnewarray(data))
-            console.log(data)
-          }).catch(err => console.log(err))
-        });
-    }
-
-
-  };*/
-
 
   const createnewarray = (array) => {
 
     const arraynew = array.map(x => x.data);
     return arraynew
   }
-
+  const removeDiscussion = (event) => {
+    console.log(event);
+    deleteDiscussion(event).then( ({data}) => {handleTick();
+      alert("Discussion deleted");})
+    
+  }
   function Discussion(props) {
     return (
-      <Link to={`/map/${props.id}`}>
-
         <div className={classes.discussion}>
-
           <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
-
+          <div className={classes.disctext}>
+          <Link to={`/map/${props.id}`} style={{color:"black"}}>
           {props.title}
-
+          </Link>
+          </div>
+        
+        <div className={classes.package}>
           <div className={classes.ratingNumber} style={{ fontSize: 25 }}>
             {props.votes}
           </div>
-
+          <div className={classes.deletedisc}>
+          <DeleteIcon onClick={e => removeDiscussion(props.id)} />
+          </div>
+    </div>
         </div>
-      </Link>
+        
     );
   }
 
@@ -305,9 +288,41 @@ export default function DiscussionOverview(props) {
     );
   }
 
-  return (
 
-    <Grid container className={classes.root} justify="center">
+  function Discussionprofile(props) {
+    return (
+        <div className={classes.discussion}>
+          <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
+          <div className={classes.disctext}>
+          <Link to={`/map/${props.id}`} style={{color:"black"}}>
+          {props.title}
+          </Link>
+          </div>
+        
+        <div className={classes.package}>
+          <div className={classes.ratingNumber} style={{ fontSize: 25 }}>
+            {props.votes}
+          </div>
+    </div>
+        </div>
+        
+    );
+  }
+
+  function DiscussionListProfile(props) {
+    return (
+      <div className={classes.disc}>
+        {props.discussionList.map(c => <Discussionprofile lat={c.lat} lng={c.lng} id={c._id} topic={c.topic} title={c.title} votes={c.votes} />)}
+      </div>
+    );
+  }
+
+
+
+  
+  let grid;
+    if (props.profile == "") {
+      grid = (    <Grid container className={classes.root} justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
 
@@ -349,6 +364,60 @@ export default function DiscussionOverview(props) {
 
       </Grid>
 
-    </Grid>
-  );
+    </Grid>)
+    }
+    else {
+      grid = (    <Grid container className={classes.root} justify="center">
+      <Grid item xs={12} >
+        <Typography variant="h5" className={classes.headline} />
+
+
+      </Grid>
+
+      <Grid item xs={11} justify="center" style={{ height: "100%" }}>
+
+        <div className="App">
+          <Card className={classes.card}>
+            <CardMedia
+              className={classes.media}
+
+            />
+            <CardContent className={classes.content}>
+
+              <Typography
+                className={"MuiTypography--heading"}
+                variant={"h6"}
+                gutterBottom
+              >
+
+                <Divider className={classes.divider} light />
+            Discussions
+          </Typography>
+              <div className={classes.element}>
+                <Typography
+                  className={"MuiTypography--subheading"}
+                  variant={"caption"}
+                >
+                </Typography>
+                <Divider className={classes.divider} light />
+                <DiscussionListProfile discussionList={discussions}></DiscussionListProfile>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+
+      </Grid>
+
+    </Grid>)
+    }
+  
+  
+  
+  
+  
+    return (<div>
+      {grid}</div>
+       );
+  
 }

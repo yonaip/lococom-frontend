@@ -6,7 +6,6 @@ const config = require("./ConfigService");
 async function getCommentProfile(profile) {
     let url = "/api/comment/CommentProfile/" + profile
     const response = await axios.get(url)
-    console.log(response)
     return response;
 }
 
@@ -46,21 +45,31 @@ const getNames = async (idlist) => {
     catch{ }
 }
 
+const getName = async (id) => {
+    const response = await axios.get("/api/user/id/" + id)
+    console.log(response);
+    return response
+}
+
 const deleteFriend = async (profile) => {
     let url = "/api/user/" + profile
     axios
-        .get(url)
+        .get(url, )
         .then(({ data }) => {
             axios.put('/api/user/removeFriend', {
                 "username": config.currentlyLoggedUsername,
                 "friend": data._id
+            },{
+                headers: { Authorization: "Bearer " + config.jwtToken }
             });
         });
 }
 
 const addFriend = async (friend) => {
     axios
-        .post('/api/user/friendlist/', friend)
+        .post('/api/user/friendlist/', friend ,{
+            headers: { Authorization: "Bearer " + config.jwtToken }
+        })
         .then(response => {
             alert('Friend added');
         })
@@ -95,5 +104,6 @@ export {
     getDiscussions,
     getNames,
     deleteFriend,
-    addFriend
+    addFriend,
+    getName
 }
