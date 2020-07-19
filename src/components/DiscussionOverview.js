@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, Typography, Fab, ButtonBase } from '@material-ui/core';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import requestimg from '../resources/request.png';
 import walkerimg from '../resources/shoes.png';
@@ -14,17 +13,12 @@ import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import commentImage from '../resources/comment.svg';
 import DeleteIcon from '@material-ui/icons/Delete';
-//import discussionImage from '../resources/plaudern.svg';
 import discussionImage from '../resources/globe.jpg';
 import { getUser, getDiscussions } from "../services/ProfileService";
 import { deleteDiscussion } from "../services/DiscussionService";
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
-  root: {
-    //marginTop: "15%",
-  },
-
 
   headline: {
     color: "black",
@@ -45,45 +39,22 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   media: {
-    // paddingTop: "10%",
-    //width: "30vw",
+
     height: "40%",
     backgroundImage: 'url(' + discussionImage + ')',
     backgroundRepeat: "no-repeat",
-    //backgroundSize: "40%",
-    //backgroundPosition: "right",
+
   },
   content: {
     textAlign: "left",
-    //padding: muiBaseTheme.spacing.unit * 3
+
   },
-  divider: {
-    // margin: `${muiBaseTheme.spacing.unit * 3}px 0`
-  },
+
   heading: {
     fontWeight: "bold"
   },
   subheading: {
     lineHeight: 1.8
-  },
-
-  text: {
-    color: "black",
-    textAlign: 'left',
-    padding: theme.spacing(1),
-    flexGrow: 2,
-    marginBottom: "2%"
-  },
-
-  titletext: {
-    color: "black",
-    textAlign: 'left',
-    marginBottom: "2%",
-    height: "100%",
-    width: "70%",
-    marginLeft: "20%",
-    overflow: "auto",
-
   },
 
   element: {
@@ -108,8 +79,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "60%",
     backgroundPosition: "center",
-  
-  
+
+
   },
   nature: {
     width: "5px",
@@ -130,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
   hint: {
     width: "5px",
     height: "60px",
-    backgroundImage: 'url(' + alertimg+ ')',
+    backgroundImage: 'url(' + alertimg + ')',
     backgroundRepeat: "no-repeat",
     backgroundSize: "60%",
     backgroundPosition: "center",
@@ -145,7 +116,6 @@ const useStyles = makeStyles((theme) => ({
   discussion: {
     textTransform: 'none',
     textAlign: "left",
-    //flexgrow: 1,
     marginTop: "2%",
     borderRadius: theme.shape.borderRadius,
     fontSize: 20,
@@ -159,17 +129,17 @@ const useStyles = makeStyles((theme) => ({
 
 
   },
-  
+
   disc: {
 
-    maxHeight: "350px", // used fixed values, otherwise overflow doesnt work
+    maxHeight: "350px",
     width: "95%",
     overflow: "auto",
     padding: "5px",
     float: "left",
   },
 
-  disctext:{
+  disctext: {
 
     textTransform: 'none',
     textAlign: "left",
@@ -191,22 +161,21 @@ const useStyles = makeStyles((theme) => ({
     height: "30px",
     marginTop: "3px",
   },
-  deletedisc:{
-    
+  deletedisc: {
+
     float: "right",
     marginTop: "8px",
     height: "30px",
 
   },
-  package:{
-    
+  package: {
+
     float: "right",
-    
+
 
   },
 
 }));
-
 
 
 export default function DiscussionOverview(props) {
@@ -214,6 +183,8 @@ export default function DiscussionOverview(props) {
   const [user, setUser] = useState(null);
   const [ratingNum, setRatingNum] = useState("0");
   const [discussions, setDiscussions] = useState([])
+
+
   useEffect(() => {
     handleTick();
     const interval = setInterval(() => handleTick(), 10000);
@@ -222,11 +193,12 @@ export default function DiscussionOverview(props) {
     };
   }, [props.profile]);
 
+  //when on own profile view get user object from name(string)
   const handleTick = () => {
-
     if (props.profile == "") {
       getUser(config.currentlyLoggedUsername).then(({ data }) => {
         setUser(config.currentlyLoggedUsername);
+        //get discussion objects from User object in seperate Array
         getDiscussions(data.discussions).then(data => {
           setDiscussions(createnewarray(data))
         });
@@ -234,7 +206,7 @@ export default function DiscussionOverview(props) {
     }
 
     else {
-
+      //same as above but with clicked User
       getUser(props.profile).then(({ data }) => {
         setUser(config.currentlyLoggedUsername);
         getDiscussions(data.discussions).then(data => {
@@ -245,38 +217,42 @@ export default function DiscussionOverview(props) {
 
   };
 
-
   const createnewarray = (array) => {
-
     const arraynew = array.map(x => x.data);
     return arraynew
   }
+  //call deleteDiscussion from DiscussionService
   const removeDiscussion = (event) => {
     console.log(event);
-    deleteDiscussion(event).then( ({data}) => {handleTick();
-      alert("Discussion deleted");})
-    
+    deleteDiscussion(event).then(({ data }) => {
+      //reload page after deleting by calling handleTick
+      handleTick();
+      alert("Discussion deleted");
+    })
+
   }
+
+  //single Discussion with links to Mapview displaying clicked Discussion
   function Discussion(props) {
     return (
-        <div className={classes.discussion}>
-          <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
-          <div className={classes.disctext}>
-          <Link to={`/map/${props.id}`} style={{color:"black"}}>
-          {props.title}
+      <div className={classes.discussion}>
+        <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
+        <div className={classes.disctext}>
+          <Link to={`/map/${props.id}`} style={{ color: "black" }}>
+            {props.title}
           </Link>
-          </div>
-        
+        </div>
+
         <div className={classes.package}>
           <div className={classes.ratingNumber} style={{ fontSize: 25 }}>
             {props.votes}
           </div>
           <div className={classes.deletedisc}>
-          <DeleteIcon onClick={e => removeDiscussion(props.id)} />
+            <DeleteIcon onClick={e => removeDiscussion(props.id)} />
           </div>
-    </div>
         </div>
-        
+      </div>
+
     );
   }
 
@@ -288,27 +264,27 @@ export default function DiscussionOverview(props) {
     );
   }
 
-
+  //Discussionprofile for clicked User without possibility to delete discussion
   function Discussionprofile(props) {
     return (
-        <div className={classes.discussion}>
-          <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
-          <div className={classes.disctext}>
-          <Link to={`/map/${props.id}`} style={{color:"black"}}>
-          {props.title}
+      <div className={classes.discussion}>
+        <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
+        <div className={classes.disctext}>
+          <Link to={`/map/${props.id}`} style={{ color: "black" }}>
+            {props.title}
           </Link>
-          </div>
-        
+        </div>
+
         <div className={classes.package}>
           <div className={classes.ratingNumber} style={{ fontSize: 25 }}>
             {props.votes}
           </div>
-    </div>
         </div>
-        
+      </div>
+
     );
   }
-
+  //DiscussionListProfile for clicked User
   function DiscussionListProfile(props) {
     return (
       <div className={classes.disc}>
@@ -319,10 +295,10 @@ export default function DiscussionOverview(props) {
 
 
 
-  
+  //differentiate between clicked user and own user profile
   let grid;
-    if (props.profile == "") {
-      grid = (    <Grid container className={classes.root} justify="center">
+  if (props.profile == "") {
+    grid = (<Grid container justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
 
@@ -345,7 +321,7 @@ export default function DiscussionOverview(props) {
                 gutterBottom
               >
 
-                <Divider className={classes.divider} light />
+                <Divider light />
             Discussions
           </Typography>
               <div className={classes.element}>
@@ -354,7 +330,7 @@ export default function DiscussionOverview(props) {
                   variant={"caption"}
                 >
                 </Typography>
-                <Divider className={classes.divider} light />
+                <Divider />
                 <DiscussionList discussionList={discussions}></DiscussionList>
               </div>
             </CardContent>
@@ -365,9 +341,9 @@ export default function DiscussionOverview(props) {
       </Grid>
 
     </Grid>)
-    }
-    else {
-      grid = (    <Grid container className={classes.root} justify="center">
+  }
+  else {
+    grid = (<Grid container justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
 
@@ -399,7 +375,7 @@ export default function DiscussionOverview(props) {
                   variant={"caption"}
                 >
                 </Typography>
-                <Divider className={classes.divider} light />
+                <Divider />
                 <DiscussionListProfile discussionList={discussions}></DiscussionListProfile>
               </div>
             </CardContent>
@@ -410,14 +386,11 @@ export default function DiscussionOverview(props) {
       </Grid>
 
     </Grid>)
-    }
-  
-  
-  
-  
-  
-    return (<div>
-      {grid}</div>
-       );
-  
+  }
+
+
+  return (<div>
+    {grid}</div>
+  );
+
 }

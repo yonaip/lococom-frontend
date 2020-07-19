@@ -2,13 +2,13 @@ import axios from "axios";
 
 const config = require("./ConfigService");
 
-
+//gets every Comment from profile
 async function getCommentProfile(profile) {
     let url = "/api/comment/CommentProfile/" + profile
     const response = await axios.get(url)
     return response;
 }
-
+//get user object from profile
 async function getUser(profile) {
     let url = "/api/user/" + profile
     const response = await axios
@@ -16,7 +16,7 @@ async function getUser(profile) {
     return response;
 }
 
-
+//get discussion objects from discussion ids
 const getDiscussions = async (discussionids) => {
     try {
         var i;
@@ -30,7 +30,7 @@ const getDiscussions = async (discussionids) => {
     }
     catch{ }
 }
-
+//get username from user ids
 const getNames = async (idlist) => {
     try {
         var i;
@@ -44,30 +44,30 @@ const getNames = async (idlist) => {
     }
     catch{ }
 }
-
+//get single username from id
 const getName = async (id) => {
     const response = await axios.get("/api/user/id/" + id)
     console.log(response);
     return response
 }
-
+//deletes friend from friendslist from loggenin user
 const deleteFriend = async (profile) => {
     let url = "/api/user/" + profile
     axios
-        .get(url, )
+        .get(url,)
         .then(({ data }) => {
             axios.put('/api/user/removeFriend', {
                 "username": config.currentlyLoggedUsername,
                 "friend": data._id
-            },{
+            }, {
                 headers: { Authorization: "Bearer " + config.jwtToken }
             });
         });
 }
-
+//adds friend to friendslist from loggedin user
 const addFriend = async (friend) => {
     axios
-        .post('/api/user/friendlist/', friend ,{
+        .post('/api/user/friendlist/', friend, {
             headers: { Authorization: "Bearer " + config.jwtToken }
         })
         .then(response => {
@@ -78,25 +78,7 @@ const addFriend = async (friend) => {
             console.error(err);
         });
 }
-async function getDiscussion(discussionID) {
-    const response = await axios.get('/api/discussion/' + discussionID);
-    return response;
-}
 
-async function getAllDiscussions() {
-    const response = await axios.get('/api/discussion');
-    return response;
-}
-
-async function upVoteDiscussion(discussionID) {
-    const response = axios.put('/api/discussion/upvote/' + discussionID);
-    return response;
-}
-
-async function downVoteDiscussion(discussionID) {
-    const response = axios.put('/api/discussion/downvote/' + discussionID);
-    return response;
-}
 
 export {
     getCommentProfile,

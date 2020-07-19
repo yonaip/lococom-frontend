@@ -92,6 +92,7 @@ export default function Discussion(props) {
     const [creator, setCreator] = useState("");
     const [userId, setUserId] = useState(null);
     const [ratingNum, setRatingNum] = useState("0");
+    const [timestamp, setTimestamp] = useState("");
 
     // Voting states
     const [userHasVotedPositive, setUserHasVotedPositive] = useState(false);
@@ -113,6 +114,7 @@ export default function Discussion(props) {
             setTopic(data.topic);
             getName(data.creatorId).then(({ data }) => setCreator(data.username));
             setRatingNum(data.votes);
+            setTimestamp(data.timestamp);
 
             // Check if the user has voted
             if(config.jwtToken) {
@@ -195,6 +197,18 @@ export default function Discussion(props) {
     const onCommentContentChange = (event) => {
         setCommentContent(event.target.value);
     }
+    const getCurrentDate = () =>{
+
+        let newDate = new Date()
+        let date = newDate.getDate();
+        let month = newDate.getMonth() + 1;
+        let year = newDate.getFullYear();
+        let hours = newDate.getHours();
+        let minute = newDate.getMinutes();
+        let seconds = newDate.getSeconds();
+
+        return (date + '-' + month + '-' + year + '/' + hours + ':' + minute + ':' + seconds)
+        }
 
     const handleSubmit = async() => {
         if (!config.currentlyLoggedUsername) {
@@ -203,7 +217,8 @@ export default function Discussion(props) {
         }
 
         try {
-            await addComment(config.currentlyLoggedUsername, commentContent, 0, props.discussionId);
+            const timestamp = getCurrentDate();
+            await addComment(config.currentlyLoggedUsername, commentContent, 0, props.discussionId, timestamp);
             loadComments();
             setCommentContent("");
         } catch(err) {
@@ -271,7 +286,7 @@ export default function Discussion(props) {
                 <TextField
                     className={classes.contentField}
                     value={content}
-                    helperText={`Created by somebody`}
+                    helperText={`Created at ${timestamp}`} //TODO
                     multiline
                     disable={true}
                     variant="outlined"

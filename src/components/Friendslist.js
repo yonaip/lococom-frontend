@@ -1,24 +1,20 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, Typography, Fab, ButtonBase } from '@material-ui/core';
-import axios from 'axios';
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
-//import friendsImage from '../resources/friends.svg';
 import friendsImage from '../resources/people.jpg';
 import { useState, useEffect } from 'react';
 import { currentlyLoggedUsername } from '../services/ConfigService';
 import { getUser, getNames, deleteFriend, addFriend } from "../services/ProfileService";
 import DeleteIcon from '@material-ui/icons/Delete';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
 
-  root: {
-    //marginTop: "15%",
-  },
 
   headline: {
     color: "black",
@@ -47,35 +43,14 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     textAlign: "left",
-    //padding: muiBaseTheme.spacing.unit * 3
+
   },
-  divider: {
-    // margin: `${muiBaseTheme.spacing.unit * 3}px 0`
-  },
+
   heading: {
     fontWeight: "bold"
   },
   subheading: {
     lineHeight: 1.8
-  },
-
-  text: {
-    color: "black",
-    textAlign: 'left',
-    padding: theme.spacing(1),
-    flexGrow: 2,
-    marginBottom: "2%"
-  },
-
-  titletext: {
-    color: "black",
-    textAlign: 'left',
-    marginBottom: "2%",
-    height: "100%",
-    width: "70%",
-    marginLeft: "20%",
-    overflow: "auto",
-
   },
 
   element: {
@@ -119,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   liste: {
-    maxHeight: "150px", // used fixed values, otherwise overflow doesnt work
+    maxHeight: "150px",
     width: "90%",
     overflow: "auto",
     float: "left",
@@ -132,7 +107,8 @@ export default function Friendslist(props) {
   const classes = useStyles();
   const [user, setUser] = React.useState(null);
   const [inputfriends, setinputfriends] = React.useState("");
-  const [showfriends, setshowfriends] = React.useState([]); //delete after testing
+  const [showfriends, setshowfriends] = React.useState([]);
+
   useEffect(() => {
     handleTick();
     const interval = setInterval(() => handleTick(), 10000);
@@ -141,42 +117,36 @@ export default function Friendslist(props) {
     };
   }, []);
 
-  /*const handleTick = () => {
-    let url = "/api/user/" + config.currentlyLoggedUsername
-    axios
-      .get(url)
-      .then(({ data }) => {
-        getName(data.friendlist).then(data => { setshowfriends(data) })
-        setUser(config.currentlyLoggedUsername);
-      });
-  };
-  */
+  //get User object with friendlist with ids, transform ids into usernames
   const handleTick = () => {
     getUser(config.currentlyLoggedUsername).then(({ data }) => {
       setUser(config.currentlyLoggedUsername);
       getNames(data.friendlist).then(data => {
         setshowfriends((createnewarray(data)))
       });
-    })}
+    })
+  }
 
 
- 
+
   const createnewarray = (array) => {
 
     const arraynew = array.map(x => x.data.username);
     return arraynew
   }
+  //textfield for adding new friend
   const onChangeContent = (event) => {
     setinputfriends(event.target.value);
   };
- 
+  //call deleteFriend method from ProfileService
   const removeFriend = (event) => {
     deleteFriend(event)
+    //reload page after deleting
     handleTick();
     alert("Friend removed")
   }
- 
 
+  //add friend, checks if friend is already in the list
   const handleSubmit = (event) => {
     if (showfriends.includes(inputfriends) == true) {
       alert('Friend is already in Friendlist');
@@ -188,32 +158,36 @@ export default function Friendslist(props) {
         friendname: inputfriends
       };
       addFriend(friendslist)
-          clear();
-          handleTick();
-        
+      clear();
+      handleTick();
+
     }
   };
-
+  //send clicked user to Userview (parent)
   const sendNametoParent = (event) => {
     props.callbackFromParent(event);
     console.log("send");
   }
 
-
+  //single Friend
   function Friend(props) {
     return (
-<div>
-      <div className={classes.friend}>
-        <span style={{ fontWeight: "bold" }} onClick={e => sendNametoParent(props.username)}>{props.username}</span>  
-                 <DeleteIcon onClick={e => removeFriend(props.username)} className={classes.delete} />
+      <div>
+        <div className={classes.friend}>
+          <span style={{ fontWeight: "bold" }} onClick={e => sendNametoParent(props.username)}>{props.username}</span>
+          <DeleteIcon onClick={e => removeFriend(props.username)} className={classes.delete} />
+        </div>
+        <Divider />
       </div>
-       <Divider className={classes.divider} dark />
-       </div>
     );
   }
+
+
   const clear = () => {
     setinputfriends("");
   }
+
+  //all friends of a user
   function Listoffriends(props) {
     return (
       <div>
@@ -221,9 +195,11 @@ export default function Friendslist(props) {
       </div>
     );
   }
+
+  //friendlist is only displayed for loggedin User
   return (
 
-    <Grid container className={classes.root} justify="center">
+    <Grid container justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
 
@@ -246,7 +222,7 @@ export default function Friendslist(props) {
                 gutterBottom
               >
 
-                <Divider className={classes.divider} light />
+                <Divider />
          My Friends
         </Typography>
 
@@ -256,7 +232,7 @@ export default function Friendslist(props) {
                   variant={"caption"}
                 >
                 </Typography>
-                <Divider className={classes.divider} light />
+                <Divider />
                 <div className={classes.liste}>
                   <Listoffriends list={showfriends}></Listoffriends>
                 </div>

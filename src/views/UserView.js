@@ -8,6 +8,7 @@ import ProfileComponent from "../components/ProfileComponent";
 import DiscussionOverview from "../components/DiscussionOverview";
 import CommentOverview from "../components/CommentOverview";
 import Friendslist from "../components/Friendslist";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const config = require("../services/ConfigService");
@@ -38,13 +39,16 @@ const useStyles = makeStyles((theme) => ({
 export default function UserView() {
 
     const classes = useStyles();
-
+    //check if left Menu from Header is open
     const [leftMenuOpen, setLeftMenu] = useState(false);
+    //Variable for another user profile
     const [differentuser, setDifferentuser] = useState("");
+    //stores loggedin user as String
     const [user, setUser] = useState("");
 
     const history = useHistory();
 
+    
     useEffect(() => {
         handleTick()
         const interval = setInterval(() => handleTick(), 10000);
@@ -53,6 +57,7 @@ export default function UserView() {
         };
     }, []);
 
+    //saves loggedin User in Variable user
     const handleTick = () => {
         setUser(config.currentlyLoggedUsername);
     };
@@ -65,25 +70,29 @@ export default function UserView() {
         setLeftMenu(open);
     };
 
+    //store user in "differentuser" from Childcomponent "Friendslist"
     const getData = (data) => {
         setDifferentuser(data);
 
     };
-
+    //when clicking back button and switching to loggedin User set differentuser to ""
     const clear = (event) => {
         setDifferentuser("");
     };
-
+    //switch to mapview when location is entered in searchbar
     const switchToMapView = (coordinates) => {
         console.log(coordinates);
         history.push(`/map/${coordinates.lat}/${coordinates.lng}`)
     }
 
+    //when user is not loggedin, no profile view will be displayed
     let grid;
     if (user == null) {
         grid = (<div></div>)
     }
+    //when user is logged in...
     else {
+        //display loggedin user
         if (differentuser == "") {
             grid = (
                 <Grid container xs={12}>
@@ -102,6 +111,7 @@ export default function UserView() {
                 </Grid>
             );
         } else {
+            //display another profile the loggedin user has clicked on
             grid = (
                 <Grid container xs={12}>
                     <Grid item xs={4}>

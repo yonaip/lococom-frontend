@@ -16,10 +16,6 @@ const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
 
-  root: {
-    //marginTop: "15%",
-  },
-
 
   headline: {
     color: "black",
@@ -39,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
     }
   },
+  //picture at card top
   media: {
     height: "40%",
     backgroundImage: 'url(' + commentImage + ')',
@@ -46,34 +43,13 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     textAlign: "left",
-    //padding: muiBaseTheme.spacing.unit * 3
   },
-  divider: {
-    // margin: `${muiBaseTheme.spacing.unit * 3}px 0`
-  },
+
   heading: {
     fontWeight: "bold"
   },
   subheading: {
     lineHeight: 1.8
-  },
-
-  text: {
-    color: "black",
-    textAlign: 'left',
-    padding: theme.spacing(1),
-    flexGrow: 2,
-    marginBottom: "2%"
-  },
-
-  titletext: {
-    color: "black",
-    textAlign: 'left',
-    marginBottom: "2%",
-    height: "100%",
-    width: "70%",
-    marginLeft: "20%",
-    overflow: "auto",
   },
 
   element: {
@@ -88,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
     flexgrow: 1,
     marginTop: "1%",
-    //borderRadius: theme.shape.borderRadius,
     color: "black",
     fontSize: 15,
     float: 'left',
@@ -99,9 +74,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
   },
+
+  //stores commentlist
   disc: {
 
-    maxHeight: "350px", // used fixed values, otherwise overflow doesnt work
+    maxHeight: "350px",
     width: "95%",
     overflow: "auto",
     padding: "5px",
@@ -128,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "3px",
     display: "flex",
     flexDirection: "row",
-  
+
   },
 
 }));
@@ -140,6 +117,8 @@ export default function CommentOverview(props) {
   const [user, setUser] = useState(null);
   const [comments, setComments] = useState([])
 
+
+
   useEffect(() => {
     handleTick();
     const interval = setInterval(() => handleTick(), 10000);
@@ -148,7 +127,9 @@ export default function CommentOverview(props) {
     };
   }, [props.profile]);
 
+
   const handleTick = () => {
+    //call getCommentProfile from ProfileService to get all comments from loggenin User
     if (props.profile == "") {
       getCommentProfile(config.currentlyLoggedUsername).then(({ data }) => {
         setComments(data)
@@ -156,6 +137,7 @@ export default function CommentOverview(props) {
       setUser(config.currentlyLoggedUsername);
     }
     else {
+      //call getCommentProfile from ProfileService to get all comments from clicked User
       getCommentProfile(props.profile).then(({ data }) => {
         setUser(config.currentlyLoggedUsername);
         setComments(data)
@@ -163,79 +145,71 @@ export default function CommentOverview(props) {
     };
   }
 
-
+  //calls deleteComment function from CommentService
   const removeComment = (event) => {
     deleteComment(event);
+    //reload view after deleting comment with call of handletick()
     handleTick();
     alert("Comment deleted");
   }
 
-
+  //single Comment of Commentlist, links to discussion where comment was posted
   function Comment(props) {
     return (
-
-
       <div className={classes.comment}>
-       
-          <div className={classes.com}>
+
+        <div className={classes.com}>
           <Link to={`/map/${props.discussionid}`} style={{ color: "black" }}>
             <span style={{ fontWeight: "bold" }}>{props.username}: </span>
             <span> {props.content}</span>
-            </Link>
-          </div>
-      
+          </Link>
+        </div>
+
         <DeleteIcon onClick={e => removeComment(props.id)} color="default" className={classes.deletecomment} />
       </div>
 
     );
   }
-
+  //Commentlist with mapping
   function CommentList(props) {
     return (
       <div className={classes.disc}>
-
         {props.commentList.map(c => <Comment id={c._id} discussionid={c.discussionId} content={c.content} username={c.username} />)}
       </div>
     );
   }
 
+  //Comments from another clicked User without the possibility to delete comment
   function Commentprofile(props) {
     return (
-
-
       <div className={classes.comment}>
-        
-          <div className={classes.com}>
-            <span style={{ fontWeight: "bold" }}>{props.username}: </span>
-            <Link to={`/map/${props.discussionid}`} style={{ color: "black" }}>
+        <div className={classes.com}>
+          <span style={{ fontWeight: "bold" }}>{props.username}: </span>
+          <Link to={`/map/${props.discussionid}`} style={{ color: "black" }}>
             <span> {props.content}</span>
-            </Link>
-          </div>
-       
+          </Link>
+        </div>
+
       </div>
 
     );
   }
-
+  //CommentList from clicked User
   function CommentListprofile(props) {
     return (
       <div className={classes.disc}>
-
         {props.commentList.map(c => <Commentprofile id={c._id} discussionid={c.discussionId} content={c.content} username={c.username} />)}
       </div>
     );
   }
 
-
+  //display element CommentList when loggedin User is on his profile, display CommentListProfile when another Profile is observed
   let grid;
   if (props.profile == "") {
-    grid = (<Grid container className={classes.root} justify="center">
+    grid = (<Grid container justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
-
-
       </Grid>
-
       <Grid item xs={11} style={{ height: "100%" }}>
 
         <div className="App">
@@ -252,7 +226,7 @@ export default function CommentOverview(props) {
                 gutterBottom
               >
 
-                <Divider className={classes.divider} light />
+                <Divider />
             Comments
           </Typography>
 
@@ -262,7 +236,7 @@ export default function CommentOverview(props) {
                   variant={"caption"}
                 >
                 </Typography>
-                <Divider className={classes.divider} light />
+                <Divider />
                 <CommentList commentList={comments} />
               </div>
             </CardContent>
@@ -274,7 +248,7 @@ export default function CommentOverview(props) {
     </Grid>)
   }
   else {
-    grid = (<Grid container className={classes.root} justify="center">
+    grid = (<Grid container justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
 
@@ -297,7 +271,7 @@ export default function CommentOverview(props) {
                 gutterBottom
               >
 
-                <Divider className={classes.divider} light />
+                <Divider />
             Comments
           </Typography>
 
@@ -307,7 +281,7 @@ export default function CommentOverview(props) {
                   variant={"caption"}
                 >
                 </Typography>
-                <Divider className={classes.divider} light />
+                <Divider />
                 <CommentListprofile commentList={comments} />
               </div>
             </CardContent>
@@ -316,14 +290,10 @@ export default function CommentOverview(props) {
 
       </Grid>
 
-    </Grid> )
+    </Grid>)
   }
-
-
-
-
 
   return (<div>
     {grid}</div>
-     );
+  );
 }
