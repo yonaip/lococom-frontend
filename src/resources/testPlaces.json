@@ -1,0 +1,32 @@
+{
+  "Munich": [
+    {
+      "topic": "nature",
+      "name": "Feringasee",
+      "lat": 48.193516,
+      "lng": 11.674534
+    },
+
+    {
+      "topic": "sport",
+      "name": "Eisbachwelle",
+      "lat": 48.142689,
+      "lng": 11.590240
+    },
+
+    {
+      "topic": "photography",
+      "name": "Inspired by Nature - Landschaften und Gärten",
+      "lat": 48.008370,
+      "lng": 11.689120
+    },
+
+    {
+      "topic": "nature",
+      "name": "Echinger See",
+      "lat": 48.297329,
+      "lng": 11.623280
+    }
+  ]
+
+}
