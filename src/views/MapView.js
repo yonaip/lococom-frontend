@@ -61,17 +61,23 @@ export default function MapView(props) {
             lng: parseFloat(lng)
         }
     }
-    let preselectedDiscussion;
+    /*let preselectedDiscussion;
     if(discId) {
         preselectedDiscussion = (
             <Paper className={classes.container} elevation={3}>
                 <Discussion discussionId={discId} />
             </Paper>);
+        console.log(discId);
+        getDiscussion(discId)
+            .then(({ data }) => { setNewMarker(data); })
+            .catch((err) => console.log(err));
     }
+
+     */
 
     // States
     const [center, setCenter] = useState(coordinates? coordinates : { lat: 48.137154, lng: 11.576124 }); // Munich: lat: 48.137154, lng: 11.576124
-    const [rightPane, setRightPane] = useState(preselectedDiscussion);
+    const [rightPane, setRightPane] = useState(null);
     const [leftMenuOpen, setLeftMenu] = useState(false);
     const [markers, setMarkers] = useState([]);
     const [discussions, setDiscussions] = useState([]);
@@ -79,14 +85,24 @@ export default function MapView(props) {
     const [activatedFilters, setActivatedFilters] = useState([false, false, false, false, false]);
     const topics = ["Request", "Nature", "Walking", "Photo", "Hint"];
 
+    const [newMarker, setNewMarker] = useState(null);
 
     useEffect(() => {
         if (props.id) {
             /* setRightPane(<Discussion discussionId={props.id}/>);*/
-            getDiscussion(props.id).then(({ data }) => { selectDiscussion(data); })
+            getDiscussion(props.id).then(({ data }) => { showDiscussion(data); })
         }
         else {
 
+        }
+    }, [props.id]);
+
+    useEffect(() => {
+        if (discId) {
+            setRightPane(<Paper className={classes.container} elevation={3}>
+                <Discussion discussionId={discId} />
+            </Paper>);
+            getDiscussion(discId).then(({ data }) => { setNewMarker(data); })
         }
     }, [props.id]);
 
@@ -107,7 +123,7 @@ export default function MapView(props) {
 
     useEffect(() => {
         loadAllDiscussions();
-    }, [activatedFilters]);
+    }, [activatedFilters, rightPane]);
 
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
@@ -148,16 +164,18 @@ export default function MapView(props) {
         ]);
     };
 
-    const handleCreateDiscussionClose = (discussionId) => {
-        if (!discussionId) {
+    const handleCreateDiscussionClose = (discussion) => {
+        if (!discussion) {
             setRightPane(null);
         } else {
             setRightPane(
                 <Paper className={classes.container} elevation={3}>
-                    <Discussion discussionId={discussionId}/>
+                    <Discussion discussionId={discussion._id}/>
                 </Paper>
             );
         }
+
+        setNewMarker(discussion);
 
         // After discussion is created the red map marker is no longer needed and thus setMarkers([])
         setMarkers([]);
@@ -167,7 +185,7 @@ export default function MapView(props) {
         setRightPane(null);
     };
 
-    const selectDiscussion = (discussion) => {
+    const showDiscussion = (discussion) => {
         updateMap({lat: discussion.lat, lng: discussion.lng});
         setRightPane(
             <Paper className={classes.container} elevation={3}>
@@ -216,8 +234,9 @@ export default function MapView(props) {
                         defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}
-                        selectDiscussion={selectDiscussion}
+                        showDiscussion={showDiscussion}
                         discussions={discussions}
+                        newMarker={newMarker}
                     />
                 </Grid>
             </Grid>
