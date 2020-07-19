@@ -31,7 +31,7 @@ async function loginUser(username, password) {
  * @param password
  */
 async function registerUser(username, password, email) {
-    const response = await axios.post('auth/register', {
+    const response = await axios.post('/auth/register', {
         "username": username,
         "password": password,
         "email": email
@@ -41,7 +41,7 @@ async function registerUser(username, password, email) {
 }
 
 async function me() {
-    const response = await axios.get('auth/me', {
+    const response = await axios.get('/auth/me', {
         headers: { Authorization: "Bearer " + config.jwtToken }
     });
     return response;

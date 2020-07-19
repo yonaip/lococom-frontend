@@ -43,6 +43,7 @@ export default function MapHeader(props) {
 
 
   useEffect(() => {
+    console.log(`${cookies.token}:${cookies.username}`)
     config.jwtToken = cookies.token;
     config.currentlyLoggedUsername = cookies.username;
 
@@ -52,7 +53,7 @@ export default function MapHeader(props) {
         setUser(config.currentlyLoggedUsername);
       })
       .catch((err) => {
-        console.log("Error logging in, removing tokens");
+        console.log(`Error logging in, removing tokens: ${err}`);
         removeCookie('token');
         removeCookie('username');
       })
