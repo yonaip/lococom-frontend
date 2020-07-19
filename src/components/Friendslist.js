@@ -6,11 +6,13 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import friendsImage from '../resources/people.jpg';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
 import { useState, useEffect } from 'react';
 import { currentlyLoggedUsername } from '../services/ConfigService';
 import { getUser, getNames, deleteFriend, addFriend } from "../services/ProfileService";
 import DeleteIcon from '@material-ui/icons/Delete';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import ChatDialog from '../components/ChatDialog';
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
@@ -38,17 +40,16 @@ const useStyles = makeStyles((theme) => ({
     height: "40%",
     backgroundImage: 'url(' + friendsImage + ')',
     backgroundRepeat: "no-repeat",
-
-
   },
+
   content: {
     textAlign: "left",
-
   },
 
   heading: {
     fontWeight: "bold"
   },
+
   subheading: {
     lineHeight: 1.8
   },
@@ -108,6 +109,9 @@ export default function Friendslist(props) {
   const [user, setUser] = React.useState(null);
   const [inputfriends, setinputfriends] = React.useState("");
   const [showfriends, setshowfriends] = React.useState([]);
+  const [showfriends, setshowfriends] = React.useState([]); //delete after testing
+  const [chatDialogOpen, setChatDialogOpen] = useState(false);
+  const [selectedUser, setSelecterUser] = useState(null);
 
   useEffect(() => {
     handleTick();
@@ -130,7 +134,6 @@ export default function Friendslist(props) {
 
 
   const createnewarray = (array) => {
-
     const arraynew = array.map(x => x.data.username);
     return arraynew
   }
@@ -169,13 +172,22 @@ export default function Friendslist(props) {
     console.log("send");
   }
 
-  //single Friend
+const handleDialogClose = () => {
+  setChatDialogOpen(false);
+}; 
+//single Friend
   function Friend(props) {
     return (
       <div>
         <div className={classes.friend}>
           <span style={{ fontWeight: "bold" }} onClick={e => sendNametoParent(props.username)}>{props.username}</span>
           <DeleteIcon onClick={e => removeFriend(props.username)} className={classes.delete} />
+          <IconButton edge="end" aria-label="comments" onClick={() => {
+          setSelecterUser(props.username);
+          setChatDialogOpen(true);
+        }}>
+          <CommentIcon/>
+        </IconButton>
         </div>
         <Divider />
       </div>
@@ -197,25 +209,21 @@ export default function Friendslist(props) {
   }
 
   //friendlist is only displayed for loggedin User
+  
   return (
-
     <Grid container justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
-
-
       </Grid>
 
-      <Grid item xs={11} style={{ height: "100%" }}>
-
+      <Grid item xs={12} style={{ height: "100%" }}>
         <div className="App">
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-
             />
             <CardContent className={classes.content}>
-
+              <Divider className={classes.divider} light />
               <Typography
                 className={"MuiTypography--heading"}
                 variant={"h6"}
@@ -252,14 +260,11 @@ export default function Friendslist(props) {
             />
             <Button size="large" onClick={handleSubmit} variant="contained" color="primary" className={classes.post}>
               Add
-        </Button>
+            </Button>
           </Grid>
         </div>
-
-
       </Grid>
-
+      <ChatDialog open={chatDialogOpen} handleClose={handleDialogClose} targetUser={selectedUser}/>
     </Grid>
-
   );
 }  

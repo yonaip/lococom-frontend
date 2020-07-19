@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, TextField, IconButton, List, ListItem, ListItemText, Box } from '@material-ui/core';
-import { addComment, getCommentsByDiscussionId } from "../../services/CommentService";
-import SendIcon from '@material-ui/icons/Send';
-import InputAdornment from "@material-ui/core/InputAdornment";
-import SentimentSatisfiedRoundedIcon from '@material-ui/icons/SentimentSatisfiedRounded';
-import EmojiPicker from "./EmojiPicker";
-
-const config = require("../../services/ConfigService");
+import { List, ListItem, ListItemText, Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -21,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
         display: "block",
         position: 'relative',
         overflow: 'auto',
-        maxHeight: "30vh"
+        maxHeight: "27vh"
     },
 
     listItem: {
@@ -43,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CommentSection(props) {
     const classes = useStyles();
-    const [showPicker, setShowPicker] = useState(false);
+    //const [showPicker, setShowPicker] = useState(false);
 
     //console.log(props.discussionId); 5f107b7eac00571098e2348e
 

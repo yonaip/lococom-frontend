@@ -52,16 +52,15 @@ const getName = async (id) => {
 }
 //deletes friend from friendslist from loggenin user
 const deleteFriend = async (profile) => {
-    let url = "/api/user/" + profile
-    axios
-        .get(url,)
-        .then(({ data }) => {
-            axios.put('/api/user/removeFriend', {
-                "username": config.currentlyLoggedUsername,
-                "friend": data._id
-            }, {
-                headers: { Authorization: "Bearer " + config.jwtToken }
-            });
+    axios.delete(`/api/user/friendlist/${username}`, {}, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    })
+        .then(response => {
+            alert('Friend removed');
+        })
+        .catch(err => {
+            alert('Friend not found');
+            console.error(err);
         });
 }
 //adds friend to friendslist from loggedin user

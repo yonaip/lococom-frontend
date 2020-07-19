@@ -19,7 +19,6 @@ import { deleteDiscussion } from "../services/DiscussionService";
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
-
   headline: {
     color: "black",
     textAlign: 'center',
@@ -179,6 +178,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function DiscussionOverview(props) {
+
   const classes = useStyles();
   const [user, setUser] = useState(null);
   const [ratingNum, setRatingNum] = useState("0");
@@ -238,7 +238,7 @@ export default function DiscussionOverview(props) {
       <div className={classes.discussion}>
         <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
         <div className={classes.disctext}>
-          <Link to={`/map/${props.id}`} style={{ color: "black" }}>
+          <Link to={`/map?lat=${props.lat}&lng=${props.lng}&discId=${props.id}`}>
             {props.title}
           </Link>
         </div>
@@ -300,21 +300,17 @@ export default function DiscussionOverview(props) {
   if (props.profile == "") {
     grid = (<Grid container justify="center">
       <Grid item xs={12} >
-        <Typography variant="h5" className={classes.headline} />
-
-
+        <Typography variant="h5" className={classes.headline}/>
       </Grid>
 
-      <Grid item xs={11} justify="center" style={{ height: "100%" }}>
+      <Grid item xs={12} justify="center" style={{ height: "100%" }}>
 
         <div className="App">
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-
             />
             <CardContent className={classes.content}>
-
               <Typography
                 className={"MuiTypography--heading"}
                 variant={"h6"}
@@ -336,8 +332,6 @@ export default function DiscussionOverview(props) {
             </CardContent>
           </Card>
         </div>
-
-
       </Grid>
 
     </Grid>)

@@ -6,10 +6,11 @@ import LeftDrawerMenu from "../components/leftmenu/LeftDrawerMenu";
 import Header from "../components/Header";
 import ProfileComponent from "../components/ProfileComponent";
 import DiscussionOverview from "../components/DiscussionOverview";
-import CommentOverview from "../components/CommentOverview";
 import Friendslist from "../components/Friendslist";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Discussion from "../components/discussion/Discussion";
 
+import ChatDialog from '../components/ChatDialog';
 
 const config = require("../services/ConfigService");
 
@@ -81,31 +82,29 @@ export default function UserView() {
     };
     //switch to mapview when location is entered in searchbar
     const switchToMapView = (coordinates) => {
-        console.log(coordinates);
-        history.push(`/map/${coordinates.lat}/${coordinates.lng}`)
+        console.log(coordinates); //lat=:lat&lng=:lng"
+        //history.push(`/map/${coordinates.lat}/${coordinates.lng}`)
+        history.push(`/map?lat=${coordinates.lat}&lng=${coordinates.lng}`)
     }
 
     //when user is not loggedin, no profile view will be displayed
     let grid;
     if (user == null) {
-        grid = (<div></div>)
+        grid = (<div>Loading user!</div>)
     }
     //when user is logged in...
     else {
         //display loggedin user
         if (differentuser == "") {
             grid = (
-                <Grid container xs={12}>
-                    <Grid item xs={3}>
+                <Grid container direction="row" justify="space-around" alignItems="flex-start">
+                    <Grid item xs={4}>
                         <ProfileComponent profile=""></ProfileComponent>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <DiscussionOverview profile=""></DiscussionOverview>
                     </Grid>
-                    <Grid item xs={3}>
-                        <CommentOverview profile=""></CommentOverview>
-                    </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <Friendslist callbackFromParent={getData}></Friendslist>
                     </Grid>
                 </Grid>
@@ -113,22 +112,12 @@ export default function UserView() {
         } else {
             //display another profile the loggedin user has clicked on
             grid = (
-                <Grid container xs={12}>
+                <Grid container direction="row" justify="space-around" alignItems="flex-start">
                     <Grid item xs={4}>
                         <ProfileComponent profile={differentuser} ></ProfileComponent>
                     </Grid>
                     <Grid item xs={4}>
                         <DiscussionOverview profile={differentuser}></DiscussionOverview>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <CommentOverview profile={differentuser}></CommentOverview>
-                        <Button
-                            onClick={clear}
-                            className={classes.back}
-                            variant="contained"
-                            color="primary">
-                            Back
-                        </Button>
                     </Grid>
                 </Grid>
             );
@@ -137,7 +126,7 @@ export default function UserView() {
 
     return (<div className={classes.root}>
         <Header className={classes.header} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={switchToMapView}/>
-        <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} />
+        {/* <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} /> */}
         {grid}
     </div>);
 }

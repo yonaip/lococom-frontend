@@ -33,9 +33,14 @@ const getDiscussion = async (discussionID) => {
     return response;
 }
 //gets all existing discussions
-const getAllDiscussions = async () => {
-    const response = await axios.get('/api/discussion');
-    return response;
+const getAllDiscussions = async (topics) => {
+    if(topics != "") {
+        const response = await axios.get(`/api/discussion?topic=${topics}`);
+        return response;
+    } else {
+        const response = await axios.get('/api/discussion');
+        return response;
+    }
 }
 //upvotes discussion
 const upVoteDiscussion = async (discussionID) => {

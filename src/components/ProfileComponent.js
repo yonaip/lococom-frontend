@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 2,
     marginTop: "2%"
   },
+
   text: {
     color: "black",
     padding: theme.spacing(2),
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
     }
   },
+
   media: {
     width: "15vw",
     height: "15vw",
@@ -45,19 +47,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "70%",
     backgroundPosition: "right",
   },
+
   content: {
     textAlign: "left",
-
   },
 
   heading: {
     fontWeight: "bold"
   },
+
   subheading: {
     lineHeight: 1.8
   },
-
-
 
 }));
 
@@ -82,7 +83,6 @@ export default function ProfileComponent(props) {
       clearInterval(interval);
     };
   }, [props.profile]);
-
   const handleTick = () => {
     // gets the number of Comments made by the User from the backend
     if (props.profile == "") {
@@ -243,11 +243,5 @@ export default function ProfileComponent(props) {
     );
   }
 
-
-
-
-  return (
-    <div>
-      {grid}</div>
-  );
+  return <div>{grid}</div>;
 }
