@@ -6,9 +6,10 @@ import LeftDrawerMenu from "../components/leftmenu/LeftDrawerMenu";
 import Header from "../components/Header";
 import ProfileComponent from "../components/ProfileComponent";
 import DiscussionOverview from "../components/DiscussionOverview";
-import CommentOverview from "../components/CommentOverview";
 import Friendslist from "../components/Friendslist";
+import Discussion from "../components/discussion/Discussion";
 
+import ChatDialog from '../components/ChatDialog';
 
 const config = require("../services/ConfigService");
 
@@ -81,44 +82,31 @@ export default function UserView() {
 
     let grid;
     if (user == null) {
-        grid = (<div></div>)
+        grid = (<div>Loading user!</div>)
     }
     else {
         if (differentuser == "") {
             grid = (
-                <Grid container xs={12}>
-                    <Grid item xs={3}>
+                <Grid container direction="row" justify="space-around" alignItems="flex-start">
+                    <Grid item xs={4}>
                         <ProfileComponent profile=""></ProfileComponent>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <DiscussionOverview profile=""></DiscussionOverview>
                     </Grid>
-                    <Grid item xs={3}>
-                        <CommentOverview profile=""></CommentOverview>
-                    </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <Friendslist callbackFromParent={getData}></Friendslist>
                     </Grid>
                 </Grid>
             );
         } else {
             grid = (
-                <Grid container xs={12}>
+                <Grid container direction="row" justify="space-around" alignItems="flex-start">
                     <Grid item xs={4}>
                         <ProfileComponent profile={differentuser} ></ProfileComponent>
                     </Grid>
                     <Grid item xs={4}>
                         <DiscussionOverview profile={differentuser}></DiscussionOverview>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <CommentOverview profile={differentuser}></CommentOverview>
-                        <Button
-                            onClick={clear}
-                            className={classes.back}
-                            variant="contained"
-                            color="primary">
-                            Back
-                        </Button>
                     </Grid>
                 </Grid>
             );

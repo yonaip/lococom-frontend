@@ -19,11 +19,6 @@ import { getUser, getDiscussions } from "../services/ProfileService";
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: "15%",
-  },
-
-
   headline: {
     color: "black",
     textAlign: 'center',
@@ -241,37 +236,6 @@ export default function DiscussionOverview(props) {
 
   };
 
-  /*const handleTick = () => {
-
-    if (props.profile == "") {
-      let url = "/api/user/" + config.currentlyLoggedUsername
-      axios
-        .get(url)
-        .then(({ data }) => {
-          setUser(config.currentlyLoggedUsername);
-          getdiscussions(data.discussions).then(data => {
-            setDiscussions(createnewarray(data))
-            console.log(data)
-          }).catch(err => console.log(err))
-        });
-    }
-
-    else {
-      let url = "/api/user/" + props.profile
-      axios
-        .get(url)
-        .then(({ data }) => {
-          getdiscussions(data.discussions).then(data => {
-            setDiscussions(createnewarray(data))
-            console.log(data)
-          }).catch(err => console.log(err))
-        });
-    }
-
-
-  };*/
-
-
   const createnewarray = (array) => {
 
     const arraynew = array.map(x => x.data);
@@ -306,33 +270,28 @@ export default function DiscussionOverview(props) {
   }
 
   return (
-
-    <Grid container className={classes.root} justify="center">
+    <Grid container justify="center">
       <Grid item xs={12} >
-        <Typography variant="h5" className={classes.headline} />
-
-
+        <Typography variant="h5" className={classes.headline}/>
       </Grid>
 
-      <Grid item xs={11} justify="center" style={{ height: "100%" }}>
+      <Grid item xs={12} justify="center" style={{ height: "100%" }}>
 
         <div className="App">
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-
             />
             <CardContent className={classes.content}>
-
               <Typography
                 className={"MuiTypography--heading"}
                 variant={"h6"}
                 gutterBottom
               >
 
-                <Divider className={classes.divider} light />
-            Discussions
-          </Typography>
+              <Divider className={classes.divider} light />
+              Discussions
+              </Typography>
               <div className={classes.element}>
                 <Typography
                   className={"MuiTypography--subheading"}
@@ -345,10 +304,7 @@ export default function DiscussionOverview(props) {
             </CardContent>
           </Card>
         </div>
-
-
       </Grid>
-
     </Grid>
   );
 }
