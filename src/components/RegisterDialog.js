@@ -43,7 +43,7 @@ export default function RegisterDialog(props) {
                 console.log(response);
                 setUsernameIncorrect(false);
                 setPasswordIncorrect(false);
-                props.handleClose();
+                props.handleClose({username: username, token: response.data.token});
             }).catch((err) => {
                 console.log(err);
                 setUsernameIncorrect(true);

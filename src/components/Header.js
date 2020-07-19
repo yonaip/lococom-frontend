@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {useCookies} from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, Button, AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+import { Grid, Box, Button, AppBar, Toolbar, Typography, IconButton, Menu, MenuItem } from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -37,6 +37,7 @@ export default function MapHeader(props) {
   const [user, setUser] = useState(null);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const history = useHistory();
 
@@ -79,6 +80,25 @@ export default function MapHeader(props) {
     setRegisterDialogOpen(true);
   };
 
+  const handleTransition = (destination) => () => {
+    history.push(destination);
+    setAnchorEl(null);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
+
+  const handleLogout = () => {
+    // Logout
+    removeCookie('token');
+    removeCookie('username');
+    config.currentlyLoggedUsername = null;
+    config.jwtToken = null;
+    setAnchorEl(null);
+    setUser(null);
+  }
+
   let userStatus;
   if (user == null) {
     userStatus = (
@@ -100,7 +120,17 @@ export default function MapHeader(props) {
       <Grid container alignItems="center" justify="flex-end">
         <Grid item xs={2}>
           <Box className={classes.button}>
-            <Button color="inherit" variant="outlined" onClick={() => history.push('/profile')}>{user}</Button>
+            <Button color="inherit" variant="outlined" onClick={(event) => setAnchorEl(event.currentTarget)}>{user}</Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleTransition('/profile')}>Profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </Box>
         </Grid>
       </Grid>);
