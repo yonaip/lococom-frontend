@@ -11,6 +11,7 @@ import requestRed from "../resources/request_red_marker.svg"
 import walkingRed from "../resources/walking_red_marker.svg"
 import photoRed from "../resources/photo_red_marker.svg"
 import hintRed from "../resources/attention_red_marker.svg"
+import mapStyle from "./MapStyle";
 
 export default function MapComponent(props) {
     const [selectedDiscussion, setSelectedDiscussion] = useState(null);
@@ -31,6 +32,7 @@ export default function MapComponent(props) {
         };
 
     }, []);
+    useEffect(() => {setSelectedDiscussion(props.newMarker)}, [props.newMarker]);
 
     // topic icon chosen based on discussion topic
     function chooseTopicIcon(discussion) {
@@ -74,7 +76,7 @@ export default function MapComponent(props) {
                 ref={(ref) => { mapRef = ref }}
                 defaultZoom={14}
                 defaultCenter={props.defaultCenter}
-                options={{disableDefaultUI: true, zoomControl: true}}
+                options={{disableDefaultUI: true, zoomControl: true, styles: mapStyle}}
                 onDblClick={handleDblClick}
             >
                 {(props.markers.length !== 0) &&
@@ -86,7 +88,7 @@ export default function MapComponent(props) {
                         }}
                         icon={{
                             url: marker,
-                            scaledSize: new window.google.maps.Size(30, 30),
+                            scaledSize: new window.google.maps.Size(40, 40),
                         }}
                     />
                 }
@@ -98,7 +100,7 @@ export default function MapComponent(props) {
                         position={{lat: discussion.lat, lng: discussion.lng}}
                         onClick={() => {
                             setSelectedDiscussion(discussion);
-                            props.selectDiscussion(discussion);
+                            props.showDiscussion(discussion);
                         }}
                         icon={{
                             url: chooseTopicIcon(discussion),
@@ -114,7 +116,7 @@ export default function MapComponent(props) {
                        position={{lat: selectedDiscussion.lat, lng: selectedDiscussion.lng}}
                        icon={{
                            url: chooseTopicIcon(selectedDiscussion),
-                           scaledSize: new window.google.maps.Size(30, 30),
+                           scaledSize: new window.google.maps.Size(40, 40),
                        }}
                    />
                 )}
@@ -123,11 +125,7 @@ export default function MapComponent(props) {
     }
 
     const handleDblClick= (event) => {
-        // console.log(mapRef);
-        // mapRef.panTo({
-        //     "lat": event.latLng.lat(),
-        //     "lng": event.latLng.lng()
-        // });
+        setSelectedDiscussion(null);
         props.onDblClick(event);
     }
 
