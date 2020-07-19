@@ -139,7 +139,6 @@ export default function ProfileComponent(props) {
     }
     catch{ }
   }
-
   const countVotes = (array) => {
     var i;
     var x = 0;

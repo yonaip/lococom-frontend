@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
     }
   },
-
   media: {
     height: "40%",
     backgroundImage: 'url(' + friendsImage + ')',

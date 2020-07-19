@@ -201,6 +201,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function DiscussionOverview(props) {
+
   const classes = useStyles();
   const [user, setUser] = useState(null);
   const [ratingNum, setRatingNum] = useState("0");
@@ -214,7 +215,6 @@ export default function DiscussionOverview(props) {
   }, [props.profile]);
 
   const handleTick = () => {
-
     if (props.profile == "") {
       getUser(config.currentlyLoggedUsername).then(({ data }) => {
         setUser(config.currentlyLoggedUsername);
@@ -244,11 +244,11 @@ export default function DiscussionOverview(props) {
 
   function Discussion(props) {
     return (
-      <Link to={`/map/${props.id}`}>
+      <Link to={`/map?lat=${props.lat}&lng=${props.lng}&discId=${props.id}`}>
 
         <div className={classes.discussion}>
 
-          <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
+          <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}/>
 
           {props.title}
 

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {useCookies} from 'react-cookie';
+import {useHistory} from 'react-router';
+import {Grid, Box, Button, Menu, MenuItem, AppBar, Toolbar, IconButton, Typography} from '@material-ui/core';
+import MenuIcon from "@material-ui/icons/Menu"
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, Button, AppBar, Toolbar, Typography, IconButton, Menu, MenuItem } from "@material-ui/core";
-import { useHistory } from 'react-router-dom';
-import MenuIcon from '@material-ui/icons/Menu';
-
-import SearchFieldComponent from './SearchFieldComponent';
 import LoginDialog from "./LoginDialog";
 import RegisterDialog from "./RegisterDialog";
 
 import {me} from "../services/AuthService";
+import SearchFieldComponent from "./SearchFieldComponent";
 
 const config = require("../services/ConfigService");
 
