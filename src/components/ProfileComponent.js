@@ -12,11 +12,6 @@ import { getDiscussion } from "../services/DiscussionService";
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
-
-  root: {
-    marginTop: "15%",
-  },
-
   headline: {
     color: "black",
     textAlign: 'center',
@@ -24,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 2,
     marginTop: "2%"
   },
+
   text: {
     color: "black",
     padding: theme.spacing(2),
@@ -40,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
     }
   },
+
   media: {
     // paddingTop: "10%",
     width: "15vw",
@@ -50,21 +47,23 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "70%",
     backgroundPosition: "right",
   },
+
   content: {
     textAlign: "left",
     //padding: muiBaseTheme.spacing.unit * 3
   },
+
   divider: {
     // margin: `${muiBaseTheme.spacing.unit * 3}px 0`
   },
+
   heading: {
     fontWeight: "bold"
   },
+
   subheading: {
     lineHeight: 1.8
   },
-
-
 
 }));
 
@@ -89,56 +88,14 @@ export default function ProfileComponent(props) {
       clearInterval(interval);
     };
   }, [props.profile]);
-  /* const handleTick = () => {
-     // gets the number of Comments made by the User from the backend
-     if (props.profile == ""){
-       let route = "/api/comment/CommentProfile/" + config.currentlyLoggedUsername
-       axios
-         .get(route)
-         .then(({ data }) => {
-           setCommentnumber(data.length);
-           setUser(config.currentlyLoggedUsername);
-         });
-       // gets the number of Discussions + Votes made by the User from the backend
-       let url = "/api/user/" + config.currentlyLoggedUsername
-       axios
-         .get(url)
-         .then(({ data }) => {
-           setEmail(data.email)
-           setDiscNumber(data.discussions.length);
-           getdiscussions(data.discussions).then(data => {
-             setVotes(countVotes(data));
-           });
-         }) }
-  // gets the number of Comments made by the clicked Profile from the backend
-         else {
-       let route2 = "/api/comment/CommentProfile/" + props.profile
-       axios
-         .get(route2)
-         .then(({ data }) => {
-           setCommentnumberProfile(data.length);
-         });
-   // gets the number of Discussions + Votes made by the clicked Profile from the backend
-     
-       let url2 = "/api/user/" + props.profile
-       axios
-         .get(url2)
-         .then(({ data }) => {
-           setDiscNumberProfile(data.discussions.length);
-           setEmailprofile(data.email);
-           getdiscussions(data.discussions).then(data => {
-             setVotesProfile(countVotes(data));
-           });
-         })
-       }
-   };*/
+  
   const handleTick = () => {
     // gets the number of Comments made by the User from the backend
     if (props.profile == "") {
       getCommentProfile(config.currentlyLoggedUsername).then(({ data }) => {
         setCommentnumber(data.length);
         setUser(config.currentlyLoggedUsername);
-})
+      });
 
       // gets the number of Discussions + Votes made by the User from the backend
       getUser(config.currentlyLoggedUsername).then(({ data }) => {
@@ -146,8 +103,8 @@ export default function ProfileComponent(props) {
         setVotes(countVotes(data));
         setEmail(data.email)
         getdiscussions(data.discussions).then(data => {
-        setVotesProfile(countVotes(data));
-      })
+          setVotesProfile(countVotes(data));
+        });
       })
     }
 
@@ -165,23 +122,9 @@ export default function ProfileComponent(props) {
         setVotesProfile(countVotes(data));
         getdiscussions(data.discussions).then(data => {
         setVotesProfile(countVotes(data))}
-      )})
+      )});
     }
   };
-
-/*  const getdiscussions = async (discussionids) => {
-    try {
-      var i;
-      var arrayresult = [];
-      for (i = 0; i < discussionids.length; i++) {
-        arrayresult.push(
-          await axios.get("/api/discussion/" + discussionids[i]))
-
-      }
-      return arrayresult;
-    }
-    catch{ }
-  }*/
 
   const getdiscussions = async (discussionids) => {
     try {
@@ -209,7 +152,7 @@ export default function ProfileComponent(props) {
   let grid;
   if (props.profile == "") {
     grid = (
-      <Grid container className={classes.root} justify="center">
+      <Grid container justify="center">
         <Grid item xs={12} >
           <Typography variant="h5" className={classes.headline}>
 
@@ -256,7 +199,7 @@ export default function ProfileComponent(props) {
   }
   else {
     grid = (
-      <Grid container className={classes.root} justify="center">
+      <Grid container justify="center">
         <Grid item xs={12} >
           <Typography variant="h5" className={classes.headline}>
 
@@ -302,11 +245,5 @@ export default function ProfileComponent(props) {
     );
   }
 
-
-
-
-  return (
-    <div>
-      {grid}</div>
-  );
+  return <div>{grid}</div>;
 }

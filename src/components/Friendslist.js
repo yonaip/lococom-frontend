@@ -8,16 +8,15 @@ import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 //import friendsImage from '../resources/friends.svg';
 import friendsImage from '../resources/people.jpg';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
 import { useState, useEffect } from 'react';
 import { currentlyLoggedUsername } from '../services/ConfigService';
 import { getUser, getNames, deleteFriend, addFriend } from "../services/ProfileService";
+import ChatDialog from '../components/ChatDialog';
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
-
-  root: {
-    marginTop: "15%",
-  },
 
   headline: {
     color: "black",
@@ -41,19 +40,21 @@ const useStyles = makeStyles((theme) => ({
     height: "40%",
     backgroundImage: 'url(' + friendsImage + ')',
     backgroundRepeat: "no-repeat",
-
-
   },
+
   content: {
     textAlign: "left",
     //padding: muiBaseTheme.spacing.unit * 3
   },
+
   divider: {
     // margin: `${muiBaseTheme.spacing.unit * 3}px 0`
   },
+
   heading: {
     fontWeight: "bold"
   },
+
   subheading: {
     lineHeight: 1.8
   },
@@ -132,6 +133,9 @@ export default function Friendslist(props) {
   const [user, setUser] = React.useState(null);
   const [inputfriends, setinputfriends] = React.useState("");
   const [showfriends, setshowfriends] = React.useState([]); //delete after testing
+  const [chatDialogOpen, setChatDialogOpen] = useState(false);
+  const [selectedUser, setSelecterUser] = useState(null);
+
   useEffect(() => {
     handleTick();
     const interval = setInterval(() => handleTick(), 10000);
@@ -140,92 +144,28 @@ export default function Friendslist(props) {
     };
   }, []);
 
-  /*const handleTick = () => {
-    let url = "/api/user/" + config.currentlyLoggedUsername
-    axios
-      .get(url)
-      .then(({ data }) => {
-        getName(data.friendlist).then(data => { setshowfriends(data) })
-        setUser(config.currentlyLoggedUsername);
-      });
-  };
-  */
   const handleTick = () => {
     getUser(config.currentlyLoggedUsername).then(({ data }) => {
       setUser(config.currentlyLoggedUsername);
       getNames(data.friendlist).then(data => {
         setshowfriends((createnewarray(data)))
       });
-    })}
-
-
-  /*const getName = async (idlist) => {
-    try {
-      var i;
-      var arrayresult = [];
-      for (i = 0; i < idlist.length; i++) {
-        arrayresult.push(
-          await axios.get("/api/user/id/" + idlist[i]))
-
-      }
-      var finalarray = createnewarray(arrayresult);
-      return finalarray;
-    }
-    catch{ }
-  }*/
+  })};
 
   const createnewarray = (array) => {
-
     const arraynew = array.map(x => x.data.username);
     return arraynew
   }
+  
   const onChangeContent = (event) => {
     setinputfriends(event.target.value);
   };
- /* const removeFriend = (event) => {
-
-    deleteFriend(event)
-    axios
-      .get(url)
-      .then(({ data }) => {
-        axios.put('/api/user/removeFriend', {
-          "username": currentlyLoggedUsername,
-          "friend": data._id
-        });
-      });
-    handleTick();
-  }*/
-  const removeFriend = (event) => {
-    deleteFriend(event)
+ 
+  const removeFriend = (username) => {
+    deleteFriend(username)
     handleTick();
     alert("Friend removed")
   }
- /* const handleSubmit = (event) => {
-    if (showfriends.includes(inputfriends) == true) {
-      alert('Friend is already in Friendlist');
-      clear();
-    }
-    else {
-      const friendslist = {
-        username: user,
-        friendname: inputfriends
-      };
-      axios
-        .post('/api/user/friendlist/', friendslist)
-        .then(response => {
-          console.log('handle submit')
-          alert('Friend added');
-          clear();
-          handleTick();
-        })
-        .catch(err => {
-          alert('Friend not found');
-          console.error(err);
-          clear();
-          handleTick();
-        });
-    }
-  };*/
 
   const handleSubmit = (event) => {
     if (showfriends.includes(inputfriends) == true) {
@@ -249,23 +189,32 @@ export default function Friendslist(props) {
     console.log("send");
   }
 
+  const handleDialogClose = () => {
+    setChatDialogOpen(false);
+  };
 
   function Friend(props) {
     return (
-
       <div className={classes.friend}>
         <span style={{ fontWeight: "bold" }} onClick={e => sendNametoParent(props.username)}>{props.username}</span>
         <Button size="small" variant="contained" onClick={e => removeFriend(props.username)} className={classes.delete}>
           delete
-                </Button>
-
+        </Button>
+        <IconButton edge="end" aria-label="comments" onClick={() => {
+          setSelecterUser(props.username);
+          setChatDialogOpen(true);
+        }}>
+          <CommentIcon/>
+        </IconButton>
         <Divider className={classes.divider} light />
       </div>
     );
   }
+
   const clear = () => {
     setinputfriends("");
   }
+
   function Listoffriends(props) {
     return (
       <div>
@@ -273,34 +222,28 @@ export default function Friendslist(props) {
       </div>
     );
   }
-  return (
 
-    <Grid container className={classes.root} justify="center">
+  return (
+    <Grid container justify="center">
       <Grid item xs={12} >
         <Typography variant="h5" className={classes.headline} />
-
-
       </Grid>
 
-      <Grid item xs={11} style={{ height: "100%" }}>
-
+      <Grid item xs={12} style={{ height: "100%" }}>
         <div className="App">
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-
             />
             <CardContent className={classes.content}>
-
+              <Divider className={classes.divider} light />
               <Typography
                 className={"MuiTypography--heading"}
                 variant={"h6"}
                 gutterBottom
-              >
-
-                <Divider className={classes.divider} light />
-         My Friends
-        </Typography>
+              >   
+                My Friends
+              </Typography>
 
               <div className={classes.element}>
                 <Typography
@@ -308,6 +251,7 @@ export default function Friendslist(props) {
                   variant={"caption"}
                 >
                 </Typography>
+                
                 <Divider className={classes.divider} light />
                 <div className={classes.liste}>
                   <Listoffriends list={showfriends}></Listoffriends>
@@ -328,14 +272,11 @@ export default function Friendslist(props) {
             />
             <Button size="large" onClick={handleSubmit} variant="contained" color="primary" className={classes.post}>
               Add
-        </Button>
+            </Button>
           </Grid>
         </div>
-
-
       </Grid>
-
+      <ChatDialog open={chatDialogOpen} handleClose={handleDialogClose} targetUser={selectedUser}/>
     </Grid>
-
   );
 }  

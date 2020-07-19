@@ -30,12 +30,17 @@ const createDiscussion = async(title, topic, content, votes, lat, lng) => {
 const getDiscussion = async(discussionID) => {
     const response = await axios.get('/api/discussion/' + discussionID);
     return response;
-}
+};
 
-const getAllDiscussions = async() => {
-    const response = await axios.get('/api/discussion');
-    return response;
-}
+const getAllDiscussions = async(topics) => {
+    if(topics != "") {
+        const response = await axios.get(`/api/discussion?topic=${topics}`);
+        return response;
+    } else {
+        const response = await axios.get('/api/discussion');
+        return response;
+    }
+};
 
 const upVoteDiscussion = async(discussionID) => {
     const response = await axios.put( `/api/discussion/${discussionID}/upvote/`, 
@@ -43,7 +48,7 @@ const upVoteDiscussion = async(discussionID) => {
         headers: { Authorization: "Bearer " + config.jwtToken }
     });
     return response;
-}
+};
 
 const downVoteDiscussion = async(discussionID) => {
     const response = await axios.put( `/api/discussion/${discussionID}/downvote/`,
@@ -51,7 +56,7 @@ const downVoteDiscussion = async(discussionID) => {
         headers: { Authorization: "Bearer " + config.jwtToken }
     });
     return response;
-}
+};
 
 export {
     createDiscussion,

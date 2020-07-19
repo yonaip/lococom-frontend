@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // View of mapview page
-export default function MapView() {
+export default function MapView(props) {
 
     const classes = useStyles();
 
@@ -76,15 +76,20 @@ export default function MapView() {
     const [markers, setMarkers] = useState([]);
     const [discussions, setDiscussions] = useState([]);
 
-    // useEffect(() => {
-    //     if (props.id) {
-    //         /* setRightPane(<Discussion discussionId={props.id}/>);*/
-    //         getDiscussion(props.id).then(({ data }) => { selectDiscussion(data); })
-    //     }
-    //     else {
+    const [activatedFilters, setActivatedFilters] = useState([false, false, false, false, false]);
+    const topics = ["Request", "Nature", "Walking", "Photo", "Hint"];
 
-    //     }
-    // }, [props.id]);
+
+    useEffect(() => {
+        if (props.id) {
+            /* setRightPane(<Discussion discussionId={props.id}/>);*/
+            getDiscussion(props.id).then(({ data }) => { selectDiscussion(data); })
+        }
+        else {
+
+        }
+    }, [props.id]);
+
     // Register listener on escape
     useEffect(() => {
         const listener = e => {
@@ -99,6 +104,10 @@ export default function MapView() {
             window.removeEventListener("keydown", listener);
         };
     });
+
+    useEffect(() => {
+        loadAllDiscussions();
+    }, [activatedFilters]);
 
     // Callback functions for opening/closing leftsideMenu
     const toggleLeftMenu = (open) => (event) => {
@@ -125,7 +134,7 @@ export default function MapView() {
 
         setRightPane(
             <Paper className={classes.container} elevation={3}>
-                <CreateDiscussion lat={lat} lng={lng} handleClose={handleCreateDiscussionClose} />
+                <CreateDiscussion lat={lat} lng={lng} handleClose={handleCreateDiscussionClose}/>
             </Paper>
         );
 
@@ -145,7 +154,7 @@ export default function MapView() {
         } else {
             setRightPane(
                 <Paper className={classes.container} elevation={3}>
-                    <Discussion discussionId={discussionId} />
+                    <Discussion discussionId={discussionId}/>
                 </Paper>
             );
         }
@@ -156,20 +165,34 @@ export default function MapView() {
 
     const handleClose = () => {
         setRightPane(null);
-    }
+    };
 
     const selectDiscussion = (discussion) => {
-        //console.log(discussion);
-        updateMap({ lat: discussion.lat, lng: discussion.lng });
+        updateMap({lat: discussion.lat, lng: discussion.lng});
         setRightPane(
             <Paper className={classes.container} elevation={3}>
-                <Discussion discussionId={discussion._id} />
+                <Discussion discussionId={discussion._id}/>
             </Paper>
         );
     };
 
     function loadAllDiscussions() {
-        getAllDiscussions()
+        console.log(activatedFilters);
+        getAllDiscussions(activatedFilters
+            .map((entry, index) => {
+                return [entry, index]
+            })
+            .filter((listElement) => {
+                return listElement[0]
+            })
+            .map((listElement) => {
+                return listElement[1]
+            })
+            .map((index) => {
+                return topics[index]
+            })
+            .toString()
+        )
             .then((res) => {
                 //console.log(res);
                 setDiscussions(res.data);
@@ -177,32 +200,35 @@ export default function MapView() {
             .catch((err) => {
                 console.log(err);
             });
-    };
+    }
 
-    // TODO: check how to memorize discussions array and add render only the newly created discussion
-    useEffect(() => {
-        loadAllDiscussions();
-    }, []);
-
-    // const mapComponent = useMemo(() => 
-    //     <MapComponent defaultCenter={{ lat: 48.137154, lng: 11.576124 }}
-    //         onDblClick={createDiscussion}
-    //         markers={markers}
-    //         selectDiscussion={selectDiscussion}
-    //         discussions={discussions}/>, [discussions, markers]);
-
-    return (<div className={classes.root}>
-        <Header className={classes.mapHeader} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={updateMap} />
-        <Grid container className={classes.content}>
-            <Grid item xs={12}>
-                <MapComponent defaultCenter={center}
-                    onDblClick={createDiscussion}
-                    markers={markers}
-                    selectDiscussion={selectDiscussion}
-                    discussions={discussions} />
+    return (
+        <div className={classes.root}>
+            <Header
+                className={classes.mapHeader}
+                position={"fixed"}
+                onLeftMenuClick={toggleLeftMenu(true)}
+                updateMap={updateMap}
+            />
+            <Grid container className={classes.content}>
+                <Grid item xs={12}>
+                    <MapComponent
+                        defaultCenter={center}
+                        onDblClick={createDiscussion}
+                        markers={markers}
+                        selectDiscussion={selectDiscussion}
+                        discussions={discussions}
+                    />
+                </Grid>
             </Grid>
-        </Grid>
-        <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} />
-        {rightPane}
-    </div>);
+            <LeftDrawerMenu
+                open={leftMenuOpen}
+                onClose={toggleLeftMenu(false)}
+                activatedFilters={activatedFilters}
+                setActivatedFilters={setActivatedFilters}
+                loadAllDiscussions={loadAllDiscussions}
+                numberOfFilteredItems={discussions.length}
+            />
+            {rightPane}
+        </div>);
 }

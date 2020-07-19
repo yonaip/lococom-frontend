@@ -17,7 +17,6 @@ async function getUser(profile) {
     return response;
 }
 
-
 const getDiscussions = async (discussionids) => {
     try {
         var i;
@@ -46,21 +45,23 @@ const getNames = async (idlist) => {
     catch{ }
 }
 
-const deleteFriend = async (profile) => {
-    let url = "/api/user/" + profile
-    axios
-        .get(url)
-        .then(({ data }) => {
-            axios.put('/api/user/removeFriend', {
-                "username": config.currentlyLoggedUsername,
-                "friend": data._id
-            });
+const deleteFriend = async (username) => {
+    axios.delete(`/api/user/friendlist/${username}`, {}, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    })
+        .then(response => {
+            alert('Friend removed');
+        })
+        .catch(err => {
+            alert('Friend not found');
+            console.error(err);
         });
 }
 
 const addFriend = async (friend) => {
-    axios
-        .post('/api/user/friendlist/', friend)
+    axios.post(`/api/user/friendlist/${friend.friendname}`, {}, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    })
         .then(response => {
             alert('Friend added');
         })
