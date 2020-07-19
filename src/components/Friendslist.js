@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   element: {
     maxHeight: 500,
     maxWidth: 400,
-    overflow: "auto",
+   
 
   },
   newComment: {
@@ -96,10 +96,13 @@ const useStyles = makeStyles((theme) => ({
   },
 
   liste: {
-    maxHeight: "150px",
-    width: "90%",
-    overflow: "auto",
-    float: "left",
+
+      maxHeight: "200px",
+      width: "95%",
+      overflow: "auto",
+      padding: "5px",
+      float: "left",
+    
   },
 
 }));
