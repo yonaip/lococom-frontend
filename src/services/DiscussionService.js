@@ -12,27 +12,28 @@ const config = require("./ConfigService");
  * @param lat
  * @param lng
  */
-const createDiscussion = async(title, topic, content, votes, lat, lng) => {
+const createDiscussion = async (title, topic, content, votes, lat, lng, timestamp) => {
     const response = await axios.post('api/discussion', {
         "title": title,
         "topic": topic,
         "content": content,
         "votes": votes,
         "lat": lat,
-        "lng": lng
+        "lng": lng,
+        "timestamp": timestamp
     }, {
         headers: { Authorization: "Bearer " + config.jwtToken }
     });
 
     return response;
 };
-
-const getDiscussion = async(discussionID) => {
+//get discussion object from id
+const getDiscussion = async (discussionID) => {
     const response = await axios.get('/api/discussion/' + discussionID);
     return response;
-};
-
-const getAllDiscussions = async(topics) => {
+}
+//gets all existing discussions
+const getAllDiscussions = async (topics) => {
     if(topics != "") {
         const response = await axios.get(`/api/discussion?topic=${topics}`);
         return response;
@@ -40,28 +41,37 @@ const getAllDiscussions = async(topics) => {
         const response = await axios.get('/api/discussion');
         return response;
     }
-};
-
-const upVoteDiscussion = async(discussionID) => {
-    const response = await axios.put( `/api/discussion/${discussionID}/upvote/`, 
-    {}, {
+}
+//upvotes discussion
+const upVoteDiscussion = async (discussionID) => {
+    const response = await axios.put(`/api/discussion/${discussionID}/upvote/`,
+        {}, {
         headers: { Authorization: "Bearer " + config.jwtToken }
     });
     return response;
-};
-
-const downVoteDiscussion = async(discussionID) => {
-    const response = await axios.put( `/api/discussion/${discussionID}/downvote/`,
-    {}, {
+}
+//downvotes discussion
+const downVoteDiscussion = async (discussionID) => {
+    const response = await axios.put(`/api/discussion/${discussionID}/downvote/`,
+        {}, {
         headers: { Authorization: "Bearer " + config.jwtToken }
     });
     return response;
-};
+}
+//deletes Discussion
+const deleteDiscussion = async (discussionID) => {
+    const response = await axios.delete(`/api/discussion/${discussionID}`, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    })
+    return response;
+
+}
 
 export {
     createDiscussion,
     getDiscussion,
     upVoteDiscussion,
     downVoteDiscussion,
-    getAllDiscussions
+    getAllDiscussions,
+    deleteDiscussion
 }

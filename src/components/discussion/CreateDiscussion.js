@@ -72,8 +72,9 @@ export default function CreateDiscussion(props) {
         const lat = props.lat;
         const lng = props.lng;
         const votes = 0;
+        const timestamp = getCurrentDate();
 
-        createDiscussion(title, selectedTopic, content, votes, lat, lng)
+        createDiscussion(title, selectedTopic, content, votes, lat, lng, timestamp)
             .then(response => {
                 //clear();
                 props.handleClose(response.data);
@@ -81,6 +82,19 @@ export default function CreateDiscussion(props) {
                 console.log(err);
             });
     };
+    
+    const getCurrentDate = () =>{
+
+        let newDate = new Date()
+        let date = newDate.getDate();
+        let month = newDate.getMonth() + 1;
+        let year = newDate.getFullYear();
+        let hours = newDate.getHours();
+        let minute = newDate.getMinutes();
+        let seconds = newDate.getSeconds();
+
+        return (date + '-' + month + '-' + year + '/' + hours + ':' + minute + ':' + seconds)
+        }
 
     const handleCancel = () => {
         //clear();

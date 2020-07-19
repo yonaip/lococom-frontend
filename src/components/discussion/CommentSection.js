@@ -62,7 +62,7 @@ export default function CommentSection(props) {
                 props.comments.map((comment, i) =>
                     <ListItem key={i} dense={true}>
                         <ListItemText primary={comment.content} 
-                            secondary={`Created by ${comment.username}`}
+                            secondary={`Created by ${comment.username} , ${comment.timestamp}`}
                             divider={true} />
                     </ListItem>
                 )

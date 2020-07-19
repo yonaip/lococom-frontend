@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, Typography, Fab, ButtonBase } from '@material-ui/core';
-import axios from 'axios';
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
@@ -12,6 +11,8 @@ import { getDiscussion } from "../services/DiscussionService";
 
 const config = require("../services/ConfigService");
 const useStyles = makeStyles((theme) => ({
+
+
   headline: {
     color: "black",
     textAlign: 'center',
@@ -38,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   media: {
-    // paddingTop: "10%",
     width: "15vw",
     height: "15vw",
     borderRadius: "50%",
@@ -50,11 +50,6 @@ const useStyles = makeStyles((theme) => ({
 
   content: {
     textAlign: "left",
-    //padding: muiBaseTheme.spacing.unit * 3
-  },
-
-  divider: {
-    // margin: `${muiBaseTheme.spacing.unit * 3}px 0`
   },
 
   heading: {
@@ -88,14 +83,13 @@ export default function ProfileComponent(props) {
       clearInterval(interval);
     };
   }, [props.profile]);
-  
   const handleTick = () => {
     // gets the number of Comments made by the User from the backend
     if (props.profile == "") {
       getCommentProfile(config.currentlyLoggedUsername).then(({ data }) => {
         setCommentnumber(data.length);
         setUser(config.currentlyLoggedUsername);
-      });
+      })
 
       // gets the number of Discussions + Votes made by the User from the backend
       getUser(config.currentlyLoggedUsername).then(({ data }) => {
@@ -103,8 +97,8 @@ export default function ProfileComponent(props) {
         setVotes(countVotes(data));
         setEmail(data.email)
         getdiscussions(data.discussions).then(data => {
-          setVotesProfile(countVotes(data));
-        });
+          setVotes(countVotes(data));
+        })
       })
     }
 
@@ -113,7 +107,7 @@ export default function ProfileComponent(props) {
       getCommentProfile(props.profile).then(({ data }) => {
         setCommentnumberProfile(data.length);
         setUser(config.currentlyLoggedUsername);
-        });
+      });
       // gets the number of Discussions + Votes made by the clicked Profile from the backend
 
       getUser(props.profile).then(({ data }) => {
@@ -121,11 +115,15 @@ export default function ProfileComponent(props) {
         setEmailprofile(data.email);
         setVotesProfile(countVotes(data));
         getdiscussions(data.discussions).then(data => {
-        setVotesProfile(countVotes(data))}
-      )});
+          setVotesProfile(countVotes(data))
+        }
+        )
+      })
     }
   };
 
+
+  //gets discussion object from discussion ids
   const getdiscussions = async (discussionids) => {
     try {
       var i;
@@ -139,16 +137,16 @@ export default function ProfileComponent(props) {
     }
     catch{ }
   }
+  //counts votes from all discussions
   const countVotes = (array) => {
     var i;
     var x = 0;
-
     for (i = 0; i < array.length; i++) {
       x = x + array[i].data.votes;
     }
     return x;
   }
-
+  //differentiate between loggedin user or clicked user
   let grid;
   if (props.profile == "") {
     grid = (
@@ -221,7 +219,7 @@ export default function ProfileComponent(props) {
                   variant={"h6"}
                   gutterBottom
                 >
-                  <Divider className={classes.divider} light />
+                  <Divider />
                   {props.profile}
                 </Typography>
                 <Typography
@@ -229,13 +227,13 @@ export default function ProfileComponent(props) {
                   variant={"caption"}
                 >
                 </Typography>
-                <Divider className={classes.divider} light />
+                <Divider />
    E-Mail: {emailprofile}
-                <Divider className={classes.divider} light />
+                <Divider />
    Number of Discussions: {discnumberprofile}
-                <Divider className={classes.divider} light />
+                <Divider />
    Number of Comments: {commentnumberprofile}
-                <Divider className={classes.divider} light />
+                <Divider />
    Votes: {votesprofile}
               </CardContent>
             </Card>
