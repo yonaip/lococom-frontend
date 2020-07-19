@@ -211,6 +211,7 @@ export default function MapView(props) {
             <Grid container className={classes.content}>
                 <Grid item xs={12}>
                     <MapComponent
+                        defaultCenter={center}
                         onDblClick={createDiscussion}
                         markers={markers}
                         selectDiscussion={selectDiscussion}
