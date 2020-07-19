@@ -51,7 +51,7 @@ const getName = async (id) => {
     return response
 }
 //deletes friend from friendslist from loggenin user
-const deleteFriend = async (profile) => {
+const deleteFriend = async (username) => {
     axios.delete(`/api/user/friendlist/${username}`, {}, {
         headers: { Authorization: "Bearer " + config.jwtToken }
     })
@@ -65,10 +65,9 @@ const deleteFriend = async (profile) => {
 }
 //adds friend to friendslist from loggedin user
 const addFriend = async (friend) => {
-    axios
-        .post('/api/user/friendlist/', friend, {
-            headers: { Authorization: "Bearer " + config.jwtToken }
-        })
+    axios.post(`/api/user/friendlist/${friend.friendname}`, {}, {
+        headers: { Authorization: "Bearer " + config.jwtToken }
+    })
         .then(response => {
             alert('Friend added');
         })

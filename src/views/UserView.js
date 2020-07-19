@@ -9,6 +9,7 @@ import DiscussionOverview from "../components/DiscussionOverview";
 import Friendslist from "../components/Friendslist";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Discussion from "../components/discussion/Discussion";
+import CommentOverview from "../components/CommentOverview";
 
 import ChatDialog from '../components/ChatDialog';
 
@@ -97,27 +98,40 @@ export default function UserView() {
         //display loggedin user
         if (differentuser == "") {
             grid = (
-                <Grid container direction="row" justify="space-around" alignItems="flex-start">
-                    <Grid item xs={4}>
-                        <ProfileComponent profile=""></ProfileComponent>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <DiscussionOverview profile=""></DiscussionOverview>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Friendslist callbackFromParent={getData}></Friendslist>
-                    </Grid>
+                <Grid container xs={12}>
+                <Grid item xs={3}>
+                    <ProfileComponent profile=""></ProfileComponent>
                 </Grid>
+                <Grid item xs={3}>
+                    <DiscussionOverview profile=""></DiscussionOverview>
+                </Grid>
+                <Grid item xs={3}>
+                    <CommentOverview profile=""></CommentOverview>
+                </Grid>
+                <Grid item xs={3}>
+                    <Friendslist callbackFromParent={getData}></Friendslist>
+                </Grid>
+            </Grid>
             );
         } else {
             //display another profile the loggedin user has clicked on
             grid = (
-                <Grid container direction="row" justify="space-around" alignItems="flex-start">
+                <Grid container xs={12}>
                     <Grid item xs={4}>
                         <ProfileComponent profile={differentuser} ></ProfileComponent>
                     </Grid>
                     <Grid item xs={4}>
                         <DiscussionOverview profile={differentuser}></DiscussionOverview>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <CommentOverview profile={differentuser}></CommentOverview>
+                        <Button
+                            onClick={clear}
+                            className={classes.back}
+                            variant="contained"
+                            color="primary">
+                            Back
+                        </Button>
                     </Grid>
                 </Grid>
             );

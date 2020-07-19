@@ -66,17 +66,17 @@ const useStyles = makeStyles((theme) => ({
     color: "#E1DEDE",
     borderRadius: theme.shape.borderRadius,
     overflow: "hidden",
-    width: '70%',
+    width: '60%',
     marginTop: "1%",
     background: "white",
-    marginLeft: "18px",
+    marginLeft: "40px",
     marginBottom: "3px",
   },
 
-  post: {
+  add: {
     float: 'right',
     marginTop: "1%",
-    marginRight: "5%"
+    marginRight: "10%"
   },
   ele: {
 
@@ -86,12 +86,13 @@ const useStyles = makeStyles((theme) => ({
   },
 
   friend: {
-    height: "30px",
+    height: "40px",
     padding: "3px",
   },
 
   delete: {
     float: "right",
+    marginTop: "8px",
   },
 
   liste: {
@@ -109,7 +110,6 @@ export default function Friendslist(props) {
   const [user, setUser] = React.useState(null);
   const [inputfriends, setinputfriends] = React.useState("");
   const [showfriends, setshowfriends] = React.useState([]);
-  const [showfriends, setshowfriends] = React.useState([]); //delete after testing
   const [chatDialogOpen, setChatDialogOpen] = useState(false);
   const [selectedUser, setSelecterUser] = useState(null);
 
@@ -258,7 +258,7 @@ const handleDialogClose = () => {
                 shrink: true,
               }}
             />
-            <Button size="large" onClick={handleSubmit} variant="contained" color="primary" className={classes.post}>
+            <Button size="large" onClick={handleSubmit} variant="contained" color="primary" className={classes.add}>
               Add
             </Button>
           </Grid>
