@@ -159,10 +159,10 @@ export default function CommentOverview(props) {
       <div className={classes.comment}>
 
         <div className={classes.com}>
-          <Link to={`/map/${props.discussionid}`} style={{ color: "black" }}>
+          {/*<Link to={`/map?discId=${props.id}`} style={{ color: "black" }}>*/}
             <span style={{ fontWeight: "bold" }}>{props.username}: </span>
             <span> {props.content}</span>
-          </Link>
+          {/*</Link>*/}
         </div>
 
         <DeleteIcon onClick={e => removeComment(props.id)} color="default" className={classes.deletecomment} />
@@ -185,9 +185,9 @@ export default function CommentOverview(props) {
       <div className={classes.comment}>
         <div className={classes.com}>
           <span style={{ fontWeight: "bold" }}>{props.username}: </span>
-          <Link to={`/map/${props.discussionid}`} style={{ color: "black" }}>
+          {/*<Link to={`/map?discId=${props.id}`} style={{ color: "black" }}>*/}
             <span> {props.content}</span>
-          </Link>
+          {/*</Link>*/}
         </div>
 
       </div>

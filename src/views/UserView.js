@@ -17,8 +17,6 @@ const config = require("../services/ConfigService");
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        position: "fixed",
-        bottom: 0,
         top: 0,
         right: 0,
         left: 0,

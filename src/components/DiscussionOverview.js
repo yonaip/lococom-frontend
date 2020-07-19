@@ -270,7 +270,7 @@ export default function DiscussionOverview(props) {
       <div className={classes.discussion}>
         <Button size="small" variant="outlined" className={props.topic === 'Nature' ? classes.nature : props.topic === 'Request' ? classes.request : props.topic === 'Walking' ? classes.walking : props.topic === 'Photo' ? classes.photo : props.topic === 'Hint' ? classes.hint : classes.hint}> </Button>
         <div className={classes.disctext}>
-          <Link to={`/map/${props.id}`} style={{ color: "black" }}>
+          <Link to={`/map?lat=${props.lat}&lng=${props.lng}&discId=${props.id}`} style={{ color: "black" }}>
             {props.title}
           </Link>
         </div>
