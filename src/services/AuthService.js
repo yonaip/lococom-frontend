@@ -16,6 +16,9 @@ async function loginUser(username, password) {
         "password": password
     });
 
+    // config.setJwtToken([response.data.token]);
+    // config.setCurrentlyLoggedUsername([username])
+
     config.currentlyLoggedUsername = username;
     config.jwtToken = response.data.token;
 
@@ -33,9 +36,6 @@ async function registerUser(username, password, email) {
         "password": password,
         "email": email
     });
-
-    config.currentlyLoggedUsername = username;
-    config.jwtToken = response.data.token;
 
     return response;
 }

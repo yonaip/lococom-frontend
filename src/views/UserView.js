@@ -115,7 +115,7 @@ export default function UserView() {
 
     return (<div className={classes.root}>
         <Header className={classes.header} position={"fixed"} onLeftMenuClick={toggleLeftMenu(true)} updateMap={switchToMapView}/>
-        <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} />
+        {/* <LeftDrawerMenu open={leftMenuOpen} onClose={toggleLeftMenu(false)} /> */}
         {grid}
     </div>);
 }

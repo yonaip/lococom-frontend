@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {useCookies} from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Box, Button, AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
@@ -7,6 +8,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchFieldComponent from './SearchFieldComponent';
 import LoginDialog from "./LoginDialog";
 import RegisterDialog from "./RegisterDialog";
+
+import {me} from "../services/AuthService";
 
 const config = require("../services/ConfigService");
 
@@ -28,17 +31,43 @@ const useStyles = makeStyles((theme) => ({
 export default function MapHeader(props) {
   const classes = useStyles();
 
+  // Cookie manager
+  const [cookies, setCookie, removeCookie] = useCookies([]);
+
   const [user, setUser] = useState(null);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
 
   const history = useHistory();
 
-  const handleDialogClose = () => {
+
+  useEffect(() => {
+    config.jwtToken = cookies.token;
+    config.currentlyLoggedUsername = cookies.username;
+
+    me()
+      .then((profile) => {
+        console.log(profile);
+        setUser(config.currentlyLoggedUsername);
+      })
+      .catch((err) => {
+        console.log("Error logging in, removing tokens");
+        removeCookie('token');
+        removeCookie('username');
+      })
+
+  }, []);
+
+
+  const handleDialogClose = (response) => {
     setLoginDialogOpen(false);
     setRegisterDialogOpen(false);
-    if (config.currentlyLoggedUsername != null) {
-      setUser(config.currentlyLoggedUsername);
+
+    // if we get a result
+    if (response != null) {
+      setCookie('token', response.token);
+      setCookie('username', response.username);
+      setUser(response.username);
     }
   };
 
