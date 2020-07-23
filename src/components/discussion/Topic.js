@@ -1,17 +1,16 @@
-
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Fab } from '@material-ui/core';
-
+import Tooltip from "@material-ui/core/Tooltip";
 import requestimg from '../../resources/request.png';
 import walkerimg from '../../resources/shoes.png';
 import photoimg from '../../resources/photograph.png';
 import natureimg from '../../resources/nature.png';
 import alertimg from '../../resources/alert.png';
-
 // TODO: squish them to two classes
 const useStyles = makeStyles((theme) => ({
-    request: {
+    request: 
+    {
         backgroundColor: "#B5CDD0",
         width: "3.5vw",
         height: "3.5vw",
@@ -71,7 +70,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundSize: "70%",
         backgroundPosition: "center",
         [theme.breakpoints.down('sm')]: {},
-
     },
     pickedRequest: {
         backgroundColor: "#62AEBB",
@@ -134,11 +132,29 @@ const useStyles = makeStyles((theme) => ({
         backgroundPosition: "center",
     },
 }))
-
 export default function Topic(props) {
-
     const classes = useStyles();
-
+    let tooltip;
+    switch(props.type) {
+        case 'Request':
+            tooltip = "Ask a Question about this place";
+            break;
+        case 'Nature':
+            tooltip = "Talk about a nature spot";
+            break;
+        case 'Walking':
+            tooltip = "Talk about a sports activity";
+            break;
+        case 'Photo':
+            tooltip = "Talk about a photo opportunity";
+            break;
+        case 'Hint':
+            tooltip = "Alert other Users";
+            break;
+        default:
+            tooltip = "Ask a Question about this place";
+            break;
+    }
     // Pick an appropriate style
     let style;
     if(props.picked) {
@@ -186,8 +202,10 @@ export default function Topic(props) {
         }
     }
 
-
     return (
-        <Fab onClick={() => props.onClick(props.type)} className={style} />
+        <Tooltip title={tooltip}>
+        <Fab onClick={() => props.onClick(props.type)} className={style}>
+            </Fab>
+        </Tooltip>
     );
 }
