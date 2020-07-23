@@ -55,6 +55,8 @@ export default function MapHeader(props) {
         console.log(`Error logging in, removing tokens: ${err}`);
         removeCookie('token');
         removeCookie('username');
+        config.currentlyLoggedUsername = null;
+        config.jwtToken = null;
       })
 
   }, []);
@@ -68,6 +70,8 @@ export default function MapHeader(props) {
     if (response != null) {
       setCookie('token', response.token);
       setCookie('username', response.username);
+      config.jwtToken = response.token;
+      config.currentlyLoggedUsername = response.username;
       setUser(response.username);
     }
   };
